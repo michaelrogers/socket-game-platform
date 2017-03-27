@@ -1,8 +1,11 @@
 import React from 'react';
-import {render} from 'react-dom';
+import ReactDOM from 'react-dom';
+import { browserHistory } from 'react-router';
 
-// Include the Form Component
-var Form = require("./components/Form");
+import routes from './config/routes';
+import { Form } from "./components/Form";
 
-// This code here allows us to render our main component (in this case Form)
-render(<Form />, document.getElementById("app"));
+ReactDOM.render(
+    <routes />,
+    document.getElementById("app")
+);
