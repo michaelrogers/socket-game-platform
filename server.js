@@ -52,7 +52,7 @@ const leaveRooms = (socket) => {
 io.on('connection', (socket) => {
     //--------------Connection-status-----------------
     connectionCount(socket);
-    socket.emit('connection-status', 'New User joined');
+    // socket.emit('connection-status', 'New User joined');
     
     socket.on('disconnect', (socket) => {
       connectionCount(socket);
@@ -65,7 +65,7 @@ io.on('connection', (socket) => {
       leaveRooms(socket);
       // Then join the specified room
       socket.join(DataPackage.roomId);
-      io.sockets.in(DataPackage.roomId).emit('connection-status', `New player joined ${DataPackage.roomId}`)
+      io.sockets.in(DataPackage.roomId).emit('connection-status', `New player joined room ${DataPackage.roomId}`)
     });
     //Note: No auto teardown of sockets necessary
     socket.on('chat-message', (DataPackage) => {
@@ -74,7 +74,7 @@ io.on('connection', (socket) => {
     
     // Relay device input to all connected clients in the room
     socket.on('input', (DataPackage) => {
-      io.sockets.in(DataPackage.roomId).emit('input', DataPackage.data);
+      io.sockets.in(DataPackage.roomId).emit('input', DataPackage);
     });
 
     // io.to('5000').emit('chat-message', 'Secret channel');

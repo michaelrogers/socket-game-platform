@@ -1,48 +1,71 @@
+// const sketch = require('./sketch.js');
 document.addEventListener('DOMContentLoaded', () => {
-   
-
     const socket = io();
-    //DataPackageConstructor    
+    // setup();
+
+    //DataPackage Constructor    
     function DataPackage(data = null, playerId = null) {
         this.roomId = roomId;
         this.data = data;
         this.playerId = playerId;
         this.timestamp = Date.now();
     }
+
+    const requestJoinRoom = () => {
+        sessionStorage.setItem('room-id', roomId);
+        playerSelection = 0;
+        $('#player-selection').val("0");
+        socket.emit('room', new DataPackage());
+    }
+
+    const inputEventHandler = (DataPackage) => {
+        console.log(DataPackage);
+        playerInput(DataPackage.playerId, DataPackage.data)
+
+    }
     
     //Client initialization
     const connection = () => {
         $('input[name="room-id"]').val(roomId);
+        
+        
+        // Transmit
         socket.emit('room',  new DataPackage());
         
         window.addEventListener('keydown', (e) => {
-            const acceptedKeys = [38, 37, 39, 40, 32];
-            if (acceptedKeys.indexOf(e.keyCode) !== -1) {
-                socket.emit('input', new DataPackage(e.keyCode));
+            if (playerSelection > 0) {
+                const acceptedKeys = [38, 37, 39, 40, 32];
+                if (acceptedKeys.indexOf(e.keyCode) !== -1) {
+                    e.preventDefault();
+                    socket.emit('input', new DataPackage(e.keyCode, playerSelection));
+                }
             }
+        });
+
+        $('#player-selection').on('change', (e) => {
+            playerSelection = $('#player-selection').val();
         });
 
         $('#room-id-button').on('click', (e) => {
             roomId = $('input[name="room-id"]').val();
-            sessionStorage.setItem('room-id', roomId);
-            socket.emit('room', new DataPackage());
+            $('#messages').empty();
+            requestJoinRoom();
         });
 
-            $('#message-button').on('click', (e) => {
+        $('#message-button').on('click', (e) => {
             e.preventDefault();
-            // $('#messages').append($('<li>').text(data.message));
-            socket.emit( 'chat-message', new DataPackage($('#m').val()) );
-            $('#m').val('');
+            socket.emit( 'chat-message', new DataPackage($('#message-input').val()) );
+            $('#message-input').val('');
         });
 
     }
+    let playerSelection = 0;
     let roomId = sessionStorage.getItem('room-id') || 0;
-    
     connection();
 
     $('form').submit(e => e.preventDefault())
 
-    // Front End updates
+    // Receive
     socket.on('connection-status', (status) => {
         $('#messages').append($('<li>').text(status));
     });
@@ -50,9 +73,9 @@ document.addEventListener('DOMContentLoaded', () => {
         $('#messages').append($('<li>').text(message));
     });
 
-    socket.on('input', (data) => {
-        $('#messages').prepend($('<li>').text(data));
-    });
+    socket.on('input', inputEventHandler);
+
+
 
 });
 
