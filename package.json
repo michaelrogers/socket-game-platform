@@ -6,13 +6,14 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack -w",
+    "start-socket": "nodemon server.js",
     "start": "webpack-dev-server --hot",
     "dev": "webpack-dev-server --content-base public/ --inline --hot",
     "webpack-dev-server": "NODE_ENV=development PORT=8080 webpack-dev-server --content-base public/ --hot --inline --devtool inline-source-map --history-api-fallback"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/michaelrogers/socket-game-platform.git"
+    "url": "git@github.com:michaelrogers/socket-game-platform.git"
   },
   "author": "",
   "license": "ISC",
