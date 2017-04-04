@@ -4,3 +4,4 @@ body { font: 13px Helvetica, Arial; }
 #messages li { padding: 5px 10px; }
 #messages li:nth-child(odd) { background: #eee; }
 #canvas-game { width: 500px; height: 500px; margin: 0 auto; background: rgba(0,0,0,0.2);}
+canvas{display:block; margin: 0 auto;}
