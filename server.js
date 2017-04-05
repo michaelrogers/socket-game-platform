@@ -74,6 +74,7 @@ io.on('connection', (socket) => {
     
     // Relay device input to all connected clients in the room
     socket.on('input', (DataPackage) => {
+      console.log('package,',DataPackage)
       io.sockets.in(DataPackage.roomId).emit('input', DataPackage);
     });
 

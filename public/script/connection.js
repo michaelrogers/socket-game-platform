@@ -4,11 +4,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // setup();
 
     //DataPackage Constructor    
-    function DataPackage(data = null, playerId = null) {
+    function DataPackage(data = null, dataType = null, playerId = null, roomId = 0) {
         this.roomId = roomId;
         this.data = data;
         this.playerId = playerId;
         this.timestamp = Date.now();
+        this.dataType = dataType;
     }
 
     const requestJoinRoom = () => {
@@ -19,8 +20,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const inputEventHandler = (DataPackage) => {
-        console.log(DataPackage);
-        playerInput(DataPackage.playerId, DataPackage.data)
+        // console.log(DataPackage);
+        // playerInput(DataPackage.playerId, DataPackage.data);
+        updateKey(DataPackage.data, DataPackage.dataType);
 
     }
     
@@ -33,30 +35,42 @@ document.addEventListener('DOMContentLoaded', () => {
         socket.emit('room',  new DataPackage());
         
         window.addEventListener('keydown', (e) => {
-            if (playerSelection > 0) {
+            // if (playerSelection > 0) {
                 const acceptedKeys = [38, 37, 39, 40, 32];
                 if (acceptedKeys.indexOf(e.keyCode) !== -1) {
                     e.preventDefault();
-                    socket.emit('input', new DataPackage(e.keyCode, playerSelection));
+                    socket.emit('input', new DataPackage(e.keyCode, 'keyCode'));
                 }
-            }
+            // }
         });
 
-        $('#player-selection').on('change', (e) => {
-            playerSelection = $('#player-selection').val();
-        });
+        window.addEventListener('devicemotion', (e) => {
+            let x = event.accelerationIncludingGravity.x;
+            let y = event.accelerationIncludingGravity.y;
+            let z = event.accelerationIncludingGravity.z;
 
-        $('#room-id-button').on('click', (e) => {
-            roomId = $('input[name="room-id"]').val();
-            $('#messages').empty();
-            requestJoinRoom();
-        });
+            if(y > 9) {
+                console.log(y);
+                e.preventDefault();
+                socket.emit('input', new DataPackage(y, 'acceleration'));
+            } 
+        }, true);
 
-        $('#message-button').on('click', (e) => {
-            e.preventDefault();
-            socket.emit( 'chat-message', new DataPackage($('#message-input').val()) );
-            $('#message-input').val('');
-        });
+        // $('#player-selection').on('change', (e) => {
+        //     playerSelection = $('#player-selection').val();
+        // });
+
+        // $('#room-id-button').on('click', (e) => {
+        //     roomId = $('input[name="room-id"]').val();
+        //     $('#messages').empty();
+        //     requestJoinRoom();
+        // });
+
+        // $('#message-button').on('click', (e) => {
+        //     e.preventDefault();
+        //     socket.emit( 'chat-message', new DataPackage($('#message-input').val()) );
+        //     $('#message-input').val('');
+        // });
 
     }
     let playerSelection = 0;

@@ -14,6 +14,21 @@ const resetGame = () => {
   setup();
 }
 
+const updateKey = (data, dataType) => {
+  switch(dataType) {
+    case 'keyCode':
+      $('#keyData').text(data);
+      break;
+
+    case 'acceleration':
+      $('#y-axis').text(data)
+      break;
+
+    default: break;
+  }
+  
+}
+
 const moveCoordinate = (player, xMovement, yMomvement) => {
   if (player == '2') {
     fill(0); 

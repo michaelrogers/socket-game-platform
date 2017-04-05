@@ -3,6 +3,8 @@
 <head>
 	<meta charset="UTF-8"/>
 	<title>React Platform</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 	<link
 		rel="stylesheet"
 		href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
@@ -13,23 +15,33 @@
 	<!--Test for chat-->
 </head>
 <body>
+
+
+		
 	<div class="container">
-		<div class="col-xs-12">
+		<h1>key data</h1>
+		<h2 id="keyData"></h2>
+		<h1>acceleration data</h1>
+    <h2 id="x-axis"></h2>
+    <h2 id="y-axis"></h2>
+    <h2 id="z-axis"></h2>
+    <h2 id="magnitude"></h2>
+		<!--<div class="col-xs-12">
 	<div id="app"></div>
 			<div class="row">
-			<div class="col-xs-2 col-xs-offset-2">
+			<div class="col-lg-2 col-lg-offset-2">
 			<div class="input-group">
-				<!--<label for="player-selection">Select Player</label>-->
+			
 				<select name="player-selection" id="player-selection" class="form-control">
-					<option value="1">Player 1</option>
+					<option selected value="1">Player 1</option>
 					<option value="2">Player 2</option>
-					<option selected value="0">Spectator</option>
+					<option value="0">Spectator</option>
 				</select>
 			</div>
 			</div>
 			<div class="col-xs-2">
 			<div class="input-group">
-				<!--<label for="room-id">Room Id</label>-->
+				
 				<input name="room-id"  class="form-control" />
 				<span class="input-group-btn">
 					<button class="btn btn-default" id="room-id-button">Set Room</button>
@@ -40,7 +52,7 @@
 		<div class="row">
 	<div class="col-xs-12">
 		<div class="" id="canvas-container">
-		<!--<canvas id="canvas-game" class="center-block"></canvas>-->
+		<canvas id="canvas-game" class="center-block"></canvas>
 		</div>
 	</div>
 		</div>
@@ -58,13 +70,13 @@
 					<span class="input-group-btn">
 						<button class="btn btn-default" id="message-button" type="button">Send</button>
 					</span>
-				</div><!-- /input-group -->
+				</div>
 			</div>
 			</div>
-		</div>
+		</div>-->
 
 		</div>
-	</div>
+	
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 
