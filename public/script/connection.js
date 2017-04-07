@@ -22,7 +22,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const inputEventHandler = (DataPackage) => {
         // console.log(DataPackage);
         // playerInput(DataPackage.playerId, DataPackage.data);
-        updateKey(DataPackage.data, DataPackage.dataType);
+        console.log('somedata',DataPackage.data)
+        updateSpring(DataPackage.data);
+
 
     }
     
@@ -49,11 +51,11 @@ document.addEventListener('DOMContentLoaded', () => {
             let y = event.accelerationIncludingGravity.y;
             let z = event.accelerationIncludingGravity.z;
 
-            if(y > 9) {
-                console.log(y);
+            // if(y > 9) {
+                // console.log(y);
                 e.preventDefault();
                 socket.emit('input', new DataPackage(y, 'acceleration'));
-            } 
+            // } 
         }, true);
 
         // $('#player-selection').on('change', (e) => {
