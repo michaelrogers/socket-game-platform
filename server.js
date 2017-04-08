@@ -22,7 +22,7 @@ db.on("error", (error) => { console.log("Mongoose Error:", error); });
 // Use morgan and body parser with our app
 app.use(morgan("dev"));
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(express.static("public"));
+app.use(express.static("./public"));
 
 //Server side react? Maybe.
 const React = require('react');
@@ -30,6 +30,10 @@ const React = require('react');
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 http.listen( port, () => console.log(`App listening on port ${port}!`) );
+
+// app.get('/', (req, res) => {
+//   res.sendFile('public/index.html')
+// });
 
 const connectionCount = (socket) => {
   try  {
@@ -48,7 +52,7 @@ const leaveRooms = (socket) => {
     });
   } catch (e) { console.log(e); }
 };
- 
+
 io.on('connection', (socket) => {
     //--------------Connection-status-----------------
     connectionCount(socket);

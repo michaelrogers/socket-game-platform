@@ -1,11 +1,26 @@
+// Libs
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { browserHistory } from 'react-router';
+// import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 
-import routes from './config/routes';
-import { Form } from "./components/Form";
+// Component
+// import { Lobby } from './components/Lobby.js';
+// import { Error404 } from './components/Error404';
 
-ReactDOM.render(
-    <routes />,
-    document.getElementById("app")
-);
+import RouterConfig from './config/routes';
+// var routes = require('./config/routes.js');
+/*
+ReactDOM.render((
+    <Router>
+        <Route path="/" component={Lobby}>
+
+        </Route>
+    </Router>
+), document.getElementById("app"));
+
+*/
+
+
+ReactDOM.render((
+    <RouterConfig/>
+), document.getElementById("app"));

@@ -1,6 +1,6 @@
 import React from "react";
 
-class Form extends React.Component {
+class Lobby extends React.Component {
   constructor(props) {
     super(props);
     this.state = { num1: 0, num2: 0, text: "" };
@@ -17,7 +17,12 @@ class Form extends React.Component {
  render() {
     return (
       <div className="container">
-        <div className="row">
+        <ul>
+          <li><Link to="/game">Game</Link></li>
+          <li><Link to="/lobby">Lobby</Link></li>
+          <li><Link to="/404">Error404</Link></li>
+        </ul>
+        {/*<div className="row">
           <div className="jumbotron">
             <h2>Chat</h2>
             <p>Sup
@@ -29,28 +34,27 @@ class Form extends React.Component {
               <div className="panel-heading">
                 <h3 className="panel-title text-center">Chat</h3>
                 <form>
-                  <div class="form-group">
-                    <label class="col-md-4 control-label" for="appendedtext">Appended Text</label>
-                    <div class="col-md-4">
-                      <div class="input-group">
-                        <input id="appendedtext" name="appendedtext" class="form-control" placeholder="placeholder" type="text"/>
-                        <span class="input-group-addon">append</span>
+                  <div className="form-group">
+                    <label className="col-md-4 control-label" htmlFor="appendedtext">Appended Text</label>
+                    <div className="col-md-4">
+                      <div className="input-group">
+                        <input id="appendedtext" name="appendedtext" className="form-control" placeholder="placeholder" type="text"/>
+                        <span className="input-group-addon">append</span>
                       </div>
-                      <p class="help-block">help</p>
+                      <p className="help-block">help</p>
                     </div>
                   </div>
                 </form>
-
               </div>
               <div className="panel-body text-center"></div>
             </div>
           </div>
-        </div>
+        </div>*/}
       </div>
     );
   }
-};
+}
 
 // Export the component back for use in other files
-export { Form }; 
-// module.exports = Form;
+export { Lobby }
+// module.exports = Lobby;

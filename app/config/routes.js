@@ -1,14 +1,52 @@
 import React from 'react';
-import { Router, Route, IndexRoute, hashHistory } from 'react-router';
+import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 
-import Form from '../components/Form';
+import Lobby from '../components/Lobby';
 import Error404 from '../components/Error404';
 
-const Routes = (props) => (
-  <Router history={hashHistory}>
-    <Route path="/" component={Form} />
-    <Route path="/404" component={Error404} />
+const Game = () => <h3>Game</h3>;
+const Pinata = () => <h3>Game / Pinata</h3>;
+
+const routes = [
+  { path: '/lobby',
+    component: Lobby
+  },
+  { path: '/game',
+    component: Game,
+    routes: [
+      { path: '/pinata',
+        component: Pinata
+      },
+      { path: '/wut',
+        component: Pinata
+      },
+    ]
+  }
+];
+
+// wrap <Route> and use this everywhere instead, then when
+// sub routes are added to any route it'll work
+const RouteWithSubRoutes = (route) => (
+  <Route path={route.path} render={props => (
+    // pass the sub-routes down to keep nesting
+    <route.component {...props} routes={route.routes}/>
+  )}/>
+);
+
+const RouteConfig = () => (
+  <Router>
+    <div className="navigation">
+      <ul>
+        <li><Link to="/game">Game</Link></li>
+        <li><Link to="/lobby">Lobby</Link></li>
+        <li><Link to="/404">Error404</Link></li>
+      </ul>
+
+      {routes.map((route, i) => (
+        <RouteWithSubRoutes key={i} {...route}/>
+      ))}
+    </div>
   </Router>
 );
 
-export default  { Routes };
+export default RouteConfig;
