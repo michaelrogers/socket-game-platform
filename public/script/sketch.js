@@ -1,7 +1,6 @@
 var img;
 var star;
 var pinata;
-var y;
 //-------------Spring--------------
 // Spring drawing constants for top bar
 var ready = true;
@@ -65,9 +64,12 @@ function drawSpring() {
   rect(left, ps + springHeight , right, ps + springHeight + 20);
 }
 
-function updateSpring(y) {
+function updateSpring(mag, alpha) {
+  
+  mag= -mag;
+
   // Update the spring position
-  if ( y > -30 ) {
+  if ( mag > -30 ) {
     // console.log('al;j', y)
     f = -K * ( ps - R ); // f=-ky
     as = f / M;          // Set the acceleration, f=ma == a=f/m
@@ -84,85 +86,9 @@ function updateSpring(y) {
 
 
   // Set and constrain the position of top bar
-  if (y < -30 && ready) {
-    $('.accData').append($('<li>').text("Y acc: " + y))
-    ps = y*0.5;
+  if (mag < -30 && ready) {
+    $('.accData').append($('<li>').text("Y acc: " + alpha))
+    ps = mag*0.5;
     ps = constrain(ps, minHeight, maxHeight);
   }
 }
-
-// function setup() {
-//     const canvas = createCanvas(640, 480);
-//     canvas.parent('canvas-container');
-//     background(255, 0, 200);
-
-//   }
-//   function draw() {
-    
-//   }
-
-// const resetGame = () => {
-//   console.log('Ran');
-//   // remove();
-//   setup();
-// }
-
-// const updateKey = (data, dataType) => {
-//   switch(dataType) {
-//     case 'keyCode':
-//       $('#keyData').text(data);
-//       break;
-
-//     case 'acceleration':
-//       $('#y-axis').text(data)
-//       break;
-
-//     default: break;
-//   }
-  
-// }
-
-// const moveCoordinate = (player, xMovement, yMomvement) => {
-//   if (player == '2') {
-//     fill(0); 
-//     player2.x += xMovement;
-//     player2.y += yMomvement;
-//     ellipse(player2.x, player2.y, 80, 80);
-
-//   } else {
-//     fill(255);
-//     player1.x += xMovement;
-//     player1.y += yMomvement;
-//     ellipse(player1.x, player1.y, 80, 80);
-
-//   }
-
-// }
-
-// let player1 = { x: 40, y: 50 }
-// let player2 = { x: 500, y: 50 }
-// const increment = 10;
-
-// const playerInput = (player, keyCode) => {
-//   const playerCoordinates = player == "1" ? player1 : player2; 
-//   console.log(keyCode);
-  
-//   switch(keyCode) {
-//     //ArrowLeft
-//     case 37: return moveCoordinate(player, -increment, 0); 
-//     //ArrowRight
-//     case 39: return moveCoordinate(player, increment, 0); 
-//     //ArrowUp
-//     case 38: return moveCoordinate(player, 0, -increment); 
-//     //ArrowDown
-//     case 40: return moveCoordinate(player, 0, +increment); 
-//     //Space
-//     case 32: return resetGame();
-
-//     default: break;
-//   }
-
-
-//   ellipse(50, 50, 80, 80);
-  
-// }

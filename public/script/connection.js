@@ -20,12 +20,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const inputEventHandler = (DataPackage) => {
-        // console.log(DataPackage);
-        // playerInput(DataPackage.playerId, DataPackage.data);
-        console.log('somedata',DataPackage.data)
-        updateSpring(DataPackage.data);
 
+        var data = DataPackage.data;
 
+        // get y and x acceleration component
+        var y = data.acc.y;
+        var x = data.acc.x;
+
+        // vector magnitude and acceleration when provided with x and y acceleration components
+        var mag  = Math.sqrt(Math.pow(y, 2) + Math.pow(x, 2));
+        var alpha = Math.atan(x/y)*(180/Math.PI);
+        
+        updateSpring(mag, alpha)
     }
     
     //Client initialization
@@ -35,44 +41,26 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Transmit
         socket.emit('room',  new DataPackage());
-        
-        window.addEventListener('keydown', (e) => {
-            // if (playerSelection > 0) {
-                const acceptedKeys = [38, 37, 39, 40, 32];
-                if (acceptedKeys.indexOf(e.keyCode) !== -1) {
-                    e.preventDefault();
-                    socket.emit('input', new DataPackage(e.keyCode, 'keyCode'));
-                }
-            // }
-        });
 
         window.addEventListener('devicemotion', (e) => {
-            let x = event.accelerationIncludingGravity.x;
-            let y = event.accelerationIncludingGravity.y;
-            let z = event.accelerationIncludingGravity.z;
-
-            // if(y > 9) {
-                // console.log(y);
-                e.preventDefault();
-                socket.emit('input', new DataPackage(y, 'acceleration'));
-            // } 
+            // get phone acceleration components
+            let a_x = event.accelerationIncludingGravity.x;
+            let a_y = event.accelerationIncludingGravity.y;
+            let a_z = event.accelerationIncludingGravity.z;
+            
+            // compile acceleration componenets in one acceleration object
+            let data = {
+                acc: {
+                    x: a_x,
+                    y: a_y,
+                    z: a_z
+                }
+            }
+            
+            e.preventDefault();
+            // send acceleration components to 'input' socket
+            socket.emit('input', new DataPackage(data, 'acceleration'));
         }, true);
-
-        // $('#player-selection').on('change', (e) => {
-        //     playerSelection = $('#player-selection').val();
-        // });
-
-        // $('#room-id-button').on('click', (e) => {
-        //     roomId = $('input[name="room-id"]').val();
-        //     $('#messages').empty();
-        //     requestJoinRoom();
-        // });
-
-        // $('#message-button').on('click', (e) => {
-        //     e.preventDefault();
-        //     socket.emit( 'chat-message', new DataPackage($('#message-input').val()) );
-        //     $('#message-input').val('');
-        // });
 
     }
     let playerSelection = 0;
@@ -90,8 +78,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     socket.on('input', inputEventHandler);
-
-
 
 });
 
