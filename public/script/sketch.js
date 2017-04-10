@@ -1,7 +1,8 @@
-$('#canvas-container').ready(() =>  {
-if ($('#canvas-container').length) {
+// const sketch = () => {
+
+// $('#canvas-container').ready(() =>  {
+// if ($('#canvas-container').length) {
 function setup() {
-    console.log('Setup')
     const canvas = createCanvas(640, 480);
     canvas.parent('canvas-container');
     background(255, 0, 200);
@@ -65,6 +66,10 @@ const playerInput = (player, keyCode) => {
 }
 
 
-}
-});
+// }
+// });
 // module.exports = playerInput;
+
+// }
+
+// export default sketch;

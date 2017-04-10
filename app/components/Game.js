@@ -1,6 +1,10 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 
+// import sketch from '../scripts/sketch.js';
+// import '/script/connnection.js';
+
+
 export default class Lobby extends React.Component {
   constructor(props) {
     super(props);
@@ -8,6 +12,19 @@ export default class Lobby extends React.Component {
     // Functions must be bound manually with ES6 classNamees
     this.state.gameId = sessionStorage.getItem('room-id') || null;
     this.handleChange = this.handleChange.bind(this);
+  }
+
+  componentDidMount() {
+      let scriptP5 = document.createElement('script');
+      let scriptSketch = document.createElement('script');
+      let scriptConnection = document.createElement('script');
+      scriptP5.src = "//cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.8/p5.js";
+      scriptSketch.src = "/script/sketch.js";
+      scriptConnection.src = "/script/connection.js";
+      $('body').append(scriptConnection);
+      $('body').append(scriptP5);
+      $('body').append(scriptSketch);
+      
   }
 
   handleChange(event) {
@@ -59,6 +76,8 @@ export default class Lobby extends React.Component {
 				</div>
 			</div>
         </div>
+        <div id="script-container"></div>
+
         </div>
 
         
