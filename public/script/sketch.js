@@ -1,10 +1,15 @@
+$('#canvas-container').ready(() =>  {
+if ($('#canvas-container').length) {
 function setup() {
+    console.log('Setup')
     const canvas = createCanvas(640, 480);
     canvas.parent('canvas-container');
     background(255, 0, 200);
 
   }
-  function draw() {
+  function draw() { 
+    moveCoordinate("1", 0, 0);
+    moveCoordinate("2", 0, 0);
     
   }
 
@@ -59,3 +64,7 @@ const playerInput = (player, keyCode) => {
   
 }
 
+
+}
+});
+// module.exports = playerInput;
