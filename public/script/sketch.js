@@ -1,19 +1,3 @@
-<<<<<<< HEAD
-$('#canvas-container').ready(() =>  {
-if ($('#canvas-container').length) {
-function setup() {
-    console.log('Setup')
-    const canvas = createCanvas(640, 480);
-    canvas.parent('canvas-container');
-    background(255, 0, 200);
-
-  }
-  function draw() { 
-    moveCoordinate("1", 0, 0);
-    moveCoordinate("2", 0, 0);
-    
-  }
-=======
 //-------------Spring--------------
 // Spring drawing constants for top bar
 const springHeight = 32;
@@ -34,7 +18,10 @@ let ps = R,   // Position
     vs = 0.0, // Velocity
     as = 0,   // Acceleration
     f = 0;    // Force
->>>>>>> d7e298b11d37a81fada66dc7de8a61dc7faccffe
+
+//arm & bat swing variables
+let batX, batY, batAngle, a;
+
 
 function setup() {
   var myCanvas = createCanvas(800, 1000);
@@ -54,6 +41,10 @@ function draw() {
   updateSpring();
   drawSpring();
 
+  //---swing animation---
+  batSwing(); //found in batSwing.js
+
+  //display sprites
   drawSprites();
 }
 
@@ -86,12 +77,6 @@ function updateSpring(mag, alpha) {
     vs = 0.0;
   }
 
-<<<<<<< HEAD
-
-}
-});
-// module.exports = playerInput;
-=======
   // Set and constrain the position of top bar
   if (mag < -30 && ready) {
     $('.accData').append($('<li>').text("Y acc: " + alpha))
@@ -99,4 +84,3 @@ function updateSpring(mag, alpha) {
     ps = constrain(ps, minHeight, maxHeight);
   }
 }
->>>>>>> d7e298b11d37a81fada66dc7de8a61dc7faccffe
