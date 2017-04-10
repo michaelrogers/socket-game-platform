@@ -1,22 +1,20 @@
 //-------------Spring--------------
 // Spring drawing constants for top bar
-var ready = true;
-var springHeight = 32,
-    left,
-    right,
-    maxHeight = 800,
-    minHeight = 100,
-    over = false,
-    move = false;
+const springHeight = 32;
+let read = true,
+  left, 
+  right,
+  maxHeight = 800,
+  minHeight = 100;
 
 // Spring simulation constants
-var M = 8,  // Mass
+const M = 8,  // Mass
     K = 0.2,  // Spring constant
     D = 0.92, // Damping
     R = 600;  // Rest position
 
 // Spring simulation variables
-var ps = R,   // Position
+let ps = R,   // Position
     vs = 0.0, // Velocity
     as = 0,   // Acceleration
     f = 0;    // Force
