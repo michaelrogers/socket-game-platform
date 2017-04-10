@@ -24,12 +24,12 @@ document.addEventListener('DOMContentLoaded', () => {
         var data = DataPackage.data;
 
         // get y and x acceleration component
-        var y = data.acc.y;
-        var x = data.acc.x;
+        var a_y = data.acc.y;
+        var a_x = data.acc.x;
 
         // vector magnitude and acceleration when provided with x and y acceleration components
-        var mag  = Math.sqrt(Math.pow(y, 2) + Math.pow(x, 2));
-        var alpha = Math.atan(x/y)*(180/Math.PI);
+        var mag  = Math.sqrt(Math.pow(a_y, 2) + Math.pow(a_x, 2));
+        var alpha = Math.atan(a_x/a_y)*(180/Math.PI);
         
         updateSpring(mag, alpha)
     }
