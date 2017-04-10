@@ -20,8 +20,12 @@ let ps = R,   // Position
     f = 0;    // Force
 
 //arm & bat swing variables
-let batX, batY, batAngle, a;
+let batX, batY, swingAngle, calcAngle;
 
+//----preload images----
+function preload() {
+  arm = loadImage('../images/arm125.png')
+}
 
 function setup() {
   var myCanvas = createCanvas(800, 1000);
@@ -31,6 +35,14 @@ function setup() {
   noStroke();
   left = width/2 - 100;
   right = width/2 + 100;
+  //-----------setup bat swing---------
+  calcAngle = 0; //
+  swingAngle = 0;
+  batX = width - 100; //x-position of bat sprite, to right side of screen
+  batY = R + 100; //y-position of bat sprite, equal to pinata resting
+  bat = createSprite(batX, batY, 20, 100);
+  bat.shapeColor = color(128);
+  bat.addImage(arm)
 }
 
 
