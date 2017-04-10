@@ -1,7 +1,7 @@
 // const sketch = require('./sketch.js');
 // import sketch from './sketch.js';
 
-document.addEventListener('DOMContentLoaded', () => {
+// document.addEventListener('DOMContentLoaded', () => {
     const socket = io();
     // setup();
 
@@ -46,6 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         $('#player-selection').on('change', (e) => {
             playerSelection = $('#player-selection').val();
+            
         });
 
         $('#room-id-button').on('click', (e) => {
@@ -58,6 +59,9 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             socket.emit( 'chat-message', new DataPackage($('#message-input').val()) );
             $('#message-input').val('');
+
+            requestJoinRoom();
+            
         });
 
     }
@@ -79,7 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-});
+// });
 
 
 /*
