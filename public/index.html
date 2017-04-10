@@ -9,63 +9,20 @@
 		integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7"
 		crossorigin="anonymous"
 	/>
-	<link rel="stylesheet" href="style/room.css">
+	<style>
+		body {
+			padding-top: 50px;
+		}
+		
+		.starter-template {
+			padding: 40px 15px;
+			text-align: center;
+		}
+	</style>
 </head>
 <body>
-
-	<div class="container">
-		<div class="col-xs-12">
-			<div id="app"></div>
-			<div class="row">
-			<div class="col-xs-2 col-xs-offset-2">
-			<div class="input-group">
-				<!--<label for="player-selection">Select Player</label>-->
-				<select name="player-selection" id="player-selection" class="form-control">
-					<option value="1">Player 1</option>
-					<option value="2">Player 2</option>
-					<option selected value="0">Spectator</option>
-				</select>
-			</div>
-			</div>
-			<div class="col-xs-2">
-			<div class="input-group">
-				<!--<label for="room-id">Room Id</label>-->
-				<input name="room-id"  class="form-control" />
-				<span class="input-group-btn">
-					<button class="btn btn-default" id="room-id-button">Set Room</button>
-				</span>
-			</div>
-			</div>
-			</div>
-		<div class="row">
-	<div class="col-xs-12">
-		<div class="" id="canvas-container">
-		<!--<canvas id="canvas-game" class="center-block"></canvas>-->
-		</div>
-	</div>
-		</div>
-		<br>
-		<div class="row">
-			<div class="col-xs-8 col-xs-offset-2">
-				<ul id="messages"></ul>
-			</div>
-		</div>
-		<br>
-		<div class="row">
-			<div class="col-xs-8 col-xs-offset-2">
-				<div class="input-group">
-				<input type="text" class="form-control" id="message-input" placeholder="Send a message.">
-					<span class="input-group-btn">
-						<button class="btn btn-default" id="message-button" type="button">Send</button>
-					</span>
-				</div><!-- /input-group -->
-			</div>
-			</div>
-		</div>
-
-		</div>
-	</div>
-
+	<!--React.js Insertion-->
+	<div id="app"></div>
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>

@@ -2,7 +2,7 @@
 import React from "react";
 
 // This is the Form, our main component. It includes the banner and form element
-class Error404 extends React.Component {
+export default class Error404 extends React.Component {
   
  render() {
     return (
@@ -20,5 +20,4 @@ class Error404 extends React.Component {
   }
 };
 
-// Export the component back for use in other files
-export { Error404 }; 
+// Export the component back for use in other file 

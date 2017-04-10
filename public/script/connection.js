@@ -1,4 +1,6 @@
 // const sketch = require('./sketch.js');
+// import sketch from './sketch.js';
+
 document.addEventListener('DOMContentLoaded', () => {
     const socket = io();
     // setup();
@@ -63,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let roomId = sessionStorage.getItem('room-id') || 0;
     connection();
 
-    $('form').submit(e => e.preventDefault())
+    // $('form').submit(e => e.preventDefault())
 
     // Receive
     socket.on('connection-status', (status) => {
