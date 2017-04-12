@@ -2,84 +2,84 @@
 // import sketch from './sketch.js';
 
 // document.addEventListener('DOMContentLoaded', () => {
-    const socket = io();
+    // const socket = io();
     // setup();
 
     //DataPackage Constructor    
-    function DataPackage(data = null, playerId = null) {
-        this.roomId = roomId;
-        this.data = data;
-        this.playerId = playerId;
-        this.timestamp = Date.now();
-    }
+    // function DataPackage(data = null, playerId = null) {
+    //     this.roomId = roomId;
+    //     this.data = data;
+    //     this.playerId = playerId;
+    //     this.timestamp = Date.now();
+    // }
 
-    const requestJoinRoom = () => {
-        sessionStorage.setItem('room-id', roomId);
-        playerSelection = 0;
-        $('#player-selection').val("0");
-        socket.emit('room', new DataPackage());
-    }
+    // const requestJoinRoom = () => {
+    //     sessionStorage.setItem('room-id', roomId);
+    //     playerSelection = 0;
+    //     $('#player-selection').val("0");
+    //     socket.emit('room', new DataPackage());
+    // }
 
-    const inputEventHandler = (DataPackage) => {
-        console.log(DataPackage);
-        playerInput(DataPackage.playerId, DataPackage.data)
+    // const inputEventHandler = (DataPackage) => {
+    //     console.log(DataPackage);
+    //     playerInput(DataPackage.playerId, DataPackage.data)
 
-    }
+    // }
     
-    //Client initialization
-    const connection = () => {
-        $('input[name="room-id"]').val(roomId);
+    // //Client initialization
+    // const connection = () => {
+    //     $('input[name="room-id"]').val(roomId);
         
         
-        // Transmit
-        socket.emit('room',  new DataPackage());
+    //     // Transmit
+    //     // socket.emit('room',  new DataPackage());
         
-        window.addEventListener('keydown', (e) => {
-            if (playerSelection > 0) {
-                const acceptedKeys = [38, 37, 39, 40, 32];
-                if (acceptedKeys.indexOf(e.keyCode) !== -1) {
-                    e.preventDefault();
-                    socket.emit('input', new DataPackage(e.keyCode, playerSelection));
-                }
-            }
-        });
+    //     window.addEventListener('keydown', (e) => {
+    //         if (playerSelection > 0) {
+    //             const acceptedKeys = [38, 37, 39, 40, 32];
+    //             if (acceptedKeys.indexOf(e.keyCode) !== -1) {
+    //                 e.preventDefault();
+    //                 socket.emit('input', new DataPackage(e.keyCode, playerSelection));
+    //             }
+    //         }
+    //     });
 
-        $('#player-selection').on('change', (e) => {
-            playerSelection = $('#player-selection').val();
+    //     $('#player-selection').on('change', (e) => {
+    //         playerSelection = $('#player-selection').val();
             
-        });
+    //     });
 
-        $('#room-id-button').on('click', (e) => {
-            roomId = $('input[name="room-id"]').val();
-            $('#messages').empty();
-            requestJoinRoom();
-        });
+    //     $('#room-id-button').on('click', (e) => {
+    //         roomId = $('input[name="room-id"]').val();
+    //         $('#messages').empty();
+    //         requestJoinRoom();
+    //     });
 
-        $('#message-button').on('click', (e) => {
-            e.preventDefault();
-            socket.emit( 'chat-message', new DataPackage($('#message-input').val()) );
-            $('#message-input').val('');
+    //     $('#message-button').on('click', (e) => {
+    //         e.preventDefault();
+    //         socket.emit( 'chat-message', new DataPackage($('#message-input').val()) );
+    //         $('#message-input').val('');
 
-            requestJoinRoom();
+    //         requestJoinRoom();
             
-        });
+    //     });
 
-    }
-    let playerSelection = 0;
-    let roomId = sessionStorage.getItem('room-id') || 0;
-    connection();
+    // }
+    // let playerSelection = 0;
+    // let roomId = sessionStorage.getItem('room-id') || 0;
+    // connection();
 
     // $('form').submit(e => e.preventDefault())
 
     // Receive
-    socket.on('connection-status', (status) => {
-        $('#messages').append($('<li>').text(status));
-    });
-    socket.on('chat-message', (message) => {
-        $('#messages').append($('<li>').text(message));
-    });
+    // socket.on('connection-status', (status) => {
+    //     $('#messages').append($('<li>').text(status));
+    // });
+    // socket.on('chat-message', (message) => {
+    //     $('#messages').append($('<li>').text(message));
+    // });
 
-    socket.on('input', inputEventHandler);
+    // socket.on('input', inputEventHandler);
 
 
 

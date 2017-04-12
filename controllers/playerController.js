@@ -25,9 +25,10 @@ const PlayerController = {
         )
     },
     fetchOne: (req, res) => {
-        Models.Player.find(
+        Models.Player.findOne(
             {name: req.params.name},
             (error, player) => {
+                console.log('Fetch', player)
                 res.send(player);
         });
     }

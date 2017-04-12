@@ -43,8 +43,12 @@ module.exports = {
         http.listen(port, () => console.log(`App listening on port ${port}!`));
         const connectionCount = (socket) => {
             try {
+                if (socket && socket.server) {
                 console.log('Player Count:',
                     socket.server.engine.clientsCount);
+                    console.log(socket.server.engine.clientsCount)
+                    io.emit('player:count', socket.server.engine.clientsCount);
+                }
             } catch (e) { console.log(e); }
         };
 
