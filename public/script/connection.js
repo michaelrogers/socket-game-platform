@@ -30,6 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // vector magnitude and acceleration when provided with x and y acceleration components
         var mag  = Math.sqrt(Math.pow(a_y, 2) + Math.pow(a_x, 2));
         var alpha = Math.atan(a_x/a_y)*(180/Math.PI);
+        console.log(alpha)
         
         updateSpring(mag, alpha)
     }
