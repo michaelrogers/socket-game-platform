@@ -1,5 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import Scoreboard from './partials/Scoreboard';
 
 // import sketch from '../scripts/sketch.js';
 // import '/script/connnection.js';
@@ -28,7 +29,11 @@ export default class Lobby extends React.Component {
     this.state = {
         playerSelection: 0,
         chatInput: null,
-        messages: []
+        messages: [],
+        score: {
+            player1: 0,
+            player2: 0
+        }
     };
     // Functions must be bound manually with ES6 classNamees
     // this.state.gameId = sessionStorage.getItem('room-id') || null;
@@ -105,7 +110,7 @@ export default class Lobby extends React.Component {
     displayChatMessages() {
         return this.state.messages
         .map(message => {
-            return <li>{message}</li>
+            return <li className="text-left">{message}</li>
         });
     }
 
@@ -117,7 +122,10 @@ render() {
     return (
     <div>
         <div className="row">
-        <div className="col-xs-2 col-xs-offset-2">
+             <Scoreboard
+            score={this.state.score}
+        />
+        <div className="col-xs-8 col-xs-offset-2">
                 <input type="text" onKeyPress={this.onKeyPress} /> 
             <div className="input-group">
                 <select name="player-selection" id="player-selection" className="form-control" onChange={this.updatePlayerSelection}>
@@ -129,7 +137,7 @@ render() {
             </div>
             <div className="col-xs-2">
             <div className="input-group">
-                <input name="room-id"  className="form-control" defaultValue={this.props.globalData.gameId} />
+                <p> gameId: {this.props.globalData.gameId}</p>
             </div>
         </div>
     </div>
@@ -141,7 +149,7 @@ render() {
 		</div>
 		<div className="row">
 			<div className="col-xs-8 col-xs-offset-2">
-				<ul id="messages">
+				<ul id="messages" className="list-unstyled">
                     {this.displayChatMessages()}
                 </ul>
 			</div>
@@ -150,7 +158,7 @@ render() {
 			<div className="col-xs-8 col-xs-offset-2">
 				<div className="input-group">
                 <form onSubmit={this.sendChatMessage}>
-				<input type="text" className="form-control" id="message-input" onChange={this.handleChange} placeholder="Send a message."/>
+                    <input type="text" className="form-control" id="message-input" onChange={this.handleChange} placeholder="Send a message."/>
 					<span className="input-group-btn">
 						<button className="btn btn-default" id="message-button" type="submit">Send</button>
 					</span>
