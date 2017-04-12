@@ -75,16 +75,9 @@ class Navigation extends React.Component {
   }
 }
 const NavRouter = () => (
-    <Router>
-      <div>
-        <Navigation/>
-        <Main>
-          <Route path="/" exact component={Lobby}/>
-          <Route path="/game" component={Game}/>
-          <Route path="/login" component={Login}/>
-        </Main>
-      </div>
-  </Router>
+  <Main>
+    
+  </Main>
 );
 
 export { NavRouter, Navigation};

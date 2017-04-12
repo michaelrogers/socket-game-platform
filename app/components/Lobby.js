@@ -1,29 +1,43 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+// import io from 'socket.io';
+// const socket = io();
 
 import helpers from "./utils/helpers";
-
+const appendScript = (scriptArray, selector) => {
+    scriptArray.map(scriptPath => {
+        const script = document.createElement('script');
+        script.src = scriptPath;
+        $(selector).append(script);
+    });
+};
 
 export default class Lobby extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       activeGames: [], 
-      playerId: sessionStorage.getItem('player-id') || null
+      playerId: sessionStorage.getItem('player-id') || null,
+      playerCount: 0
     };
     this.handleClick = this.handleClick.bind(this);
+    this.handleJoin = this.handleJoin.bind(this);
+    // this.updatePlayerCount = this.updatePlayerCount.bind(this);
+    console.log('Lobby', this.props);
   }
 
   componentDidMount() {
-    helpers.viewActiveGames().then(response => {
-      console.log(JSON.stringify(response.data));
+
+    helpers.viewActiveGames()
+    .then(response => {
       this.setState({ activeGames: response.data });
     });
-    this.handleChange = this.handleChange.bind(this);
+
   }
 
+
+
   handleClick(event) {
-    // event.preventDefault();
     console.log(this.state.playerId)
     if (this.state.playerId !== null) {
       helpers.createNewGame(this.state.playerId).then(response => {
@@ -46,6 +60,7 @@ export default class Lobby extends React.Component {
       sessionStorage.setItem('room-id', gameId);
       helpers.joinGame(gameId);
     }
+    this.props.setGameId(gameId)
   }
 
   displayGames() {
@@ -53,16 +68,20 @@ export default class Lobby extends React.Component {
         // Each Game
         return (
           <h4 >
-            <Link to="/game" data-gameid={game._id} onClick={this.handleJoin}>Game with {game.players}</Link>
+            <Link 
+              to="/game"
+              data-gameid={game._id}
+              onClick={this.handleJoin}>
+                Game with {game.players}
+            </Link>
           </h4>
         )
     });
   }
 
- render() {
+  render() {
     return (
       <div className="container">
-       
         <div className="row">
           <div className="jumbotron">
           <h2>Welcome to the Socket-Platform-Game</h2>
@@ -84,13 +103,11 @@ export default class Lobby extends React.Component {
                 <h3 className="panel-title text-center">Controls</h3>
               </div>
               <div className="panel-body">
-                  <Link to="/game" className="btn btn-primary" onClick={this.handleClick}>Create New Game</Link>
+                <div>Players Online: <span>{this.props.globalData.playerCount}</span></div>
+                <Link to="/game" className="btn btn-primary" onClick={this.handleClick}>Create New Game</Link>
               </div>
             </div>
           </div>
-
-
-          
         </div>
       </div>
     );

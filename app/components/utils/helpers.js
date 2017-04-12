@@ -3,9 +3,7 @@ import axios from 'axios';
 const helpers = {
     viewActiveGames: () => {
         return axios.get("api/game/")
-        .then(function(response) {
-              return response;
-      });
+        .then(function(response) { return response; });
     },
     createNewGame: (playerId) => {
         return axios.post(`api/game/create/${playerId}`)

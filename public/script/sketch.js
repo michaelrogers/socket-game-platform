@@ -41,19 +41,19 @@ let player1 = { x: 40, y: 50 }
 let player2 = { x: 500, y: 50 }
 const increment = 10;
 
-const playerInput = (player, keyCode) => {
+const playerInput = (player, key) => {
   const playerCoordinates = player == "1" ? player1 : player2; 
   console.log(keyCode);
   
   switch(keyCode) {
     //ArrowLeft
-    case 37: return moveCoordinate(player, -increment, 0); 
+    case 97: return moveCoordinate(player, -increment, 0); 
     //ArrowRight
-    case 39: return moveCoordinate(player, increment, 0); 
+    case 100: return moveCoordinate(player, increment, 0); 
     //ArrowUp
-    case 38: return moveCoordinate(player, 0, -increment); 
+    case 119: return moveCoordinate(player, 0, -increment); 
     //ArrowDown
-    case 40: return moveCoordinate(player, 0, +increment); 
+    case 115: return moveCoordinate(player, 0, +increment); 
     //Space
     case 32: return resetGame();
 
