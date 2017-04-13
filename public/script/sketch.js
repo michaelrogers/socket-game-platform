@@ -36,8 +36,8 @@ function setup() {
   left = width / 2 - 100;
   right = width / 2 + 100;
   //-----------setup bat swing---------
-  calcAngle = 0; //
-  swingAngle = 0;
+  calcAngle; //
+  swingAngle = -2;
   batX = width - 100; //x-position of bat sprite, to right side of screen
   batY = R + 10; //y-position of bat sprite, equal to pinata resting
   imageMode(CORNERS);
