@@ -1,24 +1,26 @@
+let timeoutVariable;
+let acceptingData = true;
+
 window.addEventListener('devicemotion', (e) => {
     // get phone acceleration components
     e.preventDefault();
-    let a_x = e.accelerationIncludingGravity.x;
-    let a_y = e.accelerationIncludingGravity.y;
-    let a_z = e.accelerationIncludingGravity.z;
-    
-    // compile acceleration componenets in one acceleration object
-    // let data = {
-    //     acc: {
-    //         x: a_x,
-    //         y: a_y,
-    //         z: a_z
-    //     }
-    // }
-    // console.log('data')
-    
-    document.getElementById('input-x').value = a_x;
-    document.getElementById('input-y').value = a_y;
-    document.getElementById('input-z').value = a_z;
-    document.getElementById('input-button').click();
+    if (acceptingData) {
+        acceptingData = false;
+        timeoutVariable = setTimeout(() => {
+            acceptingData = true;
+            // clearTimeout(timeoutVariable);
+        }, 100);
+
+        let a_x = e.accelerationIncludingGravity.x;
+        let a_y = e.accelerationIncludingGravity.y;
+        let a_z = e.accelerationIncludingGravity.z;
+        
+        document.getElementById('input-x').value = a_x;
+        document.getElementById('input-y').value = a_y;
+        document.getElementById('input-z').value = a_z;
+        document.getElementById('input-button').click();
+
+    }
 
 }, true);
 
@@ -214,7 +216,7 @@ function draw() {
 // ************************ //
 
 function updateSpring(mag, alpha) {
-    console.log('Update Spring')
+    console.log('Update Spring', mag, alpha)
  
   mag = -mag;
     // Update the spring position

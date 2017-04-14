@@ -33,8 +33,7 @@ const inputEventHandler = (DataPackage) => {
     // vector magnitude and acceleration when provided with x and y acceleration components
     var mag  = Math.sqrt(Math.pow(a_y, 2) + Math.pow(a_x, 2));
     var alpha = Math.atan(a_x/(a_y))*( 180 / Math.PI);
-    console.log(alpha)
-    
+    console.log(mag, alpha)
     updateSpring(mag, alpha)
 }
 
@@ -42,7 +41,7 @@ export default class Lobby extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-        playerSelection: 0,
+        playerSelection: 1,
         chatInput: null,
         messages: [],
         score: {
@@ -141,30 +140,39 @@ export default class Lobby extends React.Component {
     handleMotionX(e) {
         this.setState({
             acceleration: {
-                x: parseFloat(e.target.value)
+                x: parseFloat(e.target.value),
+                y: this.state.acceleration.y,
+                z: this.state.acceleration.z,
+                
             }
         });
     }
     handleMotionY(e) {
         this.setState({
             acceleration: {
-                y: parseFloat(e.target.value)
+                x: this.state.acceleration.x,
+                y: parseFloat(e.target.value),
+                z: this.state.acceleration.z,
             }
         });
     }
     handleMotionZ(e) {
         this.setState({
             acceleration: {
-                z: parseFloat(e.target.value)
+                x: this.state.acceleration.y,
+                y: this.state.acceleration.y,
+                z: parseFloat(e.target.value),
             }
         });
     }
     clearAcceleration() {
-        this.setState({acceleration: {
-            x: 0,
-            y: 0,
-            z: 0
-        }});
+        this.setState({
+            acceleration: {
+                x: 0,
+                y: 0,
+                z: 0
+            }
+        });
     }
 
     sendMotionData(e) {
@@ -180,14 +188,14 @@ export default class Lobby extends React.Component {
         }
 
         this.props.socket.emit('input',
-                    new DataPackage(
-                        this.props.globalData,
-                        this.state.playerSelection,
-                        'acceleration',
-                        data
-                    )
-                );
-        clearAcceleration();
+            new DataPackage(
+                this.props.globalData,
+                this.state.playerSelection,
+                'acceleration',
+                data
+            )
+        );
+        // this.clearAcceleration();
     }
 
     displayChatMessages() {
@@ -221,9 +229,9 @@ render() {
                 <input type="text" onKeyPress={this.onKeyPress} /> 
             <div className="input-group">
                 <select name="player-selection" id="player-selection" className="form-control" onChange={this.updatePlayerSelection}>
-                    <option value="0">Spectator</option>
                     <option value="1">Player 1</option>
                     <option value="2">Player 2</option>
+                    <option value="0">Spectator</option>
                 </select>
             </div>
             </div>
