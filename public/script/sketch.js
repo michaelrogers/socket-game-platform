@@ -15,6 +15,8 @@ let bat, batX, batY, swingAngle, calcAngle;
 //-------------Spring--------------
 // Spring drawing constants for top bar
 
+var R = 0;
+
 var ready = true;
 var springHeight = 32,
     left,
@@ -175,7 +177,7 @@ function draw() {
     //     updateSpring()
     // }
 
-    hit();
+    // hit();
     drawSprites();
 
 }
