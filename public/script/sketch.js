@@ -140,7 +140,6 @@ function draw() {
     // reference equilibrium point - not needed
     ellipse(250, len + 20, 5, 5);
 
-
     // what happens after screwing up pinata
     if (hits >= 7) {
         pinata.remove();
@@ -163,6 +162,7 @@ function draw() {
           // }
         //   }
         
+
   }
     } else {
         pinataSwing()
@@ -218,7 +218,6 @@ function updateSpring(mag, alpha) {
 }
 
 
-// ******************** //
 
 function pinataSwing(displacement) {
     acc = -gravity * sin(angle);
@@ -275,3 +274,4 @@ function Candy(batForce, img) {
 
   }
 }
+

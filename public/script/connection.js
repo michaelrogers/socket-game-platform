@@ -1,8 +1,8 @@
 // const sketch = require('./sketch.js');
 // import sketch from './sketch.js';
 
-document.addEventListener('DOMContentLoaded', () => {
-    const socket = io();
+// document.addEventListener('DOMContentLoaded', () => {
+    // const socket = io();
     // setup();
 
     //DataPackage Constructor    
@@ -37,9 +37,9 @@ document.addEventListener('DOMContentLoaded', () => {
         updateSpring(mag, alpha)
     }
     
-    //Client initialization
-    const connection = () => {
-        $('input[name="room-id"]').val(roomId);
+    // //Client initialization
+    // const connection = () => {
+    //     $('input[name="room-id"]').val(roomId);
         
         
         // Transmit
@@ -73,14 +73,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // $('form').submit(e => e.preventDefault())
 
     // Receive
-    socket.on('connection-status', (status) => {
-        $('#messages').append($('<li>').text(status));
-    });
-    socket.on('chat-message', (message) => {
-        $('#messages').append($('<li>').text(message));
-    });
+    // socket.on('connection-status', (status) => {
+    //     $('#messages').append($('<li>').text(status));
+    // });
+    // socket.on('chat-message', (message) => {
+    //     $('#messages').append($('<li>').text(message));
+    // });
 
-    socket.on('input', inputEventHandler);
+    // socket.on('input', inputEventHandler);
 
 });
 
