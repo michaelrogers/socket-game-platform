@@ -8,7 +8,7 @@ const appendScript = (scriptArray, selector) => {
     scriptArray.map(scriptPath => {
         const script = document.createElement('script');
         script.src = scriptPath;
-        $(selector).append(script);
+        document.querySelector(selector).appendChild(script);
     });
 };
 
@@ -29,7 +29,7 @@ export default class Lobby extends React.Component {
   componentDidMount() {
 
     helpers.viewActiveGames()
-    .then(response => {
+    .then(response => { 
       this.setState({ activeGames: response.data });
     });
 

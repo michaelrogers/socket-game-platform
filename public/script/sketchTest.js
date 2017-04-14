@@ -71,7 +71,7 @@ function updateSpring(mag, alpha) {
 
   // Set and constrain the position of top bar
   if (mag < -30 && ready) {
-    $('.accData').append($('<li>').text("Y acc: " + alpha))
+    // $('.accData').append($('<li>').text("Y acc: " + alpha))
     ps = mag*0.5
     ps = constrain(ps, minHeight, maxHeight);
   }

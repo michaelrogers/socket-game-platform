@@ -56,14 +56,12 @@ export default class Lobby extends React.Component {
     // componentWillMount() {
         const scriptArray = [
             "//cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.8/p5.js",
-            // "/lib/p5.play.js",
-            // "/script/sketch.js"
+            "/lib/p5.play.js",
+            "/script/sketch.js",
+            "/script/batSwing.js"
         ];
-        console.log('adsasdadas');
-        // if (document.querySelector('#script-container').length > 0) {
 
-        appendScript(scriptArray, '#script-container');
-        // }
+        // appendScript(scriptArray, '#script-container');
         console.log('Game', this.props)
         this.props.socket.emit('room',
             new DataPackage(this.props.globalData, this.state.playerSelection)
@@ -178,7 +176,14 @@ render() {
 				</div>
 			</div>
         </div>
-        <div id="script-container"></div>
+        <div id="script-container">
+            <script src="//cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.8/p5.js"></script>
+            <script src="/lib/p5.play.js"></script>
+            <script src="/script/sketch.js"></script>
+            <script src="/script/batSwing.js"> </script>
+
+        
+        </div>
 
         </div>
 

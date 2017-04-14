@@ -69,7 +69,7 @@ const connection = () => {
     }
     let playerSelection = 0;
     let roomId = sessionStorage.getItem('room-id') || 0;
-    // connection();
+    connection();
 
     // $('form').submit(e => e.preventDefault())
 
