@@ -6,68 +6,69 @@
     // setup();
 
     //DataPackage Constructor    
-    // function DataPackage(data = null, playerId = null) {
-    //     this.roomId = roomId;
-    //     this.data = data;
-    //     this.playerId = playerId;
-    //     this.timestamp = Date.now();
-    // }
+    function DataPackage(data = null, dataType = null, playerId = null, roomId = 0) {
+        this.roomId = roomId;
+        this.data = data;
+        this.playerId = playerId;
+        this.timestamp = Date.now();
+        this.dataType = dataType;
+    }
 
-    // const requestJoinRoom = () => {
-    //     sessionStorage.setItem('room-id', roomId);
-    //     playerSelection = 0;
-    //     $('#player-selection').val("0");
-    //     socket.emit('room', new DataPackage());
-    // }
+    const requestJoinRoom = () => {
+        sessionStorage.setItem('room-id', roomId);
+        playerSelection = 0;
+        $('#player-selection').val("0");
+        socket.emit('room', new DataPackage());
+    }
 
-    // const inputEventHandler = (DataPackage) => {
-    //     console.log(DataPackage);
-    //     playerInput(DataPackage.playerId, DataPackage.data)
+    const inputEventHandler = (DataPackage) => {
 
-    // }
+        var data = DataPackage.data;
+
+        // get y and x acceleration component
+        var a_y = data.acc.y;
+        var a_x = data.acc.x;
+
+        // vector magnitude and acceleration when provided with x and y acceleration components
+        var mag  = Math.sqrt(Math.pow(a_y, 2) + Math.pow(a_x, 2));
+        var alpha = Math.atan(a_x/a_y)*(180/Math.PI);
+        console.log(alpha)
+        
+        updateSpring(mag, alpha)
+    }
     
     // //Client initialization
     // const connection = () => {
     //     $('input[name="room-id"]').val(roomId);
         
         
-    //     // Transmit
-    //     // socket.emit('room',  new DataPackage());
-        
-    //     window.addEventListener('keydown', (e) => {
-    //         if (playerSelection > 0) {
-    //             const acceptedKeys = [38, 37, 39, 40, 32];
-    //             if (acceptedKeys.indexOf(e.keyCode) !== -1) {
-    //                 e.preventDefault();
-    //                 socket.emit('input', new DataPackage(e.keyCode, playerSelection));
-    //             }
-    //         }
-    //     });
+        // Transmit
+        socket.emit('room',  new DataPackage());
 
-    //     $('#player-selection').on('change', (e) => {
-    //         playerSelection = $('#player-selection').val();
+        window.addEventListener('devicemotion', (e) => {
+            // get phone acceleration components
+            let a_x = event.accelerationIncludingGravity.x;
+            let a_y = event.accelerationIncludingGravity.y;
+            let a_z = event.accelerationIncludingGravity.z;
             
-    //     });
-
-    //     $('#room-id-button').on('click', (e) => {
-    //         roomId = $('input[name="room-id"]').val();
-    //         $('#messages').empty();
-    //         requestJoinRoom();
-    //     });
-
-    //     $('#message-button').on('click', (e) => {
-    //         e.preventDefault();
-    //         socket.emit( 'chat-message', new DataPackage($('#message-input').val()) );
-    //         $('#message-input').val('');
-
-    //         requestJoinRoom();
+            // compile acceleration componenets in one acceleration object
+            let data = {
+                acc: {
+                    x: a_x,
+                    y: a_y,
+                    z: a_z
+                }
+            }
             
-    //     });
+            e.preventDefault();
+            // send acceleration components to 'input' socket
+            socket.emit('input', new DataPackage(data, 'acceleration'));
+        }, true);
 
-    // }
-    // let playerSelection = 0;
-    // let roomId = sessionStorage.getItem('room-id') || 0;
-    // connection();
+    }
+    let playerSelection = 0;
+    let roomId = sessionStorage.getItem('room-id') || 0;
+    connection();
 
     // $('form').submit(e => e.preventDefault())
 
@@ -81,9 +82,7 @@
 
     // socket.on('input', inputEventHandler);
 
-
-
-// });
+});
 
 
 /*
