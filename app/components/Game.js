@@ -11,6 +11,7 @@ const appendScript = (scriptArray, selector) => {
         script.src = scriptPath;
         try {
             document.querySelector(selector).appendChild(script);
+            console.log('Script appended')
 
         } catch (e) {
             console.log(e)
@@ -51,17 +52,18 @@ export default class Lobby extends React.Component {
     this.onKeyPress = this.onKeyPress.bind(this);
     console.log('Game', this.props)
 }
-
+    componentWillMount() {
+        appendScript(["/lib/p5.js", "/lib/p5.play.js"], '#script-container')
+    }
     componentDidMount() {
-    // componentWillMount() {
         const scriptArray = [
-            "//cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.8/p5.js",
-            "/lib/p5.play.js",
+            // "/lib/p5.js",
+            // "/lib/p5.play.js",
+            "/script/batSwing.js",
             "/script/sketch.js",
-            "/script/batSwing.js"
         ];
 
-        // appendScript(scriptArray, '#script-container');
+        appendScript(scriptArray, '#script-container');
         console.log('Game', this.props)
         this.props.socket.emit('room',
             new DataPackage(this.props.globalData, this.state.playerSelection)
@@ -73,7 +75,6 @@ export default class Lobby extends React.Component {
     }
 
     onKeyPress(e){
-            // console.log(e.charCode)
         if (this.state.playerSelection == 1 || this.state.playerSelection == 2) {
             // const acceptedKeys = [38, 37, 39, 40, 32];
             const acceptedKeys = [119, 97, 115, 100, 32];
@@ -176,14 +177,14 @@ render() {
 				</div>
 			</div>
         </div>
-        <div id="script-container">
-            <script src="//cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.8/p5.js"></script>
+        {/* <div id="script-container"> */}
+            {/* <script src="//cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.8/p5.js"></script>
             <script src="/lib/p5.play.js"></script>
             <script src="/script/sketch.js"></script>
-            <script src="/script/batSwing.js"> </script>
+            <script src="/script/batSwing.js"> </script> */}
 
         
-        </div>
+       {/*  </div> */}
 
         </div>
 

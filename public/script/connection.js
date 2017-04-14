@@ -5,14 +5,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // const socket = io();
     // setup();
 
-    //DataPackage Constructor    
-    // function DataPackage(data = null, dataType = null, playerId = null, roomId = 0) {
-    //     this.roomId = roomId;
-    //     this.data = data;
-    //     this.playerId = playerId;
-    //     this.timestamp = Date.now();
-    //     this.dataType = dataType;
-    // }
+    // DataPackage Constructor    
+    function DataPackage(data = null, dataType = null, playerId = null, roomId = 0) {
+        this.roomId = roomId;
+        this.data = data;
+        this.playerId = playerId;
+        this.timestamp = Date.now();
+        this.dataType = dataType;
+    }
 
     // const requestJoinRoom = () => {
     //     sessionStorage.setItem('room-id', roomId);

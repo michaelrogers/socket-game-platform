@@ -54,10 +54,10 @@ function preload() {
 console.log('Sketch file loaded')
 // *************** //
 function setup() {
-    try {
+    // try {
 
 
-    var myCanvas = createCanvas(1000, 1000);
+    var myCanvas = createCanvas(500, 500);
     myCanvas.parent('canvas');
 
     // cord
@@ -98,7 +98,7 @@ function setup() {
         candies.push(new Candy());
     }
     console.log('Sketch file setup')
-    } catch (e) { console.log(e); }
+    // } catch (e) { console.log(e); }
 
 }
   /*
