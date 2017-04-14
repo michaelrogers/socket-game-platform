@@ -7,6 +7,7 @@ import Lobby from './components/Lobby';
 import Login from './components/Login';
 import Game from './components/Game';
 import Error404 from './components/Error404';
+
 const socket = io();
 
 

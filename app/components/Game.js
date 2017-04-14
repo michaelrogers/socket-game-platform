@@ -1,33 +1,41 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import Scoreboard from './partials/Scoreboard';
+import Pinata from './partials/Pinata';
 
 // import sketch from '../scripts/sketch.js';
 // import '/script/connnection.js';
 const appendScript = (scriptArray, selector) => {
-    console.log('Append?')
     scriptArray.map(scriptPath => {
         const script = document.createElement('script');
         script.src = scriptPath;
-        try {
-            document.querySelector(selector).appendChild(script);
-            console.log('Script appended')
-
-        } catch (e) {
-            console.log(e)
-        }
+        try { document.querySelector(selector).appendChild(script); 
+        } catch (e) { console.log(e) }
     });
 }
 
-function DataPackage(globalData, playerSelection, data = null) {
+function DataPackage(globalData, playerSelection, dataType = null, data = null) {
     this.roomId = globalData.gameId;
     this.data = data;
     this.playerId = globalData.playerId;
     this.playerSelection = playerSelection;
+    this.dataType = dataType;
     this.timestamp = Date.now();
 }
 const inputEventHandler = (DataPackage) => {
-    playerInput(DataPackage.playerSelection, DataPackage.data)
+    // playerInput(DataPackage.playerSelection, DataPackage.data)
+    console.log(DataPackage)
+
+    // get y and x acceleration component
+    var a_y = DataPackage.data.acc.y;
+    var a_x = DataPackage.data.acc.x;
+
+    // vector magnitude and acceleration when provided with x and y acceleration components
+    var mag  = Math.sqrt(Math.pow(a_y, 2) + Math.pow(a_x, 2));
+    var alpha = Math.atan(a_x/(a_y))*( 180 / Math.PI);
+    console.log(alpha)
+    
+    updateSpring(mag, alpha)
 }
 
 export default class Lobby extends React.Component {
@@ -40,6 +48,11 @@ export default class Lobby extends React.Component {
         score: {
             player1: 0,
             player2: 0
+        },
+        acceleration: {
+            x: 0,
+            y: 0,
+            z: 0
         }
     };
     // Functions must be bound manually with ES6 classNamees
@@ -50,20 +63,27 @@ export default class Lobby extends React.Component {
     this.sendChatMessage = this.sendChatMessage.bind(this);
     this.updatePlayerSelection = this.updatePlayerSelection.bind(this);
     this.onKeyPress = this.onKeyPress.bind(this);
+    this.handleMotionX = this.handleMotionX.bind(this);
+    this.handleMotionY = this.handleMotionY.bind(this);
+    this.handleMotionZ = this.handleMotionZ.bind(this);
+    this.sendMotionData = this.sendMotionData.bind(this);
+    this.clearAcceleration = this.clearAcceleration.bind(this);
+    
     console.log('Game', this.props)
 }
-    componentWillMount() {
-        appendScript(["/lib/p5.js", "/lib/p5.play.js"], '#script-container')
+    componentWillUnmount () {
+        document.querySelector('#canvas').classList.add("hidden");
+        
     }
     componentDidMount() {
+        document.querySelector('#canvas').classList.remove("hidden");
         const scriptArray = [
             // "/lib/p5.js",
             // "/lib/p5.play.js",
-            "/script/batSwing.js",
-            "/script/sketch.js",
+            // "/script/batSwing.js",
+            // "/script/sketch.js",
         ];
-
-        appendScript(scriptArray, '#script-container');
+        // appendScript(scriptArray, '#script-container');
         console.log('Game', this.props)
         this.props.socket.emit('room',
             new DataPackage(this.props.globalData, this.state.playerSelection)
@@ -85,7 +105,7 @@ export default class Lobby extends React.Component {
                     new DataPackage(
                         this.props.globalData,
                         this.state.playerSelection,
-                        e.charCode
+                        
                     )
                 );
             }
@@ -118,6 +138,58 @@ export default class Lobby extends React.Component {
         this.setState({chatInput: event.target.value});
     }
 
+    handleMotionX(e) {
+        this.setState({
+            acceleration: {
+                x: parseFloat(e.target.value)
+            }
+        });
+    }
+    handleMotionY(e) {
+        this.setState({
+            acceleration: {
+                y: parseFloat(e.target.value)
+            }
+        });
+    }
+    handleMotionZ(e) {
+        this.setState({
+            acceleration: {
+                z: parseFloat(e.target.value)
+            }
+        });
+    }
+    clearAcceleration() {
+        this.setState({acceleration: {
+            x: 0,
+            y: 0,
+            z: 0
+        }});
+    }
+
+    sendMotionData(e) {
+        e.preventDefault();
+        // this.props.socket.emit('input', new DataPackage(data, 'acceleration'));
+
+        const data = {
+            acc: {
+                x: this.state.acceleration.x || 0,
+                y: this.state.acceleration.y || 0,
+                z: this.state.acceleration.z || 0
+            }
+        }
+
+        this.props.socket.emit('input',
+                    new DataPackage(
+                        this.props.globalData,
+                        this.state.playerSelection,
+                        'acceleration',
+                        data
+                    )
+                );
+        clearAcceleration();
+    }
+
     displayChatMessages() {
         return this.state.messages
         .map(message => {
@@ -137,6 +209,15 @@ render() {
             score={this.state.score}
         />
         <div className="col-xs-8 col-xs-offset-2">
+            <form onSubmit={this.sendMotionData}>
+                <input type="text" className="form-control" id="input-x" name="x" defaultValue="0" onChange={this.handleMotionX} />
+                <input type="text" className="form-control" id="input-y" name="y" defaultValue="0" onChange={this.handleMotionY} />
+                <input type="text" className="form-control" id="input-z" name="z" defaultValue="0" onChange={this.handleMotionZ} />
+                <button className="btn btn-default" id="input-button" type="submit">Send Data</button>
+                
+            </form>
+
+
                 <input type="text" onKeyPress={this.onKeyPress} /> 
             <div className="input-group">
                 <select name="player-selection" id="player-selection" className="form-control" onChange={this.updatePlayerSelection}>
@@ -154,8 +235,10 @@ render() {
     </div>
     <div className="row">
 	<div className="col-xs-12">
-		<div className="" id="canvas">
-		</div>
+		{/*
+        <div className="" id="canvas"></div>
+        <Pinata/>
+        */}
 	</div>
 		</div>
 		<div className="row">
@@ -177,17 +260,17 @@ render() {
 				</div>
 			</div>
         </div>
-        {/* <div id="script-container"> */}
+        <div id="script-container"> 
+        {/*
+        */}
             {/* <script src="//cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.8/p5.js"></script>
             <script src="/lib/p5.play.js"></script>
             <script src="/script/sketch.js"></script>
             <script src="/script/batSwing.js"> </script> */}
-
-        
-       {/*  </div> */}
-
         </div>
-
+{/*
+*/}
+        </div>
         );
     }
 }

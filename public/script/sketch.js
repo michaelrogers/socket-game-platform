@@ -1,5 +1,26 @@
-// document.addEventListener('Load', () => {
+window.addEventListener('devicemotion', (e) => {
+    // get phone acceleration components
+    e.preventDefault();
+    let a_x = e.accelerationIncludingGravity.x;
+    let a_y = e.accelerationIncludingGravity.y;
+    let a_z = e.accelerationIncludingGravity.z;
+    
+    // compile acceleration componenets in one acceleration object
+    // let data = {
+    //     acc: {
+    //         x: a_x,
+    //         y: a_y,
+    //         z: a_z
+    //     }
+    // }
+    // console.log('data')
+    
+    document.getElementById('input-x').value = a_x;
+    document.getElementById('input-y').value = a_y;
+    document.getElementById('input-z').value = a_z;
+    document.getElementById('input-button').click();
 
+}, true);
 
 // pendulum
 var pivot_x = 250;
@@ -57,7 +78,7 @@ function setup() {
     // try {
 
 
-    var myCanvas = createCanvas(500, 500);
+    var myCanvas = createCanvas(700, 700);
     myCanvas.parent('canvas');
 
     // cord
@@ -193,6 +214,7 @@ function draw() {
 // ************************ //
 
 function updateSpring(mag, alpha) {
+    console.log('Update Spring')
  
   mag = -mag;
     // Update the spring position
@@ -273,7 +295,7 @@ function Candy(batForce, img) {
   
   this.show = function() {
     fill(125, 125, 255);
-    noStroke;
+    noStroke();
     // stroke(0, 125, 235);
     // strokeWeight(1);
     imageMode(CENTER);
