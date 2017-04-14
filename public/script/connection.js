@@ -1,25 +1,25 @@
 // const sketch = require('./sketch.js');
 // import sketch from './sketch.js';
 
-// document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', () => {
     // const socket = io();
     // setup();
 
     //DataPackage Constructor    
-    function DataPackage(data = null, dataType = null, playerId = null, roomId = 0) {
-        this.roomId = roomId;
-        this.data = data;
-        this.playerId = playerId;
-        this.timestamp = Date.now();
-        this.dataType = dataType;
-    }
+    // function DataPackage(data = null, dataType = null, playerId = null, roomId = 0) {
+    //     this.roomId = roomId;
+    //     this.data = data;
+    //     this.playerId = playerId;
+    //     this.timestamp = Date.now();
+    //     this.dataType = dataType;
+    // }
 
-    const requestJoinRoom = () => {
-        sessionStorage.setItem('room-id', roomId);
-        playerSelection = 0;
-        $('#player-selection').val("0");
-        socket.emit('room', new DataPackage());
-    }
+    // const requestJoinRoom = () => {
+    //     sessionStorage.setItem('room-id', roomId);
+    //     playerSelection = 0;
+    //     $('#player-selection').val("0");
+    //     socket.emit('room', new DataPackage());
+    // }
 
     const inputEventHandler = (DataPackage) => {
 
@@ -31,7 +31,7 @@
 
         // vector magnitude and acceleration when provided with x and y acceleration components
         var mag  = Math.sqrt(Math.pow(a_y, 2) + Math.pow(a_x, 2));
-        var alpha = Math.atan(a_x/a_y)*(180/Math.PI);
+        var alpha = Math.atan(a_x/(a_y))*( 180 / Math.PI);
         console.log(alpha)
         
         updateSpring(mag, alpha)
@@ -41,9 +41,10 @@
     // const connection = () => {
     //     $('input[name="room-id"]').val(roomId);
         
-        
+const connection = () => {
+
         // Transmit
-        socket.emit('room',  new DataPackage());
+        // socket.emit('room',  new DataPackage());
 
         window.addEventListener('devicemotion', (e) => {
             // get phone acceleration components
@@ -62,13 +63,13 @@
             
             e.preventDefault();
             // send acceleration components to 'input' socket
-            socket.emit('input', new DataPackage(data, 'acceleration'));
+            // socket.emit('input', new DataPackage(data, 'acceleration'));
         }, true);
 
     }
     let playerSelection = 0;
     let roomId = sessionStorage.getItem('room-id') || 0;
-    connection();
+    // connection();
 
     // $('form').submit(e => e.preventDefault())
 

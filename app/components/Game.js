@@ -5,10 +5,16 @@ import Scoreboard from './partials/Scoreboard';
 // import sketch from '../scripts/sketch.js';
 // import '/script/connnection.js';
 const appendScript = (scriptArray, selector) => {
+    console.log('Append?')
     scriptArray.map(scriptPath => {
         const script = document.createElement('script');
         script.src = scriptPath;
-        $(selector).append(script);
+        try {
+            document.querySelector(selector).appendChild(script);
+
+        } catch (e) {
+            console.log(e)
+        }
     });
 }
 
@@ -47,11 +53,17 @@ export default class Lobby extends React.Component {
 }
 
     componentDidMount() {
+    // componentWillMount() {
         const scriptArray = [
             "//cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.8/p5.js",
-            "/script/sketch.js"
+            // "/lib/p5.play.js",
+            // "/script/sketch.js"
         ];
+        console.log('adsasdadas');
+        // if (document.querySelector('#script-container').length > 0) {
+
         appendScript(scriptArray, '#script-container');
+        // }
         console.log('Game', this.props)
         this.props.socket.emit('room',
             new DataPackage(this.props.globalData, this.state.playerSelection)
@@ -122,7 +134,7 @@ render() {
     return (
     <div>
         <div className="row">
-             <Scoreboard
+        <Scoreboard
             score={this.state.score}
         />
         <div className="col-xs-8 col-xs-offset-2">
@@ -143,7 +155,7 @@ render() {
     </div>
     <div className="row">
 	<div className="col-xs-12">
-		<div className="" id="canvas-container">
+		<div className="" id="canvas">
 		</div>
 	</div>
 		</div>
