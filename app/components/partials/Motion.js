@@ -11,22 +11,7 @@ class Motion extends React.Component {
       }
     }
   }
-  componentDidMount() {
-    data = {
-      x: gravityX,
-      y: gravityY
-    }
-    console.log("++++++motion mount data++++++")
-    console.log(data)
-    // this.setState({
-    //   acceleration: {
-    //     x: gravityX,
-    //     y: gravityY
-    //   }
-    // });
 
-    // this.props.childData(data)
-  }
   render() {
     const { supported, acceleration, accelerationIncludingGravity, rotationRate, interval } = this.props.deviceMotion
     // const [accelerationX, accelerationY, accelerationZ] = acceleration || []

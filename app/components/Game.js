@@ -68,7 +68,8 @@ export default class Lobby extends React.Component {
     // this.handleMotionZ = this.handleMotionZ.bind(this);
     // this.sendMotionData = this.sendMotionData.bind(this);
     // this.clearAcceleration = this.clearAcceleration.bind(this);
-
+    this.childData = this.childData.bind(this);
+    this.sendSocketInput = this.sendSocketInput.bind(this);
     console.log('Game', this.props)
 }
     componentWillUnmount () {
@@ -213,10 +214,25 @@ export default class Lobby extends React.Component {
       console.log("-------child data function------");
       console.log(x);
       console.log(y);
-      })
+      // this.setState({acceleration: { x: x}})
+      this.sendSocketInput(x,y);
     }
-    sendSocketInput() {
-      //
+    sendSocketInput(x,y) {
+      const data = {
+      acc: {
+              x: x,
+              y: y
+          }
+      }
+      console.log(data);
+      this.props.socket.emit('input',
+          new DataPackage(
+              this.props.globalData,
+              this.state.playerSelection,
+              'acceleration',
+              data
+          )
+      );
     }
 render() {
     return (
