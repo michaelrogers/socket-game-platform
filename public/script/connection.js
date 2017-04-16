@@ -65,15 +65,12 @@ document.addEventListener('DOMContentLoaded', () => {
     let playerSelection = 0;
     let roomId = sessionStorage.getItem('room-id') || 0;
     connection();
-
-    // $('form').submit(e => e.preventDefault())
-
     // Receive
     socket.on('connection-status', (status) => {
-        // $('#messages').append($('<li>').text(status));
+
     });
     socket.on('chat-message', (message) => {
-        // $('#messages').append($('<li>').text(message));
+        
     });
 
     socket.on('input', inputEventHandler);
