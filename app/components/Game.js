@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import Scoreboard from './partials/Scoreboard';
 import Pinata from './partials/Pinata';
-import Motion from './partials/Motion';
+// import Motion from './partials/Motion';
 
 const appendScript = (scriptArray, selector) => {
     scriptArray.map(scriptPath => {
@@ -156,7 +156,7 @@ render() {
         />
         <div className="col-xs-8 col-xs-offset-2">
           {/* Motion Component*/}
-          < Motion childData={this.childData}/>
+          {/*< Motion childData={this.childData}/>*/}
 
                 <input type="text" onKeyPress={this.onKeyPress} />
             <div className="input-group">

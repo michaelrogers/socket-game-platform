@@ -1,7 +1,7 @@
 import React from "react";
 import p5 from 'p5';
 import P5Wrapper from './P5Wrapper';
-import sketch from '../sketches/sketch';
+import sketch from '../lib/p5.play.js';
 
 
 export default class Pinata extends React.Component {
@@ -11,15 +11,6 @@ export default class Pinata extends React.Component {
             sketch: sketch,
         };
     }
-
-//   componentDidMount() {
-//     this.canvas = new p5(sketch, this.refs.wrapper)
-//   }
-//   componentWillReceiveProps(props, newprops) {
-//     if( this.canvas.myCustomRedrawAccordingToNewPropsHandler ) {
-//       this.canvas.myCustomRedrawAccordingToNewPropsHandler(newprops);
-//     }
-//   }
   render() {
     return (
         <div>
@@ -28,6 +19,3 @@ export default class Pinata extends React.Component {
     );
   }
 }
-// <script src="/lib/p5.play.js"></script>
-// <script src="/script/batSwing.js"></script>
-// <script src="/script/sketch.js"></script>
