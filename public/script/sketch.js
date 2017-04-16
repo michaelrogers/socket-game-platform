@@ -1,29 +1,5 @@
 let timeoutVariable;
 let acceptingData = true;
-
-// window.addEventListener('devicemotion', (e) => {
-//     // get phone acceleration components
-//     e.preventDefault();
-//     if (acceptingData) {
-//         acceptingData = false;
-//         timeoutVariable = setTimeout(() => {
-//             acceptingData = true;
-//             // clearTimeout(timeoutVariable);
-//         }, 100);
-//
-//         let a_x = e.accelerationIncludingGravity.x;
-//         let a_y = e.accelerationIncludingGravity.y;
-//         let a_z = e.accelerationIncludingGravity.z;
-//         
-//         document.getElementById('input-x').value = a_x;
-//         document.getElementById('input-y').value = a_y;
-//         document.getElementById('input-z').value = a_z;
-//         document.getElementById('input-button').click();
-//
-//     }
-//
-// }, true);
-
 // pendulum
 var pivot_x = 250;
 var pivot_y = 20;
@@ -89,12 +65,6 @@ function setup() {
     // pinata
     pinata = createSprite(pivot_x, pivot_y, 50, 50);
     pinata.addImage(dummy);
-    // pinata.draw = function() {
-    //     fill(125, 125),
-    //     stroke(0, 125, 235),
-    //     strokeWeight(2),
-    //     ellipse(0, 0, 40, 90)
-    // }
     pinata.shapeColor = color(0, 100);
     pinata.velocity.y = 0;
     pinata.velocity.x = 0;
@@ -104,9 +74,7 @@ function setup() {
     bat.shapeColor = color(128);
     bat.addImage(arm)
     bat.velocity.x = 0;
-
-    // pull
-    // pull = -200;
+    
     //-----------setup bat swing---------
     calcAngle; //
     swingAngle = -2;
