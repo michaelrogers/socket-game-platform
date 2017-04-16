@@ -89,6 +89,8 @@ module.exports = {
             // Relay device input to all connected clients in the room
             socket.on('input', (DataPackage) => {
                 io.sockets.in(DataPackage.roomId).emit('input', DataPackage);
+                console.log('=============server fired=============');
+                console.log(DataPackage);
             });
 
             // io.to('5000').emit('chat-message', 'Secret channel');

@@ -14,11 +14,11 @@ window.addEventListener('devicemotion', (e) => {
         let a_x = e.accelerationIncludingGravity.x;
         let a_y = e.accelerationIncludingGravity.y;
         let a_z = e.accelerationIncludingGravity.z;
-        
-        document.getElementById('input-x').value = a_x;
-        document.getElementById('input-y').value = a_y;
-        document.getElementById('input-z').value = a_z;
-        document.getElementById('input-button').click();
+
+        // document.getElementById('input-x').value = a_x;
+        // document.getElementById('input-y').value = a_y;
+        // document.getElementById('input-z').value = a_z;
+        // document.getElementById('input-button').click();
 
     }
 
@@ -217,7 +217,7 @@ function draw() {
 
 function updateSpring(mag, alpha) {
     console.log('Update Spring', mag, alpha)
- 
+
   mag = -mag;
     // Update the spring position
     if (mag > -30) {
@@ -273,28 +273,28 @@ function pinataSwing(displacement) {
 // ******************** //
 
 function Candy(batForce, img) {
-  
+
   this.pos = createVector(pivot_x - 10, pivot_y + len + 40);
   // this.img = sweet;
-  
+
   this.vel = createVector(random(-1, 0.2), random(-2,0));
-  
+
   this.vel.mult(random(0, 3))
   this.acc = createVector(0, 0);
   var grav = createVector(0, 0.1);
-  
- 
+
+
   this.applyForce = function() {
   // mass = 1
     this.acc.add(grav);
   }
-  
+
   this.update = function(){
     this.vel.add(this.acc);
     this.pos.add(this.vel);
     this.acc.mult(0);
   }
-  
+
   this.show = function() {
     fill(125, 125, 255);
     noStroke();
