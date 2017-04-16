@@ -25,6 +25,11 @@ app.use(morgan("dev"));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static("./public"));
 
+app.get('/testFone', function(req, res) {
+  console.log('yeah boyyyy')
+  res.sendFile(path.join(__dirname, '/public/fone.html'))
+})
+
 const routes = require('./routes');
 for (let route in routes) {
   app.use(route, routes[route]);
@@ -33,6 +38,3 @@ for (let route in routes) {
 
 //Server side react? Maybe.
 // const React = require('react');
-
-
-

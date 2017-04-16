@@ -16,7 +16,7 @@ const appendScript = (scriptArray, selector) => {
 }
 
 function DataPackage(globalData, playerSelection, dataType = null, data = null) {
-    this.roomId = globalData.gameId;
+    this.roomId = 'partyRoom';
     this.data = data;
     this.playerId = globalData.playerId;
     this.playerSelection = playerSelection;
@@ -215,7 +215,7 @@ export default class Lobby extends React.Component {
     //   console.log(x);
     //   console.log(y);
       // this.setState({acceleration: { x: x}})
-      this.sendSocketInput(x,y);
+    //   this.sendSocketInput(x,y);
     }
     sendSocketInput(x,y) {
       const data = {
