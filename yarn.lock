@@ -2693,6 +2693,10 @@ rc@^1.1.7:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
+react-device-events@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/react-device-events/-/react-device-events-1.0.0.tgz#ed734b128483c65d1090ffe0a304a5055b32695d"
+
 react-dom@^15.5.1:
   version "15.5.3"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-15.5.3.tgz#2ee127ce942df55da53111ae303316e68072b5c5"
@@ -2729,6 +2733,10 @@ react-router@4.0.0, react-router@^4.0.0:
     loose-envify "^1.3.1"
     path-to-regexp "^1.5.3"
     warning "^3.0.0"
+
+react-tap-or-click@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/react-tap-or-click/-/react-tap-or-click-0.1.0.tgz#12d9d315ae45767a6935beb82fd17788fb8d48d6"
 
 react@^15.5.1:
   version "15.5.3"

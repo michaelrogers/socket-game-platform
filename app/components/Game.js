@@ -11,7 +11,7 @@ const appendScript = (scriptArray, selector) => {
         const script = document.createElement('script');
         script.src = scriptPath;
         try { document.querySelector(selector).appendChild(script);
-        } catch (e) { console.log(e) }
+        } catch (e) {  }
     });
 }
 
@@ -34,7 +34,7 @@ const inputEventHandler = (DataPackage) => {
     // vector magnitude and acceleration when provided with x and y acceleration components
     var mag  = Math.sqrt(Math.pow(a_y, 2) + Math.pow(a_x, 2));
     var alpha = Math.atan(a_x/(a_y))*( 180 / Math.PI);
-    console.log(mag, alpha)
+    // console.log(mag, alpha)
     updateSpring(mag, alpha)
 }
 
@@ -70,7 +70,7 @@ export default class Lobby extends React.Component {
     // this.clearAcceleration = this.clearAcceleration.bind(this);
     this.childData = this.childData.bind(this);
     this.sendSocketInput = this.sendSocketInput.bind(this);
-    console.log('Game', this.props)
+    // console.log('Game', this.props)
 }
     componentWillUnmount () {
         document.querySelector('#canvas').classList.add("hidden");
@@ -85,7 +85,7 @@ export default class Lobby extends React.Component {
             // "/script/sketch.js",
         ];
         // appendScript(scriptArray, '#script-container');
-        console.log('Game', this.props)
+        // console.log('Game', this.props)
         this.props.socket.emit('room',
             new DataPackage(this.props.globalData, this.state.playerSelection)
         );
@@ -211,9 +211,9 @@ export default class Lobby extends React.Component {
         this.setState({playerSelection: parseInt(event.target.value)})
     }
     childData(x, y) {
-      console.log("-------child data function------");
-      console.log(x);
-      console.log(y);
+    //   console.log("-------child data function------");
+    //   console.log(x);
+    //   console.log(y);
       // this.setState({acceleration: { x: x}})
       this.sendSocketInput(x,y);
     }
@@ -224,7 +224,7 @@ export default class Lobby extends React.Component {
               y: y
           }
       }
-      console.log(data);
+    //   console.log(data);
       this.props.socket.emit('input',
           new DataPackage(
               this.props.globalData,
