@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const socket = io();
 
     //DataPackage Constructor    
-    function DataPackage(data = null, dataType = null, playerId = null, roomId = 0) {
+    function DataPackage(data = null, dataType = null, playerId = null, roomId = 'partyRoom') {
         this.roomId = roomId;
         this.data = data;
         this.playerId = playerId;
@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const requestJoinRoom = () => {
         sessionStorage.setItem('room-id', roomId);
         playerSelection = 0;
-        $('#player-selection').val("0");
+        // $('#player-selection').val("0");
         socket.emit('room', new DataPackage());
     }
 
@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     //Client initialization
     const connection = () => {
-        $('input[name="room-id"]').val(roomId);
+        // $('input[name="room-id"]').val(roomId);
         
         
         // Transmit
@@ -70,10 +70,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Receive
     socket.on('connection-status', (status) => {
-        $('#messages').append($('<li>').text(status));
+        // $('#messages').append($('<li>').text(status));
     });
     socket.on('chat-message', (message) => {
-        $('#messages').append($('<li>').text(message));
+        // $('#messages').append($('<li>').text(message));
     });
 
     socket.on('input', inputEventHandler);
