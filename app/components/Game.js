@@ -2,7 +2,8 @@ import React from "react";
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import Scoreboard from './partials/Scoreboard';
 import Pinata from './partials/Pinata';
-// import Motion from './partials/Motion';
+
+let QRCode = require('qrcode-react');
 
 const appendScript = (scriptArray, selector) => {
     scriptArray.map(scriptPath => {
@@ -147,6 +148,7 @@ export default class Lobby extends React.Component {
           )
       );
     }
+
 render() {
     return (
     <div>
@@ -198,7 +200,12 @@ render() {
 			</div>
         </div>
         <div>
-            <a href={"/control_device/"+ this.props.globalData.gameId + "/" + this.props.globalData.playerId}>go here to connect control device: {"/control_device/"+ this.props.globalData.gameId + "/" + this.props.globalData.playerId}</a>
+            <a href={"192.168.1.66:3000/control_device/"+ this.props.globalData.gameId + "/" + this.props.globalData.playerId}>go here to connect control device: {"/control_device/"+ this.props.globalData.gameId + "/" + this.props.globalData.playerId}</a>
+        </div>
+        <div>
+
+          <QRCode value={"http://192.168.1.66:3000/control_device/"+ this.props.globalData.gameId + "/" + this.props.globalData.playerId} />,
+
         </div>
 
         <div id="script-container">
