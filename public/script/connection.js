@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const socket = io();
 
     //DataPackage Constructor    
-    function DataPackage(data = null, dataType = null, playerId = null, roomId = 'partyRoom') {
+    function DataPackage(data = null, dataType = null, playerId = null, roomId = '0000') {
         this.roomId = roomId;
         this.data = data;
         this.playerId = playerId;
