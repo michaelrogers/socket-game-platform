@@ -8,6 +8,7 @@ import Login from './components/Login';
 import Game from './components/Game';
 import Error404 from './components/Error404';
 
+//Pass socket down as props to children components
 const socket = io();
 
 
@@ -17,15 +18,27 @@ export default class Main extends React.Component {
     this.state = {
         activeGames: [], 
         playerId: sessionStorage.getItem('player-id') || null,
+        playerName: null,
         playerCount: 0,
         gameId: null
     };
     // this.handleClick = this.handleClick.bind(this);
     this.updatePlayerCount = this.updatePlayerCount.bind(this);
     this.setGameId = this.setGameId.bind(this);
+    this.setPlayerInfo = this.setPlayerInfo.bind(this);
+
+    
   }
   updatePlayerCount(playerCount) { 
     this.setState({playerCount: playerCount}); 
+  }
+
+  setPlayerInfo(playerName, playerId) {
+    console.log('Main setPlayerInfo', playerName, playerId)
+    this.setState({
+      playerName: playerName,
+      playerId: playerId
+    });
   }
 
   componentDidMount() {
@@ -66,6 +79,7 @@ export default class Main extends React.Component {
                   <Route path="/login" render={ () => (
                     <Login 
                       globalData={this.state}
+                      setPlayerInfo={this.setPlayerInfo}
                     />
                   )}/>
                 </div>

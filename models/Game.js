@@ -6,7 +6,7 @@ const gameSchema = new Schema({
             type: Boolean,
             default: false,
         },
-        players: [{
+        player: [{
             type: Schema.Types.ObjectId,
             ref: "Player"
         }]

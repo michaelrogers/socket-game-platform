@@ -7,28 +7,32 @@ const gameController = {
     viewActiveGames: (req, res) => {
       Models.Game.find({isCompleted: false})
       // .sort(createdAt: -1)
-      .populate('Player')
+      .populate('player')
       .exec((error, games) => {
           error ?
-          console.log(error) :
+          console.log(error) : 
           res.send(games)
       });
     },
     joinGame: (req, res) => {
+      console.log('Controller joinGame', req.params)
       Models.Game.findOneAndUpdate(
           {_id: req.params.gameid},
-          { $push: {
-              'players': req.params.playerid
+          { $addToSet: {
+              'player': req.params.playerid
           }}
       ).exec((err, doc) => {
-          err ? console.log(err) :
-          res.send(doc)
+            console.log(doc)
+          err ? console.log(err) : 
+          res.send(doc);
+          
       });
     },
     createGame: (req, res) => { 
+      console.log('Create game', req)
       const newGame = new Models.Game();
-      console.log(newGame)
-      newGame.players.push(req.params.playerid);
+      console.log(newGame, req.params.playerid)
+      newGame.player.push(req.params.playerid);
       newGame.save((error, game) => {
         if (error) {
           console.log(error);
