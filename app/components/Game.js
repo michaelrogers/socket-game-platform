@@ -14,7 +14,7 @@ const appendScript = (scriptArray, selector) => {
 }
 
 function DataPackage(globalData, playerSelection, dataType = null, data = null) {
-    this.roomId = '0000';
+    this.roomId = '123idklalkckjf';
     this.data = data;
     this.playerId = globalData.playerId;
     this.playerSelection = playerSelection;

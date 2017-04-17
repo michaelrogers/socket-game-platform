@@ -25,9 +25,12 @@ app.use(morgan("dev"));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static("./public"));
 
-app.get('/testFone', function(req, res) {
-  console.log('yeah boyyyy')
+app.get('/control_device/:gameId/:playerId', function(req, res) {
+  var gameId = req.params.gameId;
+  var playerId = req.params.playerId;
+  console.log('yeah boyyyy', gameId, playerId);
   res.sendFile(path.join(__dirname, '/public/fone.html'))
+  // res.end('good stuff')
 })
 
 const routes = require('./routes');

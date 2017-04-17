@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const socket = io();
 
     //DataPackage Constructor    
-    function DataPackage(data = null, dataType = null, playerId = null, roomId = '0000') {
+    function DataPackage(data = null, dataType = null, playerId = null, roomId = null) {
         this.roomId = roomId;
         this.data = data;
         this.playerId = playerId;
@@ -55,10 +55,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     z: a_z
                 }
             }
-            
+
             e.preventDefault();
             // send acceleration components to 'input' socket
-            socket.emit('input', new DataPackage(data, 'acceleration'));
+            socket.emit('input', new DataPackage(data, 'acceleration', playerId, gameId));
         }, true);
 
     }
