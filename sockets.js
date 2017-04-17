@@ -56,17 +56,19 @@ module.exports = {
             try {
                 // Leave all rooms the socket is in
                 const roomIdArray = Object.keys(socket.rooms);
+                if (roomIdArray) {
+
                 roomIdArray.forEach(room => {
                     socket.leave(room);
                     io.sockets.in(room).emit('connection-status', 'User Left');
                 });
+                }
             } catch (e) { console.log(e); }
         };
 
         io.on('connection', (socket) => {
             //--------------Connection-status-----------------
             connectionCount(socket);
-            // socket.emit('connection-status', 'New User joined');
 
             socket.on('disconnect', (socket) => {
                 connectionCount(socket);
@@ -88,12 +90,11 @@ module.exports = {
 
             // Relay device input to all connected clients in the room
             socket.on('input', (DataPackage) => {
-              console.log("---getting server data----");
-              console.log(DataPackage);
+                console.log("---getting server data----");
+                console.log(DataPackage);
                 io.sockets.in(DataPackage.roomId).emit('input', DataPackage);
             });
 
-            // io.to('5000').emit('chat-message', 'Secret channel');
         }); //End connection
 
     }
