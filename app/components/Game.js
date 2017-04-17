@@ -14,7 +14,7 @@ const appendScript = (scriptArray, selector) => {
 }
 
 function DataPackage(globalData, playerSelection, dataType = null, data = null) {
-    this.roomId = '123idklalkckjf';
+    this.roomId = globalData.gameId;
     this.data = data;
     this.playerId = globalData.playerId;
     this.playerSelection = playerSelection;
@@ -170,6 +170,7 @@ render() {
             <div className="col-xs-2">
             <div className="input-group">
                 <p> gameId: {this.props.globalData.gameId}</p>
+                <p> playerId: {this.props.globalData.playerId}</p>
             </div>
         </div>
     </div>
@@ -196,6 +197,10 @@ render() {
 				</div>
 			</div>
         </div>
+        <div>
+            <a href={"/control_device/"+ this.props.globalData.gameId + "/" + this.props.globalData.playerId}>go here to connect control device: {"/control_device/"+ this.props.globalData.gameId + "/" + this.props.globalData.playerId}</a>
+        </div>
+
         <div id="script-container">
         </div>
         </div>
