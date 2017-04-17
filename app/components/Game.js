@@ -200,7 +200,7 @@ render() {
 			</div>
         </div>
         <div>
-            <a href={"192.168.1.66:3000/control_device/"+ this.props.globalData.gameId + "/" + this.props.globalData.playerId}>go here to connect control device: {"/control_device/"+ this.props.globalData.gameId + "/" + this.props.globalData.playerId}</a>
+            <a href={"/control_device/"+ this.props.globalData.gameId + "/" + this.props.globalData.playerId}>go here to connect control device: {"/control_device/"+ this.props.globalData.gameId + "/" + this.props.globalData.playerId}</a>
         </div>
         <div>
 
