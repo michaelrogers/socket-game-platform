@@ -78,10 +78,9 @@ function setup() {
     //-----------setup bat swing---------
     calcAngle; //
     swingAngle = -2;
-    batX = width - 100; //x-position of bat sprite, to right side of screen
-    batY = R + 10; //y-position of bat sprite, equal to pinata resting
-    imageMode(CORNERS);
-    bat = createSprite(batX, batY, 50, 200)
+    batX = width - 150; //x-position of bat sprite, to right side of screen
+    batY = len + 100; //y-position of bat sprite, equal to pinata resting
+    bat = createSprite(batX, batY, 20, 200)
     bat.shapeColor = color(128);
     bat.addImage(arm)
     // candies

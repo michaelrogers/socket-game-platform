@@ -31,7 +31,8 @@ const inputEventHandler = (DataPackage) => {
     var mag  = Math.sqrt(Math.pow(a_y, 2) + Math.pow(a_x, 2));
     var alpha = Math.atan(a_x/(a_y))*( 180 / Math.PI);
 
-    updateSpring(mag, alpha)
+    // updateSpring(mag, alpha)
+    drawBat(mag)
 }
 
 export default class Lobby extends React.Component {
