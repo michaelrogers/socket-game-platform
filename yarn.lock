@@ -2,6 +2,10 @@
 # yarn lockfile v1
 
 
+"@code-dot-org/p5.play@^1.1.6-cdo":
+  version "1.1.6-cdo"
+  resolved "https://registry.yarnpkg.com/@code-dot-org/p5.play/-/p5.play-1.1.6-cdo.tgz#12a27544e0b9ce8bf7feb2045b5cbcdeb07f9e27"
+
 abbrev@1:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/abbrev/-/abbrev-1.1.0.tgz#d0554c2256636e2f56e7c2e5ad183f859428d81f"
@@ -1114,13 +1118,13 @@ debug@2.3.3, debug@2.3.x:
   dependencies:
     ms "0.7.2"
 
-debug@2.6.1, debug@^2.1.1, debug@^2.2.0:
+debug@2.6.1, debug@^2.1.1, debug@^2.2.0, debug@^2.4.5:
   version "2.6.1"
   resolved "https://registry.yarnpkg.com/debug/-/debug-2.6.1.tgz#79855090ba2c4e3115cc7d8769491d58f0491351"
   dependencies:
     ms "0.7.2"
 
-debug@2.6.3, debug@^2.4.5:
+debug@2.6.3:
   version "2.6.3"
   resolved "https://registry.yarnpkg.com/debug/-/debug-2.6.3.tgz#0f7eb8c30965ec08c72accfa0130c8b79984141d"
   dependencies:
@@ -2689,6 +2693,10 @@ rc@^1.1.7:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
+react-device-events@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/react-device-events/-/react-device-events-1.0.0.tgz#ed734b128483c65d1090ffe0a304a5055b32695d"
+
 react-dom@^15.5.1:
   version "15.5.3"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-15.5.3.tgz#2ee127ce942df55da53111ae303316e68072b5c5"
@@ -2725,6 +2733,10 @@ react-router@4.0.0, react-router@^4.0.0:
     loose-envify "^1.3.1"
     path-to-regexp "^1.5.3"
     warning "^3.0.0"
+
+react-tap-or-click@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/react-tap-or-click/-/react-tap-or-click-0.1.0.tgz#12d9d315ae45767a6935beb82fd17788fb8d48d6"
 
 react@^15.5.1:
   version "15.5.3"

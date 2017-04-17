@@ -1,3 +1,5 @@
+let timeoutVariable;
+let acceptingData = true;
 // pendulum
 var pivot_x = 250;
 var pivot_y = 20;
@@ -40,19 +42,21 @@ var ps = 0, // Position   ps = R,
 
 // candy spill
 var candies = [];
-
+// console.log('WASDADSASDADS')
 // *************** //
 
 // preload image to sprite
 function preload() {
-    arm = loadImage('./../img/arm125.png');
-    dummy = loadImage('./../img/bird.png');
+    arm = loadImage('/img/arm125.png');
+    dummy = loadImage('/img/bird.png');
 }
-
+console.log('Sketch file loaded')
 // *************** //
-
 function setup() {
-    var myCanvas = createCanvas(1000, 1000);
+    // try {
+
+
+    var myCanvas = createCanvas(700, 700);
     myCanvas.parent('canvas');
 
     // cord
@@ -61,12 +65,6 @@ function setup() {
     // pinata
     pinata = createSprite(pivot_x, pivot_y, 50, 50);
     pinata.addImage(dummy);
-    // pinata.draw = function() {
-    //     fill(125, 125),
-    //     stroke(0, 125, 235),
-    //     strokeWeight(2),
-    //     ellipse(0, 0, 40, 90)
-    // }
     pinata.shapeColor = color(0, 100);
     pinata.velocity.y = 0;
     pinata.velocity.x = 0;
@@ -76,22 +74,23 @@ function setup() {
     bat.shapeColor = color(128);
     bat.addImage(arm)
     bat.velocity.x = 0;
-
-    // pull
-    // pull = -200;
-      //-----------setup bat swing---------
-  calcAngle; //
-  swingAngle = -2;
-  batX = width - 100; //x-position of bat sprite, to right side of screen
-  batY = R + 10; //y-position of bat sprite, equal to pinata resting
-  imageMode(CORNERS);
-  bat = createSprite(batX, batY, 50, 200)
-  bat.shapeColor = color(128);
-  bat.addImage(arm)
+    
+    //-----------setup bat swing---------
+    calcAngle; //
+    swingAngle = -2;
+    batX = width - 100; //x-position of bat sprite, to right side of screen
+    batY = R + 10; //y-position of bat sprite, equal to pinata resting
+    imageMode(CORNERS);
+    bat = createSprite(batX, batY, 50, 200)
+    bat.shapeColor = color(128);
+    bat.addImage(arm)
     // candies
-    for (var i=0; i<150; i++) {
-      candies.push(new Candy());
+    for (var i = 0; i < 150; i++) {
+        candies.push(new Candy());
     }
+    console.log('Sketch file setup')
+    // } catch (e) { console.log(e); }
+
 }
   /*
 // bat hit function triggered by mouse press
@@ -147,27 +146,27 @@ function draw() {
         pinata.velocity.x = 0;
         pinata.velocity.y = 0;
         line(pivot_x, pivot_y, pivot_x, pivot_y + len);
-        for (var i=0; i < candies.length; i++) {
-    
-        //   if (candies[i].pos.x > 0) {
-          candies[i].applyForce();
-          candies[i].update();
-          candies[i].show();
-          
-          // bounce off screen-bottom
-          // if (candies[i].pos.y > height - 20) {
-          //   candies[i].pos.y = height - 20;
-          //   candies[i].vel.x *= 0.9;
-          //   candies[i].vel.y *= -0.6;
-          // }
-        //   }
-        
+        for (var i = 0; i < candies.length; i++) {
 
-  }
+            //   if (candies[i].pos.x > 0) {
+            candies[i].applyForce();
+            candies[i].update();
+            candies[i].show();
+
+            // bounce off screen-bottom
+            // if (candies[i].pos.y > height - 20) {
+            //   candies[i].pos.y = height - 20;
+            //   candies[i].vel.x *= 0.9;
+            //   candies[i].vel.y *= -0.6;
+            // }
+            //   }
+
+
+        }
     } else {
         pinataSwing()
     }
-    
+
 
     // cord pull trigger
     // if (accelerationY !== 0) {
@@ -185,7 +184,8 @@ function draw() {
 // ************************ //
 
 function updateSpring(mag, alpha) {
- 
+    console.log('Update Spring', mag, alpha)
+
   mag = -mag;
     // Update the spring position
     if (mag > -30) {
@@ -208,7 +208,7 @@ function updateSpring(mag, alpha) {
     // Set and constrain the position of top bar
     if (mag < -30) {
         // $('.accData').append($('<li>').text("Y acc: " + accelerationY))
-        $('.accData').append($('<li>').text("Y acc: " + alpha))
+        // document.querySelector('.accData').appendChild($('<li>').text("Y acc: " + alpha))
         ps = mag * 0.5;
         mag *= 0.01;  // damping
         angle = alpha;
@@ -241,31 +241,31 @@ function pinataSwing(displacement) {
 // ******************** //
 
 function Candy(batForce, img) {
-  
+
   this.pos = createVector(pivot_x - 10, pivot_y + len + 40);
   // this.img = sweet;
-  
+
   this.vel = createVector(random(-1, 0.2), random(-2,0));
-  
+
   this.vel.mult(random(0, 3))
   this.acc = createVector(0, 0);
   var grav = createVector(0, 0.1);
-  
- 
+
+
   this.applyForce = function() {
   // mass = 1
     this.acc.add(grav);
   }
-  
+
   this.update = function(){
     this.vel.add(this.acc);
     this.pos.add(this.vel);
     this.acc.mult(0);
   }
-  
+
   this.show = function() {
     fill(125, 125, 255);
-    noStroke;
+    noStroke();
     // stroke(0, 125, 235);
     // strokeWeight(1);
     imageMode(CENTER);
@@ -275,3 +275,5 @@ function Candy(batForce, img) {
   }
 }
 
+
+// });

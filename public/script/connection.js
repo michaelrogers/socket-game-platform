@@ -1,12 +1,8 @@
-// const sketch = require('./sketch.js');
-// import sketch from './sketch.js';
-
-// document.addEventListener('DOMContentLoaded', () => {
-    // const socket = io();
-    // setup();
+document.addEventListener('DOMContentLoaded', () => {
+    const socket = io();
 
     //DataPackage Constructor    
-    function DataPackage(data = null, dataType = null, playerId = null, roomId = 0) {
+    function DataPackage(data = null, dataType = null, playerId = null, roomId = null) {
         this.roomId = roomId;
         this.data = data;
         this.playerId = playerId;
@@ -17,7 +13,7 @@
     const requestJoinRoom = () => {
         sessionStorage.setItem('room-id', roomId);
         playerSelection = 0;
-        $('#player-selection').val("0");
+        // $('#player-selection').val("0");
         socket.emit('room', new DataPackage());
     }
 
@@ -37,9 +33,9 @@
         updateSpring(mag, alpha)
     }
     
-    // //Client initialization
-    // const connection = () => {
-    //     $('input[name="room-id"]').val(roomId);
+    //Client initialization
+    const connection = () => {
+        // $('input[name="room-id"]').val(roomId);
         
         
         // Transmit
@@ -59,28 +55,25 @@
                     z: a_z
                 }
             }
-            
+
             e.preventDefault();
             // send acceleration components to 'input' socket
-            socket.emit('input', new DataPackage(data, 'acceleration'));
+            socket.emit('input', new DataPackage(data, 'acceleration', playerId, gameId));
         }, true);
 
     }
     let playerSelection = 0;
     let roomId = sessionStorage.getItem('room-id') || 0;
     connection();
-
-    // $('form').submit(e => e.preventDefault())
-
     // Receive
-    // socket.on('connection-status', (status) => {
-    //     $('#messages').append($('<li>').text(status));
-    // });
-    // socket.on('chat-message', (message) => {
-    //     $('#messages').append($('<li>').text(message));
-    // });
+    socket.on('connection-status', (status) => {
 
-    // socket.on('input', inputEventHandler);
+    });
+    socket.on('chat-message', (message) => {
+        
+    });
+
+    socket.on('input', inputEventHandler);
 
 });
 

@@ -1,14 +1,12 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
-// import io from 'socket.io';
-// const socket = io();
 
 import helpers from "./utils/helpers";
 const appendScript = (scriptArray, selector) => {
     scriptArray.map(scriptPath => {
         const script = document.createElement('script');
         script.src = scriptPath;
-        $(selector).append(script);
+        document.querySelector(selector).appendChild(script);
     });
 };
 
@@ -22,14 +20,13 @@ export default class Lobby extends React.Component {
     };
     this.handleClick = this.handleClick.bind(this);
     this.handleJoin = this.handleJoin.bind(this);
-    // this.updatePlayerCount = this.updatePlayerCount.bind(this);
     console.log('Lobby', this.props);
   }
 
   componentDidMount() {
 
     helpers.viewActiveGames()
-    .then(response => {
+    .then(response => { 
       this.setState({ activeGames: response.data });
     });
 
@@ -47,12 +44,6 @@ export default class Lobby extends React.Component {
       });
     }
   }
-
-  // handleChange(event) {
-  //   var newState = {};
-  //   newState[event.target.id] = event.target.value;
-  //   this.setState(newState);
-  // }
 
   handleJoin(event) {
     const gameId =  event.target.dataset.gameid || null;
@@ -113,7 +104,3 @@ export default class Lobby extends React.Component {
     );
   }
 }
-
-// Export the component back for use in other files
-// export default { Lobby };
-// module.exports = Lobby;

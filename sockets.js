@@ -88,6 +88,8 @@ module.exports = {
 
             // Relay device input to all connected clients in the room
             socket.on('input', (DataPackage) => {
+              console.log("---getting server data----");
+              console.log(DataPackage);
                 io.sockets.in(DataPackage.roomId).emit('input', DataPackage);
             });
 
@@ -96,4 +98,3 @@ module.exports = {
 
     }
 }
-
