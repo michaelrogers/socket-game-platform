@@ -1,8 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import Scoreboard from './partials/Scoreboard';
-// import Pinata from './partials/Pinata';
-// import Motion from './partials/Motion';
+import Pinata from './partials/Pinata';
 
 const appendScript = (scriptArray, selector) => {
     scriptArray.map(scriptPath => {
