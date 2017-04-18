@@ -1,11 +1,10 @@
 'use strict';
-console.log('hello world');
-console.log('location',window.location.href);
 
 const url = window.location.href.split('/');
 
-const gameId = url[4];
-const playerId = url[5];
+const [gameId, playerId, playerSelection] = [url[4], url[5], url[6]];
+sessionStorage.setItem('room-id', gameId);
+sessionStorage.setItem('player-id', playerId);
+sessionStorage.setItem('player-selection', playerSelection);
 
-console.log('game id', gameId);
-console.log('player id', playerId);
+console.log(gameId, playerId, playerSelection)

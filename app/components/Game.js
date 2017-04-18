@@ -24,20 +24,21 @@ function DataPackage(globalData, playerSelection, dataType = null, data = null) 
 const inputEventHandler = (DataPackage) => {
     const a_y = DataPackage.data.acc.y;
     const a_x = DataPackage.data.acc.x;
-
-
     const mag  = Math.sqrt(Math.pow(a_y, 2) + Math.pow(a_x, 2));
     const alpha = Math.atan(a_x/(a_y))*( 180 / Math.PI);
+    if (DataPackage.playerSelection == 0) {
+        updateSpring(mag, alpha)
+    } else if (DataPackage.playerSelection == 1) {
+        drawBat(mag);
+    } else console.log('Nope');
 
-    // updateSpring(mag, alpha)
-    drawBat(mag);
 }
 
 export default class Lobby extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            playerSelection: 1,
+            playerSelection: null,
             chatInput: null,
             messages: [],
             score: {
@@ -55,18 +56,21 @@ export default class Lobby extends React.Component {
     this.addChatMessage = this.addChatMessage.bind(this);
     this.displayChatMessages = this.displayChatMessages.bind(this);
     this.sendChatMessage = this.sendChatMessage.bind(this);
-    this.updatePlayerSelection = this.updatePlayerSelection.bind(this);
-    this.onKeyPress = this.onKeyPress.bind(this);
+    // this.updatePlayerSelection = this.updatePlayerSelection.bind(this);
+    // this.onKeyPress = this.onKeyPress.bind(this);
 
-    this.childData = this.childData.bind(this);
+    // this.childData = this.childData.bind(this);
     this.sendSocketInput = this.sendSocketInput.bind(this);
 
 }
+    componentWillMount () {
+    }
     componentWillUnmount () {
         document.querySelector('#canvas').classList.add("hidden");
-
+        
     }
     componentDidMount() {
+        this.setState({playerSelection: sessionStorage.getItem('player-selection')});
         document.querySelector('#canvas').classList.remove("hidden");
         this.props.socket.emit('room',
             new DataPackage(this.props.globalData, this.state.playerSelection)
@@ -77,21 +81,21 @@ export default class Lobby extends React.Component {
         this.props.socket.on('input', inputEventHandler);
     }
 
-    onKeyPress(e){
-        if (this.state.playerSelection == 1 || this.state.playerSelection == 2) {
-            const acceptedKeys = [119, 97, 115, 100, 32];
+    // onKeyPress(e){
+    //     if (this.state.playerSelection == 1 || this.state.playerSelection == 2) {
+    //         const acceptedKeys = [119, 97, 115, 100, 32];
 
-            if (acceptedKeys.indexOf(e.charCode) !== -1) {
-                e.preventDefault();
-                this.props.socket.emit('input',
-                    new DataPackage(
-                        this.props.globalData,
-                        this.state.playerSelection,
-                    )
-                );
-            }
-        }
-    }
+    //         if (acceptedKeys.indexOf(e.charCode) !== -1) {
+    //             e.preventDefault();
+    //             this.props.socket.emit('input',
+    //                 new DataPackage(
+    //                     this.props.globalData,
+    //                     this.state.playerSelection,
+    //                 )
+    //             );
+    //         }
+    //     }
+    // }
 
 
     addChatMessage(message) {
@@ -125,11 +129,11 @@ export default class Lobby extends React.Component {
         });
     }
 
-    updatePlayerSelection(event) {
-        this.setState({playerSelection: parseInt(event.target.value)})
-    }
-    childData(x, y) {
-    }
+    // updatePlayerSelection(event) {
+    //     this.setState({playerSelection: parseInt(event.target.value)})
+    // }
+    // childData(x, y) {
+    // }
     sendSocketInput(x,y) {
         const data = {
         acc: {
@@ -158,6 +162,7 @@ render() {
         {/*< Motion childData={this.childData}/>*/}
 
                 <input type="text" onKeyPress={this.onKeyPress} />
+           {/*
             <div className="input-group">
                 <select name="player-selection" id="player-selection" className="form-control" onChange={this.updatePlayerSelection}>
                     <option value="1">Player 1</option>
@@ -165,6 +170,7 @@ render() {
                     <option value="0">Spectator</option>
                 </select>
             </div>
+            */}
             </div>
             <div className="col-xs-2">
             <div className="input-group">
@@ -198,14 +204,12 @@ render() {
         </div>
         <div>
             <Link
-                to={"/control_device/" +
-                this.props.globalData.gameId + "/" +
-                this.props.globalData.playerId}>go here to connect control device: <br/>
-                {"/control_device/"+ this.props.globalData.gameId + "/" + this.props.globalData.playerId}
+                to={`/control_device/${this.props.globalData.gameId}/${this.props.globalData.playerId}/${this.state.playerSelection}`}>go here to connect control device: <br/>
+                {`/control_device/${this.props.globalData.gameId}/${this.props.globalData.playerId}/${this.state.playerSelection}`}
              </Link>
         </div>
         <div>
-            <QRCode value={window.location.origin + "/control_device/"+ this.props.globalData.gameId + "/" + this.props.globalData.playerId} />,
+            <QRCode value={`${window.location.origin}/control_device/${this.props.globalData.gameId}/${this.props.globalData.playerId}/${this.state.playerSelection}`} />,
         </div>
         <div id="script-container">
         </div>

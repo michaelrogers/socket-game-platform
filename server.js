@@ -25,10 +25,9 @@ app.use(morgan("dev"));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static("./public"));
 
-app.get('/control_device/:gameId/:playerId', function(req, res) {
-  var gameId = req.params.gameId;
-  var playerId = req.params.playerId;
-  console.log('yeah boyyyy', gameId, playerId);
+app.get('/control_device/:gameId/:playerId/:playerSelection/', function(req, res) {
+  const [gameId, playerId, playerSelection] = [req.params.gameId, req.params.playerId, req.params.playerSelection]; 
+  console.log('yeah boyyyy', gameId, playerId, playerSelection);
   res.sendFile(path.join(__dirname, '/public/fone.html'))
   // res.end('good stuff')
 })
