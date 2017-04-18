@@ -22,12 +22,12 @@ drawBat = () => {
     //Trigonometric equations for circular positioning
     const transY = dx * tan(radians(calcAngle)); //image y displacement depending on angle of rotation
     const transX = -dy / (tan(radians(calcAngle))); //image X displacement depending on angle of rotation
-    
+
     bat.position.x += transX; //moves image in x position, (0.01 to decrease magnitude**testing***)
     bat.position.y += transY; //moves image in y position, (magnitude testing)
     // bat.position.y = constrain(bat.position.y, batY - 1.25, batY + 4.4);
     // bat.position.x = constrain(bat.position.x, batX - 0.11, batX + 2);
-    
+
     /* =====could be used of accY data is more accurate====
       // --------up vs down swing--------
       //detect if player swung up
@@ -44,7 +44,7 @@ drawBat = () => {
         $('.accData').append($('<li>').text("Y Acceleration: ------NEGATIVE-----"))
         $('.accData').append($('<li>').text("Y Acceleration: " + accelerationY + " ----> Y pos: " + bat.position.y))
       }
-    */  
+    */
   }
 
   //negative and large x acceleration means player has recoiled swing backwards
@@ -53,6 +53,7 @@ drawBat = () => {
     restoreBatPos();
   }
 }
+
 /* --todo:
 1. make bat swing only after a positive x acc, with min magnitude
 2. restore bat position after swing.
