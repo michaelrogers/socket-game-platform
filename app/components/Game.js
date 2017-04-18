@@ -2,6 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import Scoreboard from './partials/Scoreboard';
 import Pinata from './partials/Pinata';
+import QRCode from 'qrcode-react';
 
 const appendScript = (scriptArray, selector) => {
     scriptArray.map(scriptPath => {
@@ -195,14 +196,16 @@ render() {
 			</div>
         </div>
         <div>
-            <a 
-                href={"/control_device/" +
+            <Link
+                to={"/control_device/" +
                 this.props.globalData.gameId + "/" +
                 this.props.globalData.playerId}>go here to connect control device: <br/>
                 {"/control_device/"+ this.props.globalData.gameId + "/" + this.props.globalData.playerId}
-             </a>
+             </Link>
         </div>
-
+        <div>
+            <QRCode value={window.location.origin + "/control_device/"+ this.props.globalData.gameId + "/" + this.props.globalData.playerId} />,
+        </div>
         <div id="script-container">
         </div>
         </div>
