@@ -1,48 +1,59 @@
 document.addEventListener('DOMContentLoaded', () => {
     const socket = io();
+    let timeoutVariable;
+    let acceptingData = true;
+    // const requestJoinRoom = () => {
+    //     sessionStorage.setItem('room-id', roomId);
+    //     // playerSelection = 0;
+    //     // $('#player-selection').val("0");
+    //     socket.emit('room', new DataPackage());
+    // }
+
+    // const inputEventHandler = (DataPackage) => {
+
+    //     var data = DataPackage.data;
+
+    //     // get y and x acceleration component
+    //     var a_y = data.acc.y;
+    //     var a_x = data.acc.x;
+
+    //     // vector magnitude and acceleration when provided with x and y acceleration components
+    //     var mag  = Math.sqrt(Math.pow(a_y, 2) + Math.pow(a_x, 2));
+    //     var alpha = Math.atan(a_x/a_y)*(180/Math.PI);
+    //     console.log(alpha)
+        
+    //     updateSpring(mag, alpha)
+    // }
 
     //DataPackage Constructor    
-    function DataPackage(data = null, dataType = null, playerId = null, roomId = null) {
+    function DataPackage(roomId, data = null, dataType = null, playerId = null, playerSelection = null) {
         this.roomId = roomId;
         this.data = data;
-        this.playerId = playerId;
-        this.timestamp = Date.now();
         this.dataType = dataType;
-    }
-
-    const requestJoinRoom = () => {
-        sessionStorage.setItem('room-id', roomId);
-        playerSelection = 0;
-        // $('#player-selection').val("0");
-        socket.emit('room', new DataPackage());
-    }
-
-    const inputEventHandler = (DataPackage) => {
-
-        var data = DataPackage.data;
-
-        // get y and x acceleration component
-        var a_y = data.acc.y;
-        var a_x = data.acc.x;
-
-        // vector magnitude and acceleration when provided with x and y acceleration components
-        var mag  = Math.sqrt(Math.pow(a_y, 2) + Math.pow(a_x, 2));
-        var alpha = Math.atan(a_x/a_y)*(180/Math.PI);
-        console.log(alpha)
-        
-        updateSpring(mag, alpha)
+        this.playerId = playerId;
+        this.playerSelection = playerSelection; 
+        this.timestamp = Date.now();
     }
     
     //Client initialization
     const connection = () => {
         // $('input[name="room-id"]').val(roomId);
-        
-        
+        const [roomId, playerSelection, playerId] = [
+            sessionStorage.getItem('room-id'),
+            sessionStorage.getItem('player-selection'),
+            sessionStorage.getItem('player-id'),
+        ];
         // Transmit
-        socket.emit('room',  new DataPackage());
+        socket.emit('room',  new DataPackage(roomId));
 
         window.addEventListener('devicemotion', (e) => {
             // get phone acceleration components
+            if (acceptingData) {
+                acceptingData = false;
+                timeoutVariable = setTimeout(() => {
+                    acceptingData = true;
+                }, 50);
+//
             let a_x = event.accelerationIncludingGravity.x;
             let a_y = event.accelerationIncludingGravity.y;
             let a_z = event.accelerationIncludingGravity.z;
@@ -58,13 +69,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
             e.preventDefault();
             // send acceleration components to 'input' socket
-            socket.emit('input', new DataPackage(data, 'acceleration', playerId, gameId));
+            socket.emit('input', new DataPackage(roomId, data, 'acceleration', playerId, playerSelection));
+            }
         }, true);
 
     }
-    let playerSelection = 0;
-    let roomId = sessionStorage.getItem('room-id') || 0;
     connection();
+    
+    
     // Receive
     socket.on('connection-status', (status) => {
 

@@ -24,23 +24,24 @@ export default class Lobby extends React.Component {
   }
 
   componentDidMount() {
-
     helpers.viewActiveGames()
       .then(response => {
         this.setState({ activeGames: response.data });
       });
+      console.log(this.props)
 
   }
 
 
-
+  // Called by create game button
   createGame(event) {
-    console.log('Create game', this.props.playerId)
-    if (this.props.playerId !== null) {
-      helpers.createNewGame(this.props.playerId)
+    console.log('Create game', this.props.globalData.playerId, this.props)
+    if (this.props.globalData.playerId !== null) {
+      helpers.createNewGame(this.props.globalData.playerId)
         .then(response => {
           // Need a way to route to game
-          console.log(response)
+          this.props.setGameId(response._id);
+          sessionStorage.setItem('player-selection', 0);
         });
     }
   }
@@ -48,10 +49,20 @@ export default class Lobby extends React.Component {
   handleJoin(event) {
     const gameId = event.currentTarget.dataset.gameid || null;
     if (gameId) {
+      this.props.setGameId(gameId)
       sessionStorage.setItem('room-id', gameId);
-      helpers.joinGame(gameId, this.props.playerId);
+      helpers.joinGame(gameId, this.props.globalData.playerId)
+      .then(response => {
+        Array.from(response.player)
+        .map((player, i) => {
+          if (player == this.props.globalData.playerId) {
+            sessionStorage.setItem('player-selection', i);
+            console.log('Player is', i)
+          }
+        });
+        
+      });
     }
-    this.props.setGameId(gameId)
   }
 
   displayPlayers(players) {
@@ -109,6 +120,16 @@ export default class Lobby extends React.Component {
                 <div><h4>Players Online: <span>{this.props.globalData.playerCount}</span></h4></div>
                 <h4>Playing as: {this.props.globalData.playerName}</h4>
                 <Link to="/game" className="btn btn-primary" onClick={this.createGame}>Create New Game</Link>
+              </div>
+            </div>
+            
+            <div className="panel panel-default">
+              <div className="panel-heading">
+                <h3 className="panel-title text-center">Player Feed</h3>
+              </div>
+              <div className="panel-body">
+                <div><h4>Players Online: <span>{this.props.globalData.playerCount}</span></h4></div>
+                <h4>Playing as: {this.props.globalData.playerName}</h4>
               </div>
             </div>
           </div>
