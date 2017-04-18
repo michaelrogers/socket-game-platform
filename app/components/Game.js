@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import Scoreboard from './partials/Scoreboard';
 import Pinata from './partials/Pinata';
 import QRCode from 'qrcode-react';
+import helpers from "./utils/helpers";
 
 const appendScript = (scriptArray, selector) => {
     scriptArray.map(scriptPath => {
@@ -38,6 +39,7 @@ export default class Lobby extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            apiResponse: {},
             playerSelection: null,
             chatInput: null,
             messages: [],
@@ -67,7 +69,7 @@ export default class Lobby extends React.Component {
     }
     componentWillUnmount () {
         document.querySelector('#canvas').classList.add("hidden");
-        
+
     }
     componentDidMount() {
         this.setState({playerSelection: sessionStorage.getItem('player-selection')});
@@ -150,6 +152,20 @@ export default class Lobby extends React.Component {
             )
         );
     }
+
+    componentWillMount() {
+      // let long_url = window.location.origin + "/control_device/" + this.props.globalData.gameId + "/" + this.props.globalData.playerId;
+      let long_url = "http://192.168.1.66:3000/control_device/" + this.props.globalData.gameId + "/" + this.props.globalData.playerId + "/" + this.state.playerSelection;
+      helpers.runQuery(long_url).then(function(response) {
+        this.setState({
+          apiResponse: {
+            bitlyURL: response.url
+          }
+        });
+      }.bind(this));
+    }
+
+
 render() {
     return (
     <div>
@@ -209,7 +225,11 @@ render() {
              </Link>
         </div>
         <div>
-            <QRCode value={`${window.location.origin}/control_device/${this.props.globalData.gameId}/${this.props.globalData.playerId}/${this.state.playerSelection}`} />,
+          Control Device Link: <strong>{this.state.apiResponse.bitlyURL}</strong>
+        </div>
+        <div>
+          {/* <QRCode value={`${window.location.origin}/control_device/${this.props.globalData.gameId}/${this.props.globalData.playerId}/${this.state.playerSelection}`} />, */}
+            <QRCode value={`http://192.168.1.66:3000/control_device/${this.props.globalData.gameId}/${this.props.globalData.playerId}/${this.state.playerSelection}`} />,
         </div>
         <div id="script-container">
         </div>
