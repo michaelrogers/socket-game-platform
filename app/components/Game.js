@@ -39,7 +39,7 @@ export default class Lobby extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            apiResponse: {},
+            bitlyURL: null,
             playerSelection: null,
             chatInput: null,
             messages: [],
@@ -64,8 +64,6 @@ export default class Lobby extends React.Component {
     // this.childData = this.childData.bind(this);
     this.sendSocketInput = this.sendSocketInput.bind(this);
 
-}
-    componentWillMount () {
     }
     componentWillUnmount () {
         document.querySelector('#canvas').classList.add("hidden");
@@ -155,13 +153,9 @@ export default class Lobby extends React.Component {
 
     componentWillMount() {
       // let long_url = window.location.origin + "/control_device/" + this.props.globalData.gameId + "/" + this.props.globalData.playerId;
-      let long_url = "http://192.168.1.66:3000/control_device/" + this.props.globalData.gameId + "/" + this.props.globalData.playerId + "/" + this.state.playerSelection;
+      let long_url = window.location.origin +"/control_device/" + this.props.globalData.gameId + "/" + this.props.globalData.playerId + "/" + this.state.playerSelection;
       helpers.runQuery(long_url).then(function(response) {
-        this.setState({
-          apiResponse: {
-            bitlyURL: response.url
-          }
-        });
+        this.setState({ bitlyURL: response.url });
       }.bind(this));
     }
 
@@ -224,7 +218,7 @@ render() {
              </Link>
         </div>
         <div>
-            Control Device Link: <strong>{this.state.apiResponse.bitlyURL}</strong>
+            <h1>Control Device Link: <strong>{this.state.bitlyURL}</strong></h1>
         </div>
         <div>
             <QRCode value={`${window.location.origin}/control_device/${this.props.globalData.gameId}/${this.props.globalData.playerId}/${this.state.playerSelection}`} />,
