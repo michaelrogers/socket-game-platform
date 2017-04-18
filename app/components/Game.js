@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import Scoreboard from './partials/Scoreboard';
 import Pinata from './partials/Pinata';
-// import Motion from './partials/Motion';
+import QRCode from 'qrcode-react';
 
 const appendScript = (scriptArray, selector) => {
     scriptArray.map(scriptPath => {
@@ -22,35 +22,33 @@ function DataPackage(globalData, playerSelection, dataType = null, data = null) 
     this.timestamp = Date.now();
 }
 const inputEventHandler = (DataPackage) => {
+    const a_y = DataPackage.data.acc.y;
+    const a_x = DataPackage.data.acc.x;
 
 
-    var a_y = DataPackage.data.acc.y;
-    var a_x = DataPackage.data.acc.x;
-
-
-    var mag  = Math.sqrt(Math.pow(a_y, 2) + Math.pow(a_x, 2));
-    var alpha = Math.atan(a_x/(a_y))*( 180 / Math.PI);
+    const mag  = Math.sqrt(Math.pow(a_y, 2) + Math.pow(a_x, 2));
+    const alpha = Math.atan(a_x/(a_y))*( 180 / Math.PI);
 
     // updateSpring(mag, alpha)
     drawBat(mag);
 }
 
 export default class Lobby extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-        playerSelection: 1,
-        chatInput: null,
-        messages: [],
-        score: {
-            player1: 0,
-            player2: 0
-        },
-        acceleration: {
-            x: 0,
-            y: 0,
-            z: 0
-        }
+    constructor(props) {
+        super(props);
+        this.state = {
+            playerSelection: 1,
+            chatInput: null,
+            messages: [],
+            score: {
+                player1: 0,
+                player2: 0
+            },
+            acceleration: {
+                x: 0,
+                y: 0,
+                z: 0
+            }
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -122,8 +120,8 @@ export default class Lobby extends React.Component {
 
     displayChatMessages() {
         return this.state.messages
-        .map(message => {
-            return <li className="text-left">{message}</li>
+        .map((message, i) => {
+            return <li key={i} className="text-left">{message}</li>
         });
     }
 
@@ -133,20 +131,20 @@ export default class Lobby extends React.Component {
     childData(x, y) {
     }
     sendSocketInput(x,y) {
-      const data = {
-      acc: {
-              x: x,
-              y: y
-          }
-      }
-      this.props.socket.emit('input',
-          new DataPackage(
-              this.props.globalData,
-              this.state.playerSelection,
-              'acceleration',
-              data
-          )
-      );
+        const data = {
+        acc: {
+                x: x,
+                y: y
+            }
+        }
+        this.props.socket.emit('input',
+            new DataPackage(
+                this.props.globalData,
+                this.state.playerSelection,
+                'acceleration',
+                data
+            )
+        );
     }
 render() {
     return (
@@ -156,8 +154,8 @@ render() {
             score={this.state.score}
         />
         <div className="col-xs-8 col-xs-offset-2">
-          {/* Motion Component*/}
-          {/*< Motion childData={this.childData}/>*/}
+        {/* Motion Component*/}
+        {/*< Motion childData={this.childData}/>*/}
 
                 <input type="text" onKeyPress={this.onKeyPress} />
             <div className="input-group">
@@ -199,9 +197,16 @@ render() {
 			</div>
         </div>
         <div>
-            <a href={"/control_device/"+ this.props.globalData.gameId + "/" + this.props.globalData.playerId}>go here to connect control device: {"/control_device/"+ this.props.globalData.gameId + "/" + this.props.globalData.playerId}</a>
+            <Link
+                to={"/control_device/" +
+                this.props.globalData.gameId + "/" +
+                this.props.globalData.playerId}>go here to connect control device: <br/>
+                {"/control_device/"+ this.props.globalData.gameId + "/" + this.props.globalData.playerId}
+             </Link>
         </div>
-
+        <div>
+            <QRCode value={window.location.origin + "/control_device/"+ this.props.globalData.gameId + "/" + this.props.globalData.playerId} />,
+        </div>
         <div id="script-container">
         </div>
         </div>
