@@ -165,7 +165,6 @@ export default class Lobby extends React.Component {
       }.bind(this));
     }
 
-
 render() {
     return (
     <div>
@@ -225,11 +224,10 @@ render() {
              </Link>
         </div>
         <div>
-          Control Device Link: <strong>{this.state.apiResponse.bitlyURL}</strong>
+            Control Device Link: <strong>{this.state.apiResponse.bitlyURL}</strong>
         </div>
         <div>
-          {/* <QRCode value={`${window.location.origin}/control_device/${this.props.globalData.gameId}/${this.props.globalData.playerId}/${this.state.playerSelection}`} />, */}
-            <QRCode value={`http://192.168.1.66:3000/control_device/${this.props.globalData.gameId}/${this.props.globalData.playerId}/${this.state.playerSelection}`} />,
+            <QRCode value={`${window.location.origin}/control_device/${this.props.globalData.gameId}/${this.props.globalData.playerId}/${this.state.playerSelection}`} />,
         </div>
         <div id="script-container">
         </div>
