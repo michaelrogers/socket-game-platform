@@ -8,13 +8,13 @@ const helpers = {
     createNewGame: (playerId) => {
         return axios.post(`api/game/create/${playerId}`)
         .then(response => {
-            return response;
+            return response.data;
         });
     },
     joinGame: (gameId, playerId) => {
         return axios.post(`api/game/join/${gameId}/${playerId}`)
         .then(response => { 
-            return response;
+            return response.data;
         });
     },
     createNewPlayer: (playerName) => {

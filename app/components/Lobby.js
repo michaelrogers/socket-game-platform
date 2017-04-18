@@ -24,23 +24,23 @@ export default class Lobby extends React.Component {
   }
 
   componentDidMount() {
-
     helpers.viewActiveGames()
       .then(response => {
         this.setState({ activeGames: response.data });
       });
+      console.log(this.props)
 
   }
 
 
-
+  // Called by create game button
   createGame(event) {
-    console.log('Create game', this.props.playerId)
-    if (this.props.playerId !== null) {
-      helpers.createNewGame(this.props.playerId)
+    console.log('Create game', this.props.globalData.playerId, this.props)
+    if (this.props.globalData.playerId !== null) {
+      helpers.createNewGame(this.props.globalData.playerId)
         .then(response => {
           // Need a way to route to game
-          console.log(response)
+          this.props.setGameId(response._id)
         });
     }
   }
@@ -49,7 +49,7 @@ export default class Lobby extends React.Component {
     const gameId = event.currentTarget.dataset.gameid || null;
     if (gameId) {
       sessionStorage.setItem('room-id', gameId);
-      helpers.joinGame(gameId, this.props.playerId);
+      helpers.joinGame(gameId, this.props.globalData.playerId);
     }
     this.props.setGameId(gameId)
   }

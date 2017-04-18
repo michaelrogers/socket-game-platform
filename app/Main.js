@@ -18,7 +18,7 @@ export default class Main extends React.Component {
     this.state = {
         activeGames: [], 
         playerId: sessionStorage.getItem('player-id') || null,
-        playerName: null,
+        playerName: sessionStorage.getItem('username') || null,
         playerCount: 0,
         gameId: null
     };
