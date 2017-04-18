@@ -48,18 +48,22 @@ drawBat = (mag) => {
     */
   }
   // collision detection
-  if (bat.overlap(pinata)) {
-
-    // translate phone-speed to angle - some equation here
+  // if (bat.overlap(pinata)) {
+  //
+  //   // translate phone-speed to angle - some equation here
+  //   angle = -Math.PI / 15 * 1;
+  //   // console.log("show stats of swing or damage caused to pinata")
+  //
+  //   // update hits
+  //   // hits++;
+  //   console.log("number of hits: " + hits);
+  // } else {
+  //   pinata.shapeColor = color(0);
+  // }
+  bat.overlap(pinata, () => {
+    console.log("bat overlaps pinata");
     angle = -Math.PI / 15 * 1;
-    // console.log("show stats of swing or damage caused to pinata")
-
-    // update hits
-    // hits++;
-    console.log("number of hits: " + hits);
-  } else {
-    pinata.shapeColor = color(0);
-  }
+  });
 
   //negative and large x acceleration means player has recoiled swing backwards
   //restore bat position when user recoils swings
