@@ -152,8 +152,9 @@ export default class Lobby extends React.Component {
     }
 
     componentWillMount() {
+      let playerSel = sessionStorage.getItem('player-selection');
       // let long_url = window.location.origin + "/control_device/" + this.props.globalData.gameId + "/" + this.props.globalData.playerId;
-      let long_url = window.location.origin +"/control_device/" + this.props.globalData.gameId + "/" + this.props.globalData.playerId + "/" + this.state.playerSelection;
+      let long_url = window.location.origin +"/control_device/" + this.props.globalData.gameId + "/" + this.props.globalData.playerId + "/" + playerSel;
       helpers.runQuery(long_url).then(function(response) {
         this.setState({ bitlyURL: response.url });
       }.bind(this));
