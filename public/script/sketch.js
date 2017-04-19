@@ -98,7 +98,7 @@ draw = () => {
     ellipse(250, len + 20, 5, 5);
 
     // what happens after screwing up pinata
-    if (hits >= 20) {
+    if (hits >= 3) {
         pinata.remove();
         // replace here with broken pinata
         pinata.velocity.x = 0;

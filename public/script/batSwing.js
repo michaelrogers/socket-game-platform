@@ -33,7 +33,6 @@ drawBat = (mag) => {
           acceptingData = true;
       }, 500);
     }
-    // hits++;
     console.log("bat overlaps pinata", hits);
     angle = -Math.PI / 15 * 1;
   });

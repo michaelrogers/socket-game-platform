@@ -94,7 +94,6 @@ module.exports = {
                 // console.log(DataPackage);
                 io.sockets.in(DataPackage.roomId).emit('input', DataPackage);
             });
-
         }); //End connection
 
     }
