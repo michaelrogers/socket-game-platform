@@ -5,13 +5,12 @@ const pivot_x = 200;
 const pivot_y = 0;
 const len = 450;
 let angle = 0;
-// var angle = Math.PI/4;
 const gravity = 0.01;
 let acc;
 let vel;
 let hits = 0;
 let batSwings = 0;
-const jit = 10;
+let jit = 10;
 let pinata;
 //arm & bat swing variables
 let bat, batX, batY, swingAngle, calcAngle;
@@ -45,13 +44,13 @@ let ps = 0, // Position   ps = R,
 let candies = [];
 
 // preload image to sprite
-function preload() {
+preload = () => {
     arm = loadImage('/img/arm125.png');
     dummy = loadImage('/img/bird.png');
 }
 console.log('Sketch file loaded')
 // *************** //
-function setup() {
+setup = () => {
     // try {
 
 
@@ -91,7 +90,7 @@ function setup() {
 
 }
 
-function draw() {
+draw = () => {
     background(50);
     // reference pivot point - not needed
     ellipse(250, 20, 5, 5);
@@ -121,7 +120,7 @@ function draw() {
 
 // ************************ //
 
-function updateSpring(mag, alpha) {
+updateSpring = (mag, alpha) => {
     // console.log('Update Spring', mag, alpha)
 
   mag = -mag;
@@ -156,7 +155,7 @@ function updateSpring(mag, alpha) {
 
 
 
-function pinataSwing() {
+pinataSwing = () => {
     acc = -gravity * sin(angle);
 
     // rotating object to align with rope plus some jittering - fix jittering to re-start after every hit, not really needed
@@ -177,10 +176,9 @@ function pinataSwing() {
 
 // ******************** //
 
-function Candy(batForce, img) {
-
+class Candy {
+    constructor() {
   this.pos = createVector(pivot_x - 10, pivot_y + len + 40);
-  // this.img = sweet;
 
   this.vel = createVector(random(-1, 0.2), random(-2,0));
 
@@ -189,18 +187,17 @@ function Candy(batForce, img) {
   var grav = createVector(0, 0.1);
 
 
-  this.applyForce = function() {
-  // mass = 1
+  this.applyForce = () => {
     this.acc.add(grav);
   }
 
-  this.update = function(){
+  this.update = () => {
     this.vel.add(this.acc);
     this.pos.add(this.vel);
     this.acc.mult(0);
   }
 
-  this.show = function() {
+  this.show = () => {
     fill(125, 125, 255);
     noStroke();
     // stroke(0, 125, 235);
@@ -210,4 +207,5 @@ function Candy(batForce, img) {
     ellipse(this.pos.x, this.pos.y, random(7, 11), random(5, 9));
 
   }
+    }
 }
