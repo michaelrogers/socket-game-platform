@@ -1,3 +1,69 @@
+module.exports = {
+    listen: (port, app) => {
+        const http = require('http').Server(app);
+        const io = require('socket.io')(http);
+        http.listen(port, () => console.log(`App listening on port ${port}!`));
+        const connectionCount = (socket) => {
+            try {
+                if (socket && socket.server) {
+                console.log('Player Count:',
+                    socket.server.engine.clientsCount);
+                    console.log(socket.server.engine.clientsCount)
+                    io.emit('player:count', socket.server.engine.clientsCount);
+                }
+            } catch (e) { console.log(e); }
+        };
+
+        const leaveRooms = (socket) => {
+            if (socket && socket.rooms) {
+
+            try {
+                // Leave all rooms the socket is in
+                const roomIdArray = Object.keys(socket.rooms);
+                if (roomIdArray) {
+
+                roomIdArray.forEach(room => {
+                    socket.leave(room);
+                    io.sockets.in(room).emit('connection-status', 'User Left');
+                });
+                }
+            } catch (e) { console.log(e); }
+            }
+        };
+
+        io.on('connection', (socket) => {
+            //--------------Connection-status-----------------
+            connectionCount(socket);
+
+            socket.on('disconnect', (socket) => {
+                connectionCount(socket);
+                leaveRooms(socket);
+            });
+
+            //--------------Data--channels---------------------
+            //A client requests to join a room and the server joins them
+            socket.on('room', (DataPackage) => {
+                leaveRooms(socket);
+                // Then join the specified room
+                socket.join(DataPackage.roomId);
+                let phoneCount = 0;
+                if (DataPackage.phone) { phoneCount++ }
+                if (phoneCount > 1) { console.log('Game started') }
+                io.sockets.in(DataPackage.roomId).emit('connection-status', `New player joined room ${DataPackage.roomId}`)
+            });
+            //Note: No auto teardown of sockets necessary
+            socket.on('chat-message', (DataPackage) => {
+                io.sockets.in(DataPackage.roomId).emit('chat-message', DataPackage.data);
+            });
+
+            // Relay device input to all connected clients in the room
+            socket.on('input', (DataPackage) => {
+                io.sockets.in(DataPackage.roomId).emit('input', DataPackage);
+            });
+        }); //End connection
+
+    }
+}
 /*
 ** Lobby data routes
 
@@ -29,73 +95,3 @@
 
 
 */
-
-
-
-// app.get('/', (req, res) => {
-//   res.sendFile('public/index.html')
-// });
-
-module.exports = {
-    listen: (port, app) => {
-        const http = require('http').Server(app);
-        const io = require('socket.io')(http);
-        http.listen(port, () => console.log(`App listening on port ${port}!`));
-        const connectionCount = (socket) => {
-            try {
-                if (socket && socket.server) {
-                console.log('Player Count:',
-                    socket.server.engine.clientsCount);
-                    console.log(socket.server.engine.clientsCount)
-                    io.emit('player:count', socket.server.engine.clientsCount);
-                }
-            } catch (e) { console.log(e); }
-        };
-
-        const leaveRooms = (socket) => {
-            try {
-                // Leave all rooms the socket is in
-                const roomIdArray = Object.keys(socket.rooms);
-                if (roomIdArray) {
-
-                roomIdArray.forEach(room => {
-                    socket.leave(room);
-                    io.sockets.in(room).emit('connection-status', 'User Left');
-                });
-                }
-            } catch (e) { console.log(e); }
-        };
-
-        io.on('connection', (socket) => {
-            //--------------Connection-status-----------------
-            connectionCount(socket);
-
-            socket.on('disconnect', (socket) => {
-                connectionCount(socket);
-                leaveRooms(socket);
-            });
-
-            //--------------Data--channels---------------------
-            //A client requests to join a room and the server joins them
-            socket.on('room', (DataPackage) => {
-                leaveRooms(socket);
-                // Then join the specified room
-                socket.join(DataPackage.roomId);
-                io.sockets.in(DataPackage.roomId).emit('connection-status', `New player joined room ${DataPackage.roomId}`)
-            });
-            //Note: No auto teardown of sockets necessary
-            socket.on('chat-message', (DataPackage) => {
-                io.sockets.in(DataPackage.roomId).emit('chat-message', DataPackage.data);
-            });
-
-            // Relay device input to all connected clients in the room
-            socket.on('input', (DataPackage) => {
-                // console.log("---getting server data----");
-                // console.log(DataPackage);
-                io.sockets.in(DataPackage.roomId).emit('input', DataPackage);
-            });
-
-        }); //End connection
-
-    }
-}

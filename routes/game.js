@@ -13,12 +13,19 @@ router.post('/join/:gameid/:playerid', (req, res) => {
 router.post('/create/:playerid', (req, res) => {
     console.log('Create player', req.params)
     gameController.createGame(req, res);
-})
+});
 
 router.get('/complete/:gameid', (req, res) => {
     console.log(req.params)
     if (req.params.gameid) {
         gameController.completeGame(req.params.gameid)
+    } else console.log('Nope.');
+});
+
+router.post('/remove/:gameid', (req, res) => {
+    console.log('Route', req.params.gameid)
+     if (req.params.gameid) {
+        gameController.removeGame(req, res)
     } else console.log('Nope.');
 });
 
