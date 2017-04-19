@@ -90,6 +90,7 @@ setup = () => {
     bat = createSprite(batX, batY, 20, 200)
     bat.shapeColor = color(128);
     bat.addImage(arm)
+
     // candies
     for (var i = 0; i < 150; i++) {
         candies.push(new Candy());
@@ -105,6 +106,18 @@ draw = () => {
     ellipse(250, 20, 5, 5);
     // reference equilibrium point - not needed
     ellipse(250, len + 20, 5, 5);
+
+    if (hits < 6) {
+    if (bat.overlap(pinata)) {
+        jit = 10;
+        var rSound = Math.floor(random(0, hitSound.length));
+        hitSound[rSound].setVolume(0, 2);
+        hitSound[rSound].play();
+        // chicken.setVolume(0.1);
+        // chicken.play();
+      }
+    }
+
 
     // what happens after screwing up pinata
     if (hits >= 5) {
