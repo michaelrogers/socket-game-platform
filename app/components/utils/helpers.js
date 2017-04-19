@@ -11,6 +11,11 @@ const helpers = {
             return response.data;
         });
     },
+    removeGame: (gameId) => {
+        return axios.post(`api/game/remove/${gameId}`)
+        .then(response => response.data);
+    },
+
     joinGame: (gameId, playerId) => {
         return axios.post(`api/game/join/${gameId}/${playerId}`)
         .then(response => { 

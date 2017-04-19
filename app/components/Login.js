@@ -6,12 +6,17 @@ import helpers from "./utils/helpers";
 export default class Lobby extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {}
+        this.state = {
+            inputUsername: undefined
+        }
         // Functions must be bound manually with ES6 classNames
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleLogin = this.handleLogin.bind(this);
+        this.handleLogout = this.handleLogout.bind(this);
         this.handleNewUser = this.handleNewUser.bind(this);
+        this.displayControls = this.displayControls.bind(this);
+        console.log('Login', this.props)
     }
 
     handleChange(e) {
@@ -24,6 +29,17 @@ export default class Lobby extends React.Component {
         helpers.login(this.state.inputUsername);
     }
 
+    handleLogout(e) {
+        this.props.setMainState({
+            playerId: undefined,
+            gameId: undefined,
+            playerSelection: undefined,
+            playerName: undefined
+        });
+        sessionStorage.clear();
+        document.getElementById('inputUsername').value = "";
+    }
+
     handleNewUser(e) {
         helpers.createNewPlayer(this.state.inputUsername)
         .then(response => {
@@ -31,14 +47,19 @@ export default class Lobby extends React.Component {
             this.props.setPlayerInfo(response.name, response._id);
         });
     }
+    handleSubmit(e) { e.preventDefault(); }
 
-
-    handleSubmit(e) {
-        e.preventDefault();
-        console.log(this.state);
-        // sessionStorage.setItem('inputUsername', this.state.inputUsername)
+    displayControls() {
+        if (this.props.globalData.playerId) {
+            return (
+                <button type="submit" onClick={this.handleLogout} className="btn btn-primary">Log Out</button>
+            );
+        } else {
+            return (
+                <button type="submit" onClick={this.handleNewUser} className="btn btn-primary">Create Account</button>
+            );
+        }
     }
-
 
  render() {
     return (
@@ -51,23 +72,20 @@ export default class Lobby extends React.Component {
 
         <div className="row">
         <div className="col-xs-8 col-xs-offset-2">
-        <form onSubmit={this.handleSubmit}>
             <div className="form-group">
                 <label htmlFor="inputUsername">Username</label>
-                <input type="text" className="form-control" id="inputUsername" placeholder="Username" onChange={this.handleChange}/>
+                <input type="text" className="form-control" id="inputUsername" placeholder="Username" onChange={this.handleChange} defaultValue={this.props.globalData.playerName} />
+                {this.displayControls()}
             </div>
             {/*
             <div className="form-group">
                 <label htmlFor="password">Password </label>
                 <input type="password" className="form-control" id="password" placeholder="Password" onChange={this.handleChange}/>
             </div>
+                {/* 
             */}
-            {/* 
-            <button type="submit" onClick={this.handleLogin} className="btn btn-default">Login</button>
-            */}
-            <button type="submit" onClick={this.handleNewUser} className="btn btn-primary">New Account</button>
             
-        </form>
+            
         </div>
         </div>
     

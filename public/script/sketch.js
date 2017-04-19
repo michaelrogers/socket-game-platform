@@ -50,7 +50,7 @@ function preload() {
     arm = loadImage('/img/arm125.png');
     dummy = loadImage('/img/bird.png');
 }
-console.log('Sketch file loaded')
+// console.log('Sketch file loaded')
 // *************** //
 function setup() {
     // try {
@@ -87,7 +87,7 @@ function setup() {
     for (var i = 0; i < 150; i++) {
         candies.push(new Candy());
     }
-    console.log('Sketch file setup')
+    // console.log('Sketch file setup')
     // } catch (e) { console.log(e); }
 
 }
