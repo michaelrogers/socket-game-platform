@@ -60,7 +60,6 @@ module.exports = {
             socket.on('input', (DataPackage) => {
                 io.sockets.in(DataPackage.roomId).emit('input', DataPackage);
             });
-
         }); //End connection
 
     }
