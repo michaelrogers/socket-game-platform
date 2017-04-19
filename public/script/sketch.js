@@ -1,49 +1,48 @@
-let timeoutVariable;
-let acceptingData = true;
+// let timeoutVariable;
+// let acceptingData = true;
 // pendulum
-var pivot_x = 250;
-var pivot_y = 20;
-var len = 350;
-var angle = 0;
+const pivot_x = 200;
+const pivot_y = 0;
+const len = 450;
+let angle = 0;
 // var angle = Math.PI/4;
-var gravity = 0.01;
-var acc;
-var vel;
-var hits = 0;
-var jit = 10;
-var pinata;
+const gravity = 0.01;
+let acc;
+let vel;
+let hits = 0;
+let batSwings = 0;
+const jit = 10;
+let pinata;
 //arm & bat swing variables
 let bat, batX, batY, swingAngle, calcAngle;
 //-------------Spring--------------
 // Spring drawing constants for top bar
 
-var R = 0;
+let R = 0;
 
-var ready = true;
-var springHeight = 32,
+let ready = true;
+let springHeight = 32,
     left,
     right,
-    maxHeight = 300,
-    minHeight = 100,
+    maxHeight = 350,
+    minHeight = 350,
     over = false,
     move = false;
 
 // Spring simulation constants
-var M = 1000, // Mass
-    K = 0.2, // Spring constant
-    D = 0.98; // Damping
+const M = 5, // Mass
+    K = 3, // Spring constant
+    D = 0.7; // Damping
 // R = 0;
 
 // Spring simulation variables
-var ps = 0, // Position   ps = R,
+let ps = 0, // Position   ps = R,
     vs = 0.0, // Velocity
     as = 0, // Acceleration
     f = 0; // Force
 
 // candy spill
-var candies = [];
-// console.log('WASDADSASDADS')
-// *************** //
+let candies = [];
 
 // preload image to sprite
 function preload() {
@@ -91,45 +90,6 @@ function setup() {
     // } catch (e) { console.log(e); }
 
 }
-  /*
-// bat hit function triggered by mouse press
-function hit() {
-    // change here to bat trigger
-    if (mouseIsPressed) {
-        // random cord length
-        // len += random(-10, 40)
-
-        // bat forward x and some up/down y position change
-        // translate trigger value to bat position
-        bat.position.x += random(0, -50);
-        bat.position.y += random(-10, 20);
-
-        // bat forward rotation
-        bat.rotation = -20;
-    } else {
-        // return bat to original position
-        bat.rotation = 10;
-        bat.position.x = 650
-        bat.position.y = 550
-        len = 350;
-    }
-
-    // collision detection
-    if (bat.overlap(pinata)) {
-
-        // translate phone-speed to angle - some equation here
-        angle = -Math.PI / 15 * 1;
-        // console.log("show stats of swing or damage caused to pinata")
-
-        // update hits
-        // hits++;
-        console.log("number of hits: " + hits);
-    } else {
-        pinata.shapeColor = color(0);
-    }
-}
-    */
-// *************************** //
 
 function draw() {
     background(50);
@@ -139,7 +99,7 @@ function draw() {
     ellipse(250, len + 20, 5, 5);
 
     // what happens after screwing up pinata
-    if (hits >= 7) {
+    if (hits >= 20) {
         pinata.remove();
         // replace here with broken pinata
         pinata.velocity.x = 0;
@@ -151,31 +111,10 @@ function draw() {
             candies[i].applyForce();
             candies[i].update();
             candies[i].show();
-
-            // bounce off screen-bottom
-            // if (candies[i].pos.y > height - 20) {
-            //   candies[i].pos.y = height - 20;
-            //   candies[i].vel.x *= 0.9;
-            //   candies[i].vel.y *= -0.6;
-            // }
-            //   }
-
-
         }
     } else {
         pinataSwing()
     }
-
-
-    // cord pull trigger
-    // if (accelerationY !== 0) {
-    //     // what accelerationY will trigger spring motion,
-    //     // negative value to pinata upward motion
-
-    //     updateSpring()
-    // }
-
-    // hit();
     drawSprites();
 
 }
@@ -183,7 +122,7 @@ function draw() {
 // ************************ //
 
 function updateSpring(mag, alpha) {
-    console.log('Update Spring', mag, alpha)
+    // console.log('Update Spring', mag, alpha)
 
   mag = -mag;
     // Update the spring position
@@ -206,11 +145,10 @@ function updateSpring(mag, alpha) {
 
     // Set and constrain the position of top bar
     if (mag < -30) {
-        // $('.accData').append($('<li>').text("Y acc: " + accelerationY))
-        // document.querySelector('.accData').appendChild($('<li>').text("Y acc: " + alpha))
+
         ps = mag * 0.5;
         mag *= 0.01;  // damping
-        angle = alpha;
+        // angle = alpha*.03;
         ps = constrain(ps, minHeight, maxHeight);
     }
 
@@ -218,7 +156,7 @@ function updateSpring(mag, alpha) {
 
 
 
-function pinataSwing(displacement) {
+function pinataSwing() {
     acc = -gravity * sin(angle);
 
     // rotating object to align with rope plus some jittering - fix jittering to re-start after every hit, not really needed
@@ -273,6 +211,3 @@ function Candy(batForce, img) {
 
   }
 }
-
-
-// });
