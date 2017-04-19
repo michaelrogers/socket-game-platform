@@ -3,7 +3,36 @@ import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import Scoreboard from './partials/Scoreboard';
 import Pinata from './partials/Pinata';
 import QRCode from 'qrcode-react';
+import Modal from 'react-modal';
 
+const customStyles = {
+  overlay : {
+    position          : 'fixed',
+    top               : 0,
+    left              : 0,
+    right             : 0,
+    bottom            : 0,
+    backgroundColor   : 'rgba(255, 255, 255, 0.55)'
+  },
+  content : {
+    position                   : 'absolute',
+    top                        : '20%',
+    left                       : '40%',
+    right                      : '40%',
+    bottom                     : '20%',
+    border                     : '1px solid #ccc',
+    background                 : '#fff',
+    overflow                   : 'auto',
+    WebkitOverflowScrolling    : 'touch',
+    borderRadius               : '4px',
+    outline                    : 'none',
+    padding                    : '20px',
+    zIndex                     : 1000,
+    marginLeft                 : 'auto',
+    marginRight                : 'auto',
+    display                    : 'block'
+  }
+}
 const appendScript = (scriptArray, selector) => {
     scriptArray.map(scriptPath => {
         const script = document.createElement('script');
@@ -38,7 +67,7 @@ export default class Lobby extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            playerSelection: null,
+            playerSelection: sessionStorage.getItem('player-selection'),
             chatInput: null,
             messages: [],
             score: {
@@ -49,7 +78,8 @@ export default class Lobby extends React.Component {
                 x: 0,
                 y: 0,
                 z: 0
-            }
+            },
+            modalIsOpen: false
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -61,10 +91,11 @@ export default class Lobby extends React.Component {
 
     // this.childData = this.childData.bind(this);
     this.sendSocketInput = this.sendSocketInput.bind(this);
-
+    // --modals--
+    this.openModal = this.openModal.bind(this);
+    this.afterOpenModal = this.afterOpenModal.bind(this);
+    this.closeModal = this.closeModal.bind(this);
 }
-    componentWillMount () {
-    }
     componentWillUnmount () {
         document.querySelector('#canvas').classList.add("hidden");
         
@@ -150,6 +181,15 @@ export default class Lobby extends React.Component {
             )
         );
     }
+    openModal() {
+        this.setState({modalIsOpen: true});
+    }
+    afterOpenModal() {
+        //?
+    }
+    closeModal() {
+        this.setState({modalIsOpen:false});
+    }
 render() {
     return (
     <div>
@@ -209,7 +249,17 @@ render() {
              </Link>
         </div>
         <div>
-            <QRCode value={`${window.location.origin}/control_device/${this.props.globalData.gameId}/${this.props.globalData.playerId}/${this.state.playerSelection}`} />,
+            <button onClick={this.openModal}>QR Scan Code</button>
+            <Modal 
+                isOpen={this.state.modalIsOpen}
+                onAfterOpen={this.afterOpenModal}
+                onRequestClose={this.closeModal}
+                contentLable="Modal"
+                shouldCloseOnOverlayClick={true}
+                style={customStyles}
+            >
+                <QRCode value={`${window.location.origin}/control_device/${this.props.globalData.gameId}/${this.props.globalData.playerId}/${this.state.playerSelection}`} />
+            </Modal>
         </div>
         <div id="script-container">
         </div>
