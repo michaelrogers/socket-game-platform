@@ -1,6 +1,19 @@
 import axios from 'axios';
 
 const helpers = {
+
+    runQuery : (long_url) => {
+        let bitlyToken = 'f707841cb08536c98723f28ac1d64de1c7dc0162';
+        let queryURL = "https://api-ssl.bitly.com/v3/shorten?access_token=" + bitlyToken + "&longUrl=" + long_url;
+
+        return axios.get(queryURL).then(function(apiResponse) {
+          console.log("axios long url: " + long_url);
+          console.log(apiResponse);
+          console.log("axios shortened url: " + apiResponse.data.data.url)
+          return apiResponse.data.data;
+        });
+    },
+
     viewActiveGames: () => {
         return axios.get("api/game/")
         .then(function(response) {return response; });
@@ -18,7 +31,7 @@ const helpers = {
 
     joinGame: (gameId, playerId) => {
         return axios.post(`api/game/join/${gameId}/${playerId}`)
-        .then(response => { 
+        .then(response => {
             return response.data;
         });
     },

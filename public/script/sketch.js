@@ -42,18 +42,27 @@ let ps = 0, // Position   ps = R,
 
 // candy spill
 let candies = [];
+var sweet = [];
+var hitSound = [];
+var chicken;
 
 // preload image to sprite
 preload = () => {
     arm = loadImage('/img/arm125.png');
     dummy = loadImage('/img/bird.png');
+    for (var i=0; i < 3; i++ ) {
+     sweet[i] = loadImage("/img/sweet" + i + ".png");
+     console.log(sweet.length)
+    }
+    // sounds
+    for (var j=0; j < 6; j++) {
+      hitSound[j] = loadSound('/sounds/hit' + j + '.mp3');
+    }
+    chicken = loadSound('/sounds/chicken1.mp3')
 }
 // console.log('Sketch file loaded')
 // *************** //
 setup = () => {
-    // try {
-
-
     var myCanvas = createCanvas(700, 700);
     myCanvas.parent('canvas');
 
@@ -72,7 +81,7 @@ setup = () => {
     bat.shapeColor = color(128);
     bat.addImage(arm)
     bat.velocity.x = 0;
-    
+
     //-----------setup bat swing---------
     calcAngle; //
     swingAngle = -2;
@@ -98,7 +107,7 @@ draw = () => {
     ellipse(250, len + 20, 5, 5);
 
     // what happens after screwing up pinata
-    if (hits >= 3) {
+    if (hits >= 5) {
         pinata.remove();
         // replace here with broken pinata
         pinata.velocity.x = 0;
@@ -203,8 +212,10 @@ class Candy {
     // stroke(0, 125, 235);
     // strokeWeight(1);
     imageMode(CENTER);
-    // image(this.img, this.pos.x, this.pos.y )
-    ellipse(this.pos.x, this.pos.y, random(7, 11), random(5, 9));
+    var randImg = Math.floor(random(0, sweet.length));
+    this.img = sweet[randImg];
+    image(this.img, this.pos.x, this.pos.y )
+    // ellipse(this.pos.x, this.pos.y, random(7, 11), random(5, 9));
 
   }
     }

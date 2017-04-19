@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import Scoreboard from './partials/Scoreboard';
 import Pinata from './partials/Pinata';
 import QRCode from 'qrcode-react';
+import helpers from "./utils/helpers";
 
 const appendScript = (scriptArray, selector) => {
     scriptArray.map(scriptPath => {
@@ -38,6 +39,8 @@ export default class Lobby extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            bitlyURL: null,
+            playerSelection: null,
             chatInput: null,
             messages: [],
             score: {
@@ -69,7 +72,7 @@ export default class Lobby extends React.Component {
     componentWillMount() {
         console.log('Game', this.props);
         // Redirect users away from page if not logged in or no gameId
-        //!this.props.globalData.gameId || 
+        //!this.props.globalData.gameId ||
         if (!this.props.globalData.playerId) {
             window.location.pathname = "/";
         }
@@ -151,7 +154,17 @@ export default class Lobby extends React.Component {
             )
         );
     }
-    render() {
+
+    componentWillMount() {
+      let playerSel = sessionStorage.getItem('player-selection');
+      // let long_url = window.location.origin +"/control_device/" + this.props.globalData.gameId + "/" + this.props.globalData.playerId + "/" + playerSel;
+      let long_url = "http://192.168.1.66:3000/control_device/" + this.props.globalData.gameId + "/" + this.props.globalData.playerId + "/" + 1;
+      helpers.runQuery(long_url).then(function(response) {
+        this.setState({ bitlyURL: response.url });
+      }.bind(this));
+    }
+
+render() {
     return (
     <div>
         <div className="row">
@@ -207,11 +220,15 @@ export default class Lobby extends React.Component {
         <div className="row">
         <div className="col-xs-8 col-xs-offset-2">
             <a target="_blank"
-                href={`/control-device/${this.props.globalData.gameId}/${this.props.globalData.playerId}/${this.props.globalData.playerSelection}`}>go here to connect control device: <br/>
+                href={`http://192.168.1.66:3000/control-device/${this.props.globalData.gameId}/${this.props.globalData.playerId}/${this.props.globalData.playerSelection}`}>go here to connect control device: <br/>
                 {`/control-device/${this.props.globalData.gameId}/${this.props.globalData.playerId}/${this.props.globalData.playerSelection}`}
             </a>
             <div>
-                <QRCode value={`${window.location.origin}/control-device/${this.props.globalData.gameId}/${this.props.globalData.playerId}/${this.props.globalData.playerSelection}`} />,
+                <h1>Control Device Link: <strong>{this.state.bitlyURL}</strong></h1>
+            </div>
+            <div>
+              {/* <QRCode value={`${window.location.origin}/control-device/${this.props.globalData.gameId}/${this.props.globalData.playerId}/${this.props.globalData.playerSelection}`} /> */}
+                <QRCode value={`http://192.168.1.66:3000/control-device/${this.props.globalData.gameId}/${this.props.globalData.playerId}/${this.props.globalData.playerSelection}`} />
             </div>
         </div>
         </div>
