@@ -9,7 +9,7 @@ const appendScript = (scriptArray, selector) => {
         const script = document.createElement('script');
         script.src = scriptPath;
         try { document.querySelector(selector).appendChild(script);
-        } catch (e) {  }
+        } catch (e) { }
     });
 }
 
@@ -21,6 +21,7 @@ function DataPackage(globalData, playerSelection, dataType = null, data = null) 
     this.dataType = dataType;
     this.timestamp = Date.now();
 }
+
 const inputEventHandler = (DataPackage) => {
     const a_y = DataPackage.data.acc.y;
     const a_x = DataPackage.data.acc.x;
@@ -31,14 +32,12 @@ const inputEventHandler = (DataPackage) => {
     } else if (DataPackage.playerSelection == 1) {
         drawBat(mag);
     } else console.log('Nope');
-
 }
 
 export default class Lobby extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            playerSelection: null,
             chatInput: null,
             messages: [],
             score: {
@@ -52,25 +51,32 @@ export default class Lobby extends React.Component {
             }
     };
 
-    this.handleChange = this.handleChange.bind(this);
+    this.handleChatInput = this.handleChatInput.bind(this);
     this.addChatMessage = this.addChatMessage.bind(this);
     this.displayChatMessages = this.displayChatMessages.bind(this);
     this.sendChatMessage = this.sendChatMessage.bind(this);
-    // this.updatePlayerSelection = this.updatePlayerSelection.bind(this);
-    // this.onKeyPress = this.onKeyPress.bind(this);
-
-    // this.childData = this.childData.bind(this);
     this.sendSocketInput = this.sendSocketInput.bind(this);
+    }
 
-}
-    componentWillMount () {
-    }
-    componentWillUnmount () {
+    componentWillUnmount() {
         document.querySelector('#canvas').classList.add("hidden");
-        
+        this.props.setMainState({
+            gameId: undefined,
+            playerSelection: undefined
+        });
     }
+
+    componentWillMount() {
+        console.log('Game', this.props);
+        // Redirect users away from page if not logged in or no gameId
+        //!this.props.globalData.gameId || 
+        if (!this.props.globalData.playerId) {
+            window.location.pathname = "/";
+        }
+    }
+
     componentDidMount() {
-        this.setState({playerSelection: sessionStorage.getItem('player-selection')});
+        // this.setState({playerSelection: sessionStorage.getItem('player-selection')});
         document.querySelector('#canvas').classList.remove("hidden");
         this.props.socket.emit('room',
             new DataPackage(this.props.globalData, this.state.playerSelection)
@@ -112,13 +118,13 @@ export default class Lobby extends React.Component {
             'chat-message',
             new DataPackage(this.props.globalData, this.state.playerSelection, this.state.chatInput)
         );
-        this.setState({chatInput: ""});
+        // this.setState({chatInput: ""});
         document.getElementById('message-input').value = "";
 
         }
     }
 
-    handleChange(event) {
+    handleChatInput(event) {
         this.setState({chatInput: event.target.value});
     }
 
@@ -129,11 +135,6 @@ export default class Lobby extends React.Component {
         });
     }
 
-    // updatePlayerSelection(event) {
-    //     this.setState({playerSelection: parseInt(event.target.value)})
-    // }
-    // childData(x, y) {
-    // }
     sendSocketInput(x,y) {
         const data = {
         acc: {
@@ -144,24 +145,25 @@ export default class Lobby extends React.Component {
         this.props.socket.emit('input',
             new DataPackage(
                 this.props.globalData,
-                this.state.playerSelection,
+                this.props.globalData.playerSelection,
                 'acceleration',
                 data
             )
         );
     }
-render() {
+    render() {
     return (
     <div>
         <div className="row">
-        <Scoreboard
-            score={this.state.score}
-        />
-        <div className="col-xs-8 col-xs-offset-2">
+            <Scoreboard
+                score={this.state.score}
+
+            />
+        {/*<div className="col-xs-8 col-xs-offset-2">*/}
         {/* Motion Component*/}
         {/*< Motion childData={this.childData}/>*/}
 
-                <input type="text" onKeyPress={this.onKeyPress} />
+                {/*<input type="text" onKeyPress={this.onKeyPress} />*/}
            {/*
             <div className="input-group">
                 <select name="player-selection" id="player-selection" className="form-control" onChange={this.updatePlayerSelection}>
@@ -171,7 +173,7 @@ render() {
                 </select>
             </div>
             */}
-            </div>
+            {/*</div>*/}
             <div className="col-xs-2">
             <div className="input-group">
                 <p> gameId: {this.props.globalData.gameId}</p>
@@ -194,7 +196,7 @@ render() {
 			<div className="col-xs-8 col-xs-offset-2">
 				<div className="input-group">
                 <form onSubmit={this.sendChatMessage}>
-                    <input type="text" className="form-control" id="message-input" onChange={this.handleChange} placeholder="Send a message."/>
+                    <input type="text" className="form-control" id="message-input" onChange={this.handleChatInput} placeholder="Send a message."/>
 					<span className="input-group-btn">
 						<button className="btn btn-default" id="message-button" type="submit">Send</button>
 					</span>
@@ -202,14 +204,16 @@ render() {
 				</div>
 			</div>
         </div>
-        <div>
-            <Link
-                to={`/control_device/${this.props.globalData.gameId}/${this.props.globalData.playerId}/${this.state.playerSelection}`}>go here to connect control device: <br/>
-                {`/control_device/${this.props.globalData.gameId}/${this.props.globalData.playerId}/${this.state.playerSelection}`}
-             </Link>
+        <div className="row">
+        <div className="col-xs-8 col-xs-offset-2">
+            <a target="_blank"
+                href={`/control-device/${this.props.globalData.gameId}/${this.props.globalData.playerId}/${this.props.globalData.playerSelection}`}>go here to connect control device: <br/>
+                {`/control-device/${this.props.globalData.gameId}/${this.props.globalData.playerId}/${this.props.globalData.playerSelection}`}
+            </a>
+            <div>
+                <QRCode value={`${window.location.origin}/control-device/${this.props.globalData.gameId}/${this.props.globalData.playerId}/${this.props.globalData.playerSelection}`} />,
+            </div>
         </div>
-        <div>
-            <QRCode value={`${window.location.origin}/control_device/${this.props.globalData.gameId}/${this.props.globalData.playerId}/${this.state.playerSelection}`} />,
         </div>
         <div id="script-container">
         </div>

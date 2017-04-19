@@ -1,11 +1,11 @@
-import React from 'react';
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+// import React from 'react';
+// import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 
-import Lobby from '../components/Lobby';
-import Login from '../components/Login';
-import Game from '../components/Game';
-import Error404 from '../components/Error404';
-import Main from '../Main';
+// import Lobby from '../components/Lobby';
+// import Login from '../components/Login';
+// import Game from '../components/Game';
+// import Error404 from '../components/Error404';
+// import Main from '../Main';
 
 // const Game = () => <h3>Game</h3>;
 // const Pinata = () => <h3>Game / Pinata</h3>;
@@ -52,32 +52,9 @@ import Main from '../Main';
 //   </Router>
 // );
 
-class Navigation extends React.Component {
-  render() {
-    return (
-      <nav className="navbar navbar-inverse navbar-fixed-top">
-        <div className="container">
-          <div className="navbar-header">
-            <a className="navbar-brand" href="/">Socket-Game-Platform</a>
-          </div>
-          <div id="navbar" className="collapse navbar-collapse">
-            <ul className="nav navbar-nav">
-              <li><Link to="/">Lobby</Link></li>
-              {/*<li><Link to="/game">Game</Link></li>*/}
-              <li><a href="/game.html">Redirect Game</a></li>
-              {/*<li><Link to="/game">Create New Game</Link></li>*/}
-              <li><Link to="/login">Login</Link></li>
-            </ul>
-          </div>
-        </div>
-      </nav>
-    )
-  }
-}
-const NavRouter = () => (
-  <Main>
-    
-  </Main>
-);
 
-export { NavRouter, Navigation};
+// const NavRouter = () => (
+//   <Main></Main>
+// );
+
+// export { NavRouter, Navigation};

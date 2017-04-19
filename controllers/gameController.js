@@ -20,7 +20,8 @@ const gameController = {
           {_id: req.params.gameid},
           { $addToSet: {
               'player': req.params.playerid
-          }}
+          }
+          }, { new: true }
       ).exec((err, doc) => {
             console.log(doc)
           err ? console.log(err) : 
@@ -39,6 +40,17 @@ const gameController = {
         } else {
           res.send(game)
         }
+      });
+    },
+
+    removeGame: (req, res) => {
+      console.log('Controller remove', req.params)
+      Models.Game.findByIdAndRemove(req.params.gameid)
+      .exec((err, doc) => {
+            console.log(doc)
+          err ? console.log(err) : 
+          res.send(doc);
+          
       });
     },
 
