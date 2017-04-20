@@ -56,6 +56,8 @@ export default class Lobby extends React.Component {
     this.displayChatMessages = this.displayChatMessages.bind(this);
     this.sendChatMessage = this.sendChatMessage.bind(this);
     this.sendSocketInput = this.sendSocketInput.bind(this);
+    this.batWins = this.batWins.bind(this);
+    this.winner = this.winner.bind(this);
     }
 
     componentWillUnmount() {
@@ -85,29 +87,34 @@ export default class Lobby extends React.Component {
         this.props.socket.on('connection-status', this.addChatMessage);
         this.props.socket.on('chat-message', this.addChatMessage);
         this.props.socket.on('input', inputEventHandler);
+        this.props.socket.on('admin', this.declareWinner);
     }
-
-    // onKeyPress(e){
-    //     if (this.state.playerSelection == 1 || this.state.playerSelection == 2) {
-    //         const acceptedKeys = [119, 97, 115, 100, 32];
-
-    //         if (acceptedKeys.indexOf(e.charCode) !== -1) {
-    //             e.preventDefault();
-    //             this.props.socket.emit('input',
-    //                 new DataPackage(
-    //                     this.props.globalData,
-    //                     this.state.playerSelection,
-    //                 )
-    //             );
-    //         }
-    //     }
-    // }
-
 
     addChatMessage(message) {
         let chatArray = this.state.messages;
         chatArray.push(message)
         this.setState({messages: chatArray});
+    }
+
+    batWins() {
+        this.winner(1)
+    }
+    winner(player) {
+        console.log('done mm', player)
+        const str = 'ouiiiiiiiiiiiiiiiiiii boooyyyyy';
+        // const player = 1;
+        const data = {
+            roomId: this.props.globalData.gameId,
+            result: player
+        }
+        if(this.props.globalData.playerSelection == 0) {
+            this.props.socket.emit('admin', data);
+        }
+    }
+    
+
+    declareWinner(data) {
+        console.log('winner is', data.result);
     }
 
 
@@ -156,24 +163,7 @@ export default class Lobby extends React.Component {
     <div>
         <div className="row">
             <Scoreboard
-                score={this.state.score}
-
-            />
-        {/*<div className="col-xs-8 col-xs-offset-2">*/}
-        {/* Motion Component*/}
-        {/*< Motion childData={this.childData}/>*/}
-
-                {/*<input type="text" onKeyPress={this.onKeyPress} />*/}
-           {/*
-            <div className="input-group">
-                <select name="player-selection" id="player-selection" className="form-control" onChange={this.updatePlayerSelection}>
-                    <option value="1">Player 1</option>
-                    <option value="2">Player 2</option>
-                    <option value="0">Spectator</option>
-                </select>
-            </div>
-            */}
-            {/*</div>*/}
+                score={this.state.score}/>
             <div className="col-xs-2">
             <div className="input-group">
                 <p> gameId: {this.props.globalData.gameId}</p>
@@ -217,7 +207,13 @@ export default class Lobby extends React.Component {
         </div>
         <div id="script-container">
         </div>
+        <div>
+            <Link to="#" id="batWins" className="btn btn-primary" onClick={this.batWins} style={{display:"none"}}>bat wins</Link>
+
         </div>
+        
+        </div>
+        
         );
     }
 }
