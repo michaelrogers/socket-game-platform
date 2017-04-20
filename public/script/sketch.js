@@ -3,7 +3,7 @@
 // pendulum
 const pivot_x = 200;
 const pivot_y = 0;
-const len = 450;
+let len = 450;
 let angle = 0;
 const gravity = 0.01;
 let acc;
@@ -42,14 +42,18 @@ let ps = 0, // Position   ps = R,
 
 // candy spill
 let candies = [];
-var sweet = [];
-var hitSound = [];
-var chicken;
+let sweet = [];
+let hitSound = [];
+let chicken;
 
 // preload image to sprite
 preload = () => {
     arm = loadImage('/img/arm125.png');
     dummy = loadImage('/img/bird.png');
+    // broken = loadImage('/img/bird3.png')
+    broken = loadImage('/img/bird2.png')
+    // broken = loadImage('/img/empty.png')
+    //  broken = loadImage('/img/winner.png')
     for (var i=0; i < 3; i++ ) {
      sweet[i] = loadImage("/img/sweet" + i + ".png");
      console.log(sweet.length)
@@ -107,25 +111,28 @@ draw = () => {
     // reference equilibrium point - not needed
     ellipse(250, len + 20, 5, 5);
 
-    if (hits < 6) {
+    if (hits < 8) {
     if (bat.overlap(pinata)) {
         jit = 10;
         var rSound = Math.floor(random(0, hitSound.length));
-        hitSound[rSound].setVolume(0, 2);
+        hitSound[rSound].setVolume(0.5, 2);
         hitSound[rSound].play();
-        // chicken.setVolume(0.1);
-        // chicken.play();
+        chicken.setVolume(0.05);
+        chicken.play();
       }
     }
 
 
     // what happens after screwing up pinata
-    if (hits >= 5) {
-        pinata.remove();
+    if (hits >= 7) {
+      jit = 2;
+      len = 345;
+      pinata.addImage(broken);
+        // pinata.remove();
         // replace here with broken pinata
-        pinata.velocity.x = 0;
-        pinata.velocity.y = 0;
-        line(pivot_x, pivot_y, pivot_x, pivot_y + len);
+        // pinata.velocity.x = 0;
+        // pinata.velocity.y = 0;
+        // line(pivot_x, pivot_y, pivot_x, pivot_y + len);
         for (var i = 0; i < candies.length; i++) {
 
             //   if (candies[i].pos.x > 0) {
@@ -133,9 +140,10 @@ draw = () => {
             candies[i].update();
             candies[i].show();
         }
-    } else {
-        pinataSwing()
     }
+    // else {
+        pinataSwing()
+    // }
     drawSprites();
 
 }
@@ -220,10 +228,10 @@ class Candy {
   }
 
   this.show = () => {
-    fill(125, 125, 255);
+    // fill(125, 125, 255);
     noStroke();
-    // stroke(0, 125, 235);
-    // strokeWeight(1);
+    stroke(0);
+    strokeWeight(1);
     imageMode(CENTER);
     var randImg = Math.floor(random(0, sweet.length));
     this.img = sweet[randImg];
