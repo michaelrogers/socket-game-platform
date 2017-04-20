@@ -1,6 +1,9 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
-
+import {List, ListItem} from 'material-ui/List';
+import Subheader from 'material-ui/Subheader';
+import Avatar from 'material-ui/Avatar';
+import RaisedButton from 'material-ui/RaisedButton';
 import helpers from "./utils/helpers";
 const appendScript = (scriptArray, selector) => {
   scriptArray.map(scriptPath => {
@@ -95,63 +98,59 @@ export default class Lobby extends React.Component {
     return this.state.activeGames.map((game, i) => {
       // Each Game
       return (
-          <Link
-            to="/game"
-            key={game._id}
-            data-gameid={game._id}
-            onClick={this.handleJoin}
-            className="list-group-item">
-            <a href="/" className="pull-right" onClick={(e) => {e.stopPropagation(); this.removeGame(game._id)}}>x</a>
-            <h4 className="h4">Piñata game</h4>
-            <span>Current players:</span>
-            {this.displayPlayers(game.player)}
-          </Link>
+        <ListItem
+          linkButton
+          containerElement={
+            <Link
+              to="/game"
+              key={game._id}
+              data-gameid={game._id}
+              onClick={this.handleJoin}>
+            </Link>
+          }
+          rightIcon={<a href="/" onClick={(e) => {e.stopPropagation(); this.removeGame(game._id)}}>x</a>}
+        >
+          <h5>Piñata game</h5>
+          <span>Current players:</span>
+          {this.displayPlayers(game.player)}
+        </ListItem>
       )
     });
   }
 
   render() {
     return (
-      <div className="container">
         <div className="row">
-          <div className="jumbotron">
-            <h2>Welcome to the Socket-Platform-Game</h2>
-            <p><em>A journey through the whimsical world of React Routing</em></p>
-            </div>
-          <div className="col-md-8">
-            <div className="panel panel-default">
-              <div className="panel-heading">
-                <h3 className="panel-title text-center">Active Games</h3>
-              </div>
-              <div className="panel-body">
-                <div className="list-group">
-                  {this.displayGames()}
-                </div>
-              </div>
-            </div>
+          <div className="col m8">
+            <List>
+              <Subheader>Games</Subheader>
+              {this.displayGames()}
+            </List>
           </div>
-          <div className="col-md-4">
-            <div className="panel panel-default">
-              <div className="panel-heading">
-                <h3 className="panel-title text-center">Controls</h3>
-              </div>
-              <div className="panel-body">
-                <div><h4>Players Online: <span>{this.state.playerCount}</span></h4></div>
-                <h4>Playing as: {this.props.globalData.playerName}</h4>
-                <Link to="/game" className="btn btn-primary" onClick={this.createGame}>Create New Game</Link>
-              </div>
-            </div>
-
-            <div className="panel panel-default">
-              <div className="panel-heading">
-                <h3 className="panel-title text-center">Player Feed</h3>
-              </div>
-              <div className="panel-body">
-              </div>
-            </div>
+          <div className="col m4">
+            <List>
+              <Subheader>Controls</Subheader>
+              <ListItem
+                primaryText={"Players Online: " + this.state.playerCount}
+                primaryText={"Playing as: " + this.props.globalData.playerName}
+              >
+                <RaisedButton 
+                  label="Primary" 
+                  primary={true} 
+                  containerElement={
+                    <Link 
+                      to="/game" 
+                      onClick={this.createGame}
+                    >
+                      Create New Game
+                    </Link>
+                  }
+                   />
+                
+              </ListItem>
+            </List>
           </div>
         </div>
-      </div>
     );
   }
 }

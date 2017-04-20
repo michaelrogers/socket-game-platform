@@ -62,7 +62,7 @@ export default class Main extends React.Component {
 
   render() {
     return (
-      <MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme)}>
+      <MuiThemeProvider >
           <div className="container">
             <div className="row">
               <div className="col s12">
