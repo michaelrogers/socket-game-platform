@@ -48,7 +48,9 @@ export default class Lobby extends React.Component {
                 x: 0,
                 y: 0,
                 z: 0
-            }
+            },
+            winner: null,
+            playing: false
     };
 
     this.handleChatInput = this.handleChatInput.bind(this);
@@ -57,7 +59,9 @@ export default class Lobby extends React.Component {
     this.sendChatMessage = this.sendChatMessage.bind(this);
     this.sendSocketInput = this.sendSocketInput.bind(this);
     this.batWins = this.batWins.bind(this);
+    this.pinataWins = this.pinataWins.bind(this);
     this.winner = this.winner.bind(this);
+    this.declareWinner = this.declareWinner.bind(this);
     }
 
     componentWillUnmount() {
@@ -99,6 +103,10 @@ export default class Lobby extends React.Component {
     batWins() {
         this.winner(1)
     }
+
+    pinataWins() {
+        this.winner(0)
+    }
     winner(player) {
         console.log('done mm', player)
         const str = 'ouiiiiiiiiiiiiiiiiiii boooyyyyy';
@@ -115,6 +123,9 @@ export default class Lobby extends React.Component {
 
     declareWinner(data) {
         console.log('winner is', data.result);
+        this.setState({winner: data.result});
+        // this.setState({winner: data.result});
+        console.log('le winner', this.state.winner);
     }
 
 
@@ -208,8 +219,8 @@ export default class Lobby extends React.Component {
         <div id="script-container">
         </div>
         <div>
-            <Link to="#" id="batWins" className="btn btn-primary" onClick={this.batWins} style={{display:"none"}}>bat wins</Link>
-
+            <Link to="#" id="batWins" className="btn btn-primary" onClick={this.batWins} style={{display:"block"}}>bat wins</Link>
+            <Link to="#" id="pinataWins" className="btn btn-primary" onClick={this.pinataWins} style={{display:"block"}}>bat wins</Link>
         </div>
         
         </div>

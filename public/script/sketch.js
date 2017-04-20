@@ -114,9 +114,10 @@ draw = () => {
             candies[i].show();
         }
     } 
-    // else if(batSwings > 1) {
-    //     document.getElementById('batWins').click();
-    // }
+    else if(batSwings > 1) {
+        document.getElementById('pinataWins').click();
+        batSwings = 0;
+    }
 
     else {
         pinataSwing()
