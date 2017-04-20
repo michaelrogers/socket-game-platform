@@ -62,6 +62,7 @@ export default class Lobby extends React.Component {
     }
 
     componentWillUnmount() {
+        ClearCanvas();
         document.querySelector('#canvas').classList.add("hidden");
         this.props.setMainState({
             gameId: undefined,

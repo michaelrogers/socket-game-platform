@@ -241,3 +241,11 @@ class Candy {
   }
     }
 }
+
+// function mousePressed() {
+// //   remove(); // remove whole sketch on mouse press
+// // }
+
+function ClearCanvas() {
+  remove(); // remove whole sketch on mouse press
+}
