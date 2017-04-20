@@ -36,12 +36,12 @@ app.use(morgan("dev"));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static("./public"));
 
-app.get('/control-device/:gameId/:playerId/:playerSelection', function(req, res) {
-  const [gameId, playerId, playerSelection] = [req.params.gameId, req.params.playerId, req.params.playerSelection]; 
-  // console.log('yeah boyyyy', gameId, playerId, playerSelection);
-  res.sendFile(path.join(__dirname, 'public/fone.html'))
-  // res.end('good stuff')
-})
+// app.get('/control-device/:gameId/:playerId/:playerSelection', function(req, res) {
+//   const [gameId, playerId, playerSelection] = [req.params.gameId, req.params.playerId, req.params.playerSelection]; 
+//   // console.log('yeah boyyyy', gameId, playerId, playerSelection);
+//   res.sendFile(path.join(__dirname, 'public/fone.html'))
+//   // res.end('good stuff')
+// })
 
 const routes = require('./routes');
 for (let route in routes) {
