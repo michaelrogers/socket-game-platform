@@ -50,7 +50,8 @@ export default class Lobby extends React.Component {
                 z: 0
             },
             winner: null,
-            playing: false
+            playing: false,
+            batSwings: 0
     };
 
     this.handleChatInput = this.handleChatInput.bind(this);
@@ -60,6 +61,7 @@ export default class Lobby extends React.Component {
     this.sendSocketInput = this.sendSocketInput.bind(this);
     this.batWins = this.batWins.bind(this);
     this.pinataWins = this.pinataWins.bind(this);
+    this.batSwings = this.batSwings.bind(this);
     this.winner = this.winner.bind(this);
     this.declareWinner = this.declareWinner.bind(this);
     }
@@ -107,6 +109,18 @@ export default class Lobby extends React.Component {
     pinataWins() {
         this.winner(0)
     }
+
+// send through socket and bring back to update DOM
+    batSwings() {
+        const data = {
+            roomId: this.props.globalData.gameId,
+            result: player
+        }
+        if(this.props.globalData.playerSelection == 0) {
+            this.props.socket.emit('admin', data);
+        }
+    }
+
     winner(player) {
         console.log('done mm', player)
         const str = 'ouiiiiiiiiiiiiiiiiiii boooyyyyy';
@@ -219,8 +233,10 @@ export default class Lobby extends React.Component {
         <div id="script-container">
         </div>
         <div>
-            <Link to="#" id="batWins" className="btn btn-primary" onClick={this.batWins} style={{display:"block"}}>bat wins</Link>
-            <Link to="#" id="pinataWins" className="btn btn-primary" onClick={this.pinataWins} style={{display:"block"}}>bat wins</Link>
+            <Link to="#" id="batWins" className="btn btn-primary" onClick={this.batWins} style={{display:"hide"}}>bat wins</Link>
+            <Link to="#" id="pinataWins" className="btn btn-primary" onClick={this.pinataWins} style={{display:"hide"}}>pinata wins</Link>
+
+            <Link to="#" id="batSwings" className="btn btn-primary" onClick={this.batSwings} style={{display:"block"}}>bat swings</Link>
         </div>
         
         </div>
