@@ -23,6 +23,7 @@ export default class Lobby extends React.Component {
     this.removeGame = this.removeGame.bind(this);
     this.handleJoin = this.handleJoin.bind(this);
     this.updatePlayerCount = this.updatePlayerCount.bind(this);
+    this.populateButtons = this.populateButtons.bind(this);
 
     console.log('Lobby', this.props);
   }
@@ -110,6 +111,20 @@ export default class Lobby extends React.Component {
     });
   }
 
+  populateButtons() {
+      if (this.props.globalData.playerName) {
+          return (
+              <span>
+                <h4>Playing as: {this.props.globalData.playerName}</h4>
+                <Link to="/game" className="btn btn-primary" onClick={this.createGame}>Create New Game</Link>
+              </span>
+          )
+      } else {
+          return <Link to="/login" className="btn btn-primary">Login</Link>
+      }
+  }
+
+
   render() {
     return (
       <div className="container">
@@ -137,8 +152,7 @@ export default class Lobby extends React.Component {
               </div>
               <div className="panel-body">
                 <div><h4>Players Online: <span>{this.state.playerCount}</span></h4></div>
-                <h4>Playing as: {this.props.globalData.playerName}</h4>
-                <Link to="/game" className="btn btn-primary" onClick={this.createGame}>Create New Game</Link>
+                {this.populateButtons()}
               </div>
             </div>
             
