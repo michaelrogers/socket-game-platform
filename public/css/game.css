@@ -1,3 +1,11 @@
+body {background-color:#f5f5f5}
+.container{
+  width:96%;
+  max-width:none!important;
+}
+.lobby-wrapper, .game-wrapper{
+  margin-top:65px;
+}
 .Modal {
     z-index: 1000;
     position: absolute;

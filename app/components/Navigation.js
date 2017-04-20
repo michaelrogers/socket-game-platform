@@ -13,7 +13,7 @@ export default class Navigation extends React.Component {
         if (this.props.playerName) {
             return (
                 <ToolbarGroup>
-                    <Link to="/login">{this.props.playerName}</Link>
+                    <Link to="/login">Playing as: {this.props.playerName}</Link>
                 </ToolbarGroup>
             )
         } else {
@@ -27,7 +27,13 @@ export default class Navigation extends React.Component {
 
     render() {
         return (
-            <Toolbar>
+            <Toolbar style={{
+                          top:0,
+                          left:0,
+                          right:0,
+                          position:"absolute"
+                        }
+                      }>
                 <ToolbarGroup firstChild={false}>
                     <Link className="navbar-brand" to="/">Socket-Game-Platform</Link>
                     <ToolbarSeparator />

@@ -1,9 +1,14 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+
 import {List, ListItem} from 'material-ui/List';
 import Subheader from 'material-ui/Subheader';
 import Avatar from 'material-ui/Avatar';
 import RaisedButton from 'material-ui/RaisedButton';
+import Paper from 'material-ui/Paper';
+import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
+
+
 import helpers from "./utils/helpers";
 const appendScript = (scriptArray, selector) => {
   scriptArray.map(scriptPath => {
@@ -99,7 +104,7 @@ export default class Lobby extends React.Component {
       // Each Game
       return (
         <ListItem
-          linkButton
+          key={i}
           containerElement={
             <Link
               to="/game"
@@ -110,7 +115,9 @@ export default class Lobby extends React.Component {
           }
           rightIcon={<a href="/" onClick={(e) => {e.stopPropagation(); this.removeGame(game._id)}}>x</a>}
         >
+        
           <h5>Piñata game</h5>
+          
           <span>Current players:</span>
           {this.displayPlayers(game.player)}
         </ListItem>
@@ -120,37 +127,64 @@ export default class Lobby extends React.Component {
 
   render() {
     return (
+      <div className="container lobby-wrapper">
         <div className="row">
-          <div className="col m8">
-            <List>
-              <Subheader>Games</Subheader>
-              {this.displayGames()}
-            </List>
+          <div className="col s12 m8">
+              <div className="row">
+                <div className="col m6">
+                  <Card>
+                    <CardMedia
+                      overlay={<CardTitle title="Pinata" subtitle="Destroy the pinata, or survive the bat" />}
+                    >
+                      <img src="img/game.png" />
+                    </CardMedia>
+                  </Card>
+                </div>
+                <div className="col m6">
+                  <Card>
+                    <CardMedia
+                      overlay={<CardTitle title="Game 2" />}
+                    >
+                      <img src="img/coming-soon.jpg" />
+                    </CardMedia>
+                  </Card>
+                </div>
+              </div>
           </div>
-          <div className="col m4">
-            <List>
-              <Subheader>Controls</Subheader>
-              <ListItem
-                primaryText={"Players Online: " + this.state.playerCount}
-                primaryText={"Playing as: " + this.props.globalData.playerName}
-              >
-                <RaisedButton 
-                  label="Primary" 
+          <div className="col s8 m4">
+            <Card>
+              <CardHeader
+                title="Games"
+                subtitle="Which do you want to play?"
+              />
+              <RaisedButton 
+                  fullWidth={true}
+                  label="Create New Game" 
                   primary={true} 
+                  onClick={this.createGame}
                   containerElement={
                     <Link 
                       to="/game" 
-                      onClick={this.createGame}
-                    >
-                      Create New Game
+                      >
                     </Link>
                   }
                    />
-                
-              </ListItem>
-            </List>
+              <List>
+                {this.displayGames()}
+              </List>
+            </Card>
+          </div>
+          <div className="col s4 m4">
+            <div>
+              <h3>Controls</h3>
+              <div className="collection">
+                <h4 className="collection-item">Players Online:  {this.state.playerCount} </h4>
+                <h5 className="collection-item">Playing as:  {this.props.globalData.playerName} </h5>
+              </div>
+            </div>
           </div>
         </div>
+      </div>
     );
   }
 }

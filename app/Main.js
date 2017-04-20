@@ -63,7 +63,6 @@ export default class Main extends React.Component {
   render() {
     return (
       <MuiThemeProvider >
-          <div className="container">
             <div className="row">
               <div className="col s12">
 
@@ -101,7 +100,7 @@ export default class Main extends React.Component {
 
               </div>
             </div>
-          </div>
+
           {/*}
               <script src="/lib/p5.js"></script>
               <script src="/lib/p5.play.js"></script>

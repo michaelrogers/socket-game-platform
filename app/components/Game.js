@@ -5,8 +5,9 @@ import Pinata from './partials/Pinata';
 import QRCode from 'qrcode-react';
 import Modal from 'react-modal';
 import Styles from './styles/customStyles.js';
-// ==Material Designs==
+import {List, ListItem} from 'material-ui/List';
 import Avatar from 'material-ui/Avatar';
+
 
 const appendScript = (scriptArray, selector) => {
     scriptArray.map(scriptPath => {
@@ -54,7 +55,7 @@ export default class Lobby extends React.Component {
                 z: 0
             },
             modalIsOpen: false
-    };
+        };
 
     this.handleChatInput = this.handleChatInput.bind(this);
     this.addChatMessage = this.addChatMessage.bind(this);
@@ -178,38 +179,41 @@ export default class Lobby extends React.Component {
 
         return (
 
-            <div className="container">
+            <div className="container game-wrapper">
                 <div className="row">
-                    <Scoreboard
-                        score={this.state.score}
-                    />
-                    <div className="col m3">
-                      <Avatar src="/public/img/bird-sm.jpg" />
+                    <div className="col s6">
+                        <List >
+                            <ListItem 
+                                leftAvatar={<Avatar size={40} src="/img/bird-sm.png" />}
+                                primaryText={this.props.globalData.playerName}
+                                rightAvatar={
+                                    <Avatar
+                                        size={30}    
+                                    > 1
+                                    </Avatar>
+                                    }
+                            >
+                            </ListItem>
+                        </List>
                     </div>
-                    {/*<div className="col-xs-8 col-xs-offset-2">*/}
-                    {/* Motion Component*/}
-                    {/*< Motion childData={this.childData}/>*/}
-
-                    {/*<input type="text" onKeyPress={this.onKeyPress} />*/}
-                    {/*
-                        <div className="input-group">
-                            <select name="player-selection" id="player-selection" className="form-control" onChange={this.updatePlayerSelection}>
-                                <option value="1">Player 1</option>
-                                <option value="2">Player 2</option>
-                                <option value="0">Spectator</option>
-                            </select>
-                        </div>
-                        */}
-                    {/*</div>*/}
-                    <div className="col-xs-2">
-                        <div className="input-group">
-                            <p> gameId: {this.props.globalData.gameId}</p>
-                            <p> playerId: {this.props.globalData.playerId}</p>
-                        </div>
+                    <div className="col s6">
+                        <List >
+                            <ListItem 
+                                rightAvatar={<Avatar size={40} src="/img/arm125.png" />}
+                                primaryText={this.props.globalData.playerName}
+                                leftAvatar={
+                                    <Avatar
+                                        size={30}    
+                                    > 0
+                                    </Avatar>
+                                    }
+                            >
+                            </ListItem>
+                        </List>
                     </div>
                 </div>
                 <div className="row">
-                    <div className="col-xs-8 col-xs-offset-2">
+                    <div className="col s3">
                         <ul id="messages" className="list-unstyled">
                             {this.displayChatMessages()}
                         </ul>
