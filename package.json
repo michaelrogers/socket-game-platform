@@ -29,6 +29,7 @@
     "babel-core": "^6.24.0",
     "body-parser": "^1.17.1",
     "express": "^4.15.2",
+    "material-ui": "^0.17.4",
     "mongo-oplog": "^2.0.2",
     "mongoose": "^4.9.1",
     "morgan": "^1.8.1",

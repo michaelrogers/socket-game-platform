@@ -5,6 +5,8 @@ import Pinata from './partials/Pinata';
 import QRCode from 'qrcode-react';
 import Modal from 'react-modal';
 import Styles from './styles/customStyles.js';
+// ==Material Designs==
+import Avatar from 'material-ui/Avatar';
 
 const appendScript = (scriptArray, selector) => {
     scriptArray.map(scriptPath => {
@@ -79,7 +81,7 @@ export default class Lobby extends React.Component {
     componentWillMount() {
         console.log('Game', this.props);
         // Redirect users away from page if not logged in or no gameId
-        //!this.props.globalData.gameId || 
+        //!this.props.globalData.gameId ||
         if (!this.props.globalData.playerId) {
             window.location.pathname = "/";
         }
@@ -171,17 +173,19 @@ export default class Lobby extends React.Component {
     closeModal() {
         this.setState({modalIsOpen:false});
     }
-    
+
     render() {
 
         return (
-        
+
             <div className="container">
                 <div className="row">
                     <Scoreboard
-                        score={this.state.score}
-
+                        score={this.state.score
                     />
+                    <div className="col m3">
+                      <Avatar src="/public/img/bird-sm.jpg" />
+                    </div>
                     {/*<div className="col-xs-8 col-xs-offset-2">*/}
                     {/* Motion Component*/}
                     {/*< Motion childData={this.childData}/>*/}
@@ -232,7 +236,7 @@ export default class Lobby extends React.Component {
                         {/*Modal button*/}
                         <button onClick={this.openModal}>QR Scan Code</button>
                         {/*Modal*/}
-                        <Modal 
+                        <Modal
                             isOpen={this.state.modalIsOpen}
                             onAfterOpen={this.afterOpenModal}
                             onRequestClose={this.closeModal}
