@@ -181,7 +181,7 @@ export default class Lobby extends React.Component {
             <div className="container">
                 <div className="row">
                     <Scoreboard
-                        score={this.state.score
+                        score={this.state.score}
                     />
                     <div className="col m3">
                       <Avatar src="/public/img/bird-sm.jpg" />

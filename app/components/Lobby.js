@@ -37,8 +37,8 @@ export default class Lobby extends React.Component {
     this.props.socket.on('player:count', this.updatePlayerCount);
   }
 
-  updatePlayerCount(playerCount) { 
-    this.setState({playerCount: playerCount}); 
+  updatePlayerCount(playerCount) {
+    this.setState({playerCount: playerCount});
   }
 
   // Called by create game button
@@ -80,7 +80,7 @@ export default class Lobby extends React.Component {
             console.log('Player is', i)
           }
         });
-        
+
       });
     }
   }
@@ -103,7 +103,7 @@ export default class Lobby extends React.Component {
             className="list-group-item">
             <a href="/" className="pull-right" onClick={(e) => {e.stopPropagation(); this.removeGame(game._id)}}>x</a>
             <h4 className="h4">Piñata game</h4>
-            <span>Current players:</span> 
+            <span>Current players:</span>
             {this.displayPlayers(game.player)}
           </Link>
       )
@@ -141,7 +141,7 @@ export default class Lobby extends React.Component {
                 <Link to="/game" className="btn btn-primary" onClick={this.createGame}>Create New Game</Link>
               </div>
             </div>
-            
+
             <div className="panel panel-default">
               <div className="panel-heading">
                 <h3 className="panel-title text-center">Player Feed</h3>
