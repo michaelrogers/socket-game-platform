@@ -8,8 +8,8 @@
     "build": "webpack",
     "watch": "webpack -d --watch",
     "start-socket": "nodemon server.js",
-    "start": "webpack-dev-server --hot",
-    "dev": "watc",
+    // "start": "webpack-dev-server --hot",
+    "start": "node server.js",
     "webpack-dev-server": "NODE_ENV=development PORT=3000 webpack-dev-server --content-base public/ --hot --inline --devtool inline-source-map --history-api-fallback"
   },
   "repository": {
