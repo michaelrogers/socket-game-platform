@@ -1,0 +1,62 @@
+body {background-color:#f5f5f5}
+.container{
+  width:96%;
+  max-width:none!important;
+}
+#canvas{
+  float: right;
+  margin-right: 30px;
+  z-index: 10000;
+  position: absolute;
+  top: 235px;
+  right: 65px;
+}
+.lobby-wrapper, .game-wrapper{
+  margin-top:65px;
+}
+.Modal {
+    z-index: 1000;
+    position: absolute;
+    top: 25%;
+    left: 35%;
+    right: 35%;
+    bottom: 25%;
+    background-color: white;
+    opacity: 1;
+  }
+
+  .Overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: gray;
+  }
+  .playerHeader{
+    position: relative;
+    display: block;
+  }
+  .playerHeader img, .playerHeader h4{
+    position: relative;
+    display:inline-block;
+  }
+  .playerHeader img{
+    margin:auto 25px;
+    width: 70px;
+    border-radius: 6px;
+  }
+  .iconBtn{
+    display:flex!important;
+    font-size: 20px;
+    color: black;
+  }
+  .iconBtn img{
+    width:30px;
+    height:auto;
+  }
+  .QRcanvas canvas{
+    position:relative;
+    display: block;
+    margin: 0 auto;
+  }
