@@ -68,7 +68,7 @@ export default class Lobby extends React.Component {
     };
 
             modalIsOpen: false
-        };
+        
 
 
     this.handleChatInput = this.handleChatInput.bind(this);
@@ -95,7 +95,7 @@ export default class Lobby extends React.Component {
 
 
     componentWillUnmount() {
-        document.querySelector('#canvas').classList.add("hidden");
+        // document.querySelector('#canvas').classList.add("hidden");
         console.log('Game Unmount')
         document.querySelector('#canvas').classList.add("hide");
         this.props.setMainState({
@@ -153,7 +153,7 @@ export default class Lobby extends React.Component {
 
 
 
-        document.querySelector('#canvas').classList.remove("hidden");
+        document.querySelector('#canvas').classList.remove("hide");
         this.props.socket.on('connection-status', this.addChatMessage);
         this.props.socket.on('chat-message', this.addChatMessage);
         this.props.socket.on('input', inputEventHandler);
@@ -293,7 +293,7 @@ export default class Lobby extends React.Component {
                 data
             )
         );
-   
+    }
 //     render() {
 //     return (
 //     <div>
@@ -475,7 +475,7 @@ export default class Lobby extends React.Component {
                           open={this.state.modalIsOpen}
                           onRequestClose={this.closeModal}
                         >
-                          <QRCode className="QRcanvas" value={`${window.location.origin}/control_device/${this.props.globalData.gameId}/${this.props.globalData.playerId}/${this.state.playerSelection}`} />
+                          <QRCode className="QRcanvas" value={`${window.location.origin}/control-device/${this.props.globalData.gameId}/${this.props.globalData.playerId}/${this.props.globalData.playerSelection}`} />
                         </Dialog>
                     </div>
                     <div id="script-container">
