@@ -3,11 +3,15 @@ import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import Scoreboard from './partials/Scoreboard';
 import Pinata from './partials/Pinata';
 import QRCode from 'qrcode-react';
-import Modal from 'react-modal';
+// ---Styling--
 import Styles from './styles/customStyles.js';
 import {List, ListItem} from 'material-ui/List';
 import Avatar from 'material-ui/Avatar';
-
+import TextField from 'material-ui/TextField';
+import RaisedButton from 'material-ui/RaisedButton';
+import FlatButton from 'material-ui/FlatButton';
+import SvgIcon from 'material-ui/SvgIcon';
+import Dialog from 'material-ui/Dialog';
 
 const appendScript = (scriptArray, selector) => {
     scriptArray.map(scriptPath => {
@@ -65,14 +69,13 @@ export default class Lobby extends React.Component {
 
     // --modals--
     this.openModal = this.openModal.bind(this);
-    this.afterOpenModal = this.afterOpenModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
 
     }
 
 
     componentWillUnmount() {
-        document.querySelector('#canvas').classList.add("hidden");
+        document.querySelector('#canvas').classList.add("hide");
         this.props.setMainState({
             gameId: undefined,
             playerSelection: undefined
@@ -90,7 +93,7 @@ export default class Lobby extends React.Component {
 
     componentDidMount() {
         // this.setState({playerSelection: sessionStorage.getItem('player-selection')});
-        document.querySelector('#canvas').classList.remove("hidden");
+        document.querySelector('#canvas').classList.remove("hide");
         this.props.socket.emit('room',
             new DataPackage(this.props.globalData, this.state.playerSelection)
         );
@@ -144,7 +147,13 @@ export default class Lobby extends React.Component {
     displayChatMessages() {
         return this.state.messages
         .map((message, i) => {
-            return <li key={i} className="text-left">{message}</li>
+            return (
+              <ListItem
+                key={i}
+                >
+                {message}
+              </ListItem>
+            )
         });
     }
 
@@ -168,9 +177,6 @@ export default class Lobby extends React.Component {
     openModal() {
         this.setState({modalIsOpen: true});
     }
-    afterOpenModal() {
-        //?
-    }
     closeModal() {
         this.setState({modalIsOpen:false});
     }
@@ -178,82 +184,78 @@ export default class Lobby extends React.Component {
     render() {
 
         return (
-
             <div className="container game-wrapper">
                 <div className="row">
-                    <div className="col s6">
-                        <List >
-                            <ListItem 
-                                leftAvatar={<Avatar size={40} src="/img/bird-sm.png" />}
-                                primaryText={this.props.globalData.playerName}
-                                rightAvatar={
-                                    <Avatar
-                                        size={30}    
-                                    > 1
-                                    </Avatar>
-                                    }
-                            >
-                            </ListItem>
-                        </List>
+                    { /* --player header: Left corner-- */}
+                    <div className="col s6 playerHeader valign-wrapper">
+                        <img style={{float:"left"}} className="circle responsive-img" src="/img/bird-sm.png" />
+                        <h4>{this.props.globalData.playerName}</h4>
                     </div>
-                    <div className="col s6">
-                        <List >
-                            <ListItem 
-                                rightAvatar={<Avatar size={40} src="/img/arm125.png" />}
-                                primaryText={this.props.globalData.playerName}
-                                leftAvatar={
-                                    <Avatar
-                                        size={30}    
-                                    > 0
-                                    </Avatar>
-                                    }
-                            >
-                            </ListItem>
-                        </List>
+                    { /* --player header: Right corner-- */}
+                    <div className="col s6 playerHeader valign-wrapper">
+                        <img style={{float:"right", right:0, position:"relative", width:"45px"}} className="circle responsive-img" src="/img/arm125.png" />
+                        <h4 style={{float:"right"}}>{this.props.globalData.playerName}</h4>
                     </div>
                 </div>
+                { /* ----Chat Messages---- */}
                 <div className="row">
                     <div className="col s3">
-                        <ul id="messages" className="list-unstyled">
+                        <List id="messages" className="list-unstyled">
+                        <form onSubmit={this.sendChatMessage}>
+                          <TextField
+                            id="message-input"
+                            hintText="Send a Message"
+                            multiLine={true}
+                            rows={2}
+                            onChange={this.handleChatInput}
+                          />
+                          <RaisedButton
+                              fullWidth={true}
+                              label="Send"
+                              primary={true}
+                              containerElement={
+                                  <button id="message-button" type="submit"></button>
+                              }
+                               />
+                        </form>
                             {this.displayChatMessages()}
-                        </ul>
+                        </List>
                     </div>
                 </div>
-                <div className="row">
-                    <div className="col-xs-8 col-xs-offset-2">
-                        <div className="input-group">
-                            <form onSubmit={this.sendChatMessage}>
-                                <input type="text" className="form-control" id="message-input" onChange={this.handleChatInput} placeholder="Send a message."/>
-                                <span className="input-group-btn">
-                                    <button className="btn btn-default" id="message-button" type="submit">Send</button>
-                                </span>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col-xs-8 col-xs-offset-2">
+
+                {/* --- Connect Device ---*/}
+                    <div className="col s3">
                         <a target="_blank"
                             href={`/control-device/${this.props.globalData.gameId}/${this.props.globalData.playerId}/${this.props.globalData.playerSelection}`}>go here to connect control device: <br/>
                             {`/control-device/${this.props.globalData.gameId}/${this.props.globalData.playerId}/${this.props.globalData.playerSelection}`}
                         </a>
                         {/*Modal button*/}
-                        <button onClick={this.openModal}>QR Scan Code</button>
-                        {/*Modal*/}
-                        <Modal
-                            isOpen={this.state.modalIsOpen}
-                            onAfterOpen={this.afterOpenModal}
-                            onRequestClose={this.closeModal}
-                            contentLable="Modal"
-                            shouldCloseOnOverlayClick={true}
-                            style={Styles.customStyles}
+                        <button
+                          className="waves-effect waves-light btn valign-wrapper iconBtn"
+                          onClick={this.openModal}
+                          >
+                          <img style={{padding:"5px"}} src='img/qr-code-icon.png' /> Scan
+                        </button>
+                        {/* ---QR Code Modal---*/}
+                        <Dialog
+                          style={{zIndex:10000, width:"260px"}}
+                          title="QR Code"
+                          modal={false}
+                          actions={
+                              <FlatButton
+                                label="Close"
+                                primary={true}
+                                onClick={this.closeModal}
+                              />}
+                          open={this.state.modalIsOpen}
+                          onRequestClose={this.closeModal}
                         >
-                            <QRCode value={`${window.location.origin}/control_device/${this.props.globalData.gameId}/${this.props.globalData.playerId}/${this.state.playerSelection}`} />
-                        </Modal>
+                          <QRCode className="QRcanvas" value={`${window.location.origin}/control_device/${this.props.globalData.gameId}/${this.props.globalData.playerId}/${this.state.playerSelection}`} />
+                        </Dialog>
                     </div>
                     <div id="script-container">
                     </div>
-                </div>
+
             </div>
         );
     }
