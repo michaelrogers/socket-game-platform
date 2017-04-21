@@ -1,8 +1,9 @@
 // let timeoutVariable;
 // let acceptingData = true;
 // pendulum
-let pivot_x;
-let pivot_y;
+const pivot_x = 450; //x-position of sprite, relative to middle of screen
+const pivot_y = 0;
+
 let len = 450;
 
 let angle = 0;
@@ -81,11 +82,11 @@ preload = () => {
 // console.log('Sketch file loaded')
 // *************** //
 setup = () => {
-  var myCanvas = createCanvas(windowWidth, 700);
+  var myCanvas = createCanvas(1000, 700);
   myCanvas.parent('canvas');
 
-  pivot_x = width / 2 -100; //x-position of sprite, relative to middle of screen
-  pivot_y = 0;
+  // pivot_x = width / 2 -100; //x-position of sprite, relative to middle of screen
+  // pivot_y = 0;
   // cord
   line(pivot_x, pivot_y, 300, 250);
 

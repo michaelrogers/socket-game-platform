@@ -9,6 +9,7 @@ body {background-color:#f5f5f5}
     z-index: -100;
     position: relative;
     top: -340px;
+    background-color: #323232;
 }
 .lobby-wrapper, .game-wrapper{
   margin-top:65px;
