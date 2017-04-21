@@ -73,6 +73,36 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }, true);
 
+        // testBtn.onclick = () => {
+        //     let a_x = 1;
+        //     let a_y = -40;
+        //     let a_z = 1;
+            
+        //     // compile acceleration componenets in one acceleration object
+        //     let data = {
+        //         acc: {
+        //             x: a_x,
+        //             y: a_y,
+        //             z: a_z
+        //         }
+        //     }
+
+        //     // send acceleration components to 'input' socket
+        //     socket.emit('input', new DataPackage(roomId, data, 'acceleration', playerId, playerSelection));
+        // }
+
+        startGameBtn.onclick = () => {
+                console.log('clickeeeedddd in connection')
+                let data = {
+                    roomId: gameId,
+                    result: 1,
+                    type: 'gameStart'
+                }
+                console.log(data)
+                startGameBtn.disabled = true;
+                socket.emit('admin', data);
+            }
+
     }
     connection();
     

@@ -39,17 +39,17 @@ function DataPackage(globalData, playerSelection, dataType = null, data = null) 
     this.timestamp = Date.now();
 }
 
-const inputEventHandler = (DataPackage) => {
-    const a_y = DataPackage.data.acc.y;
-    const a_x = DataPackage.data.acc.x;
-    const mag  = Math.sqrt(Math.pow(a_y, 2) + Math.pow(a_x, 2));
-    const alpha = Math.atan(a_x/(a_y))*( 180 / Math.PI);
-    if (DataPackage.playerSelection == 0) {
-        updateSpring(mag, alpha)
-    } else if (DataPackage.playerSelection == 1) {
-        drawBat(mag);
-    } else console.log('Nope');
-}
+// const inputEventHandler = (DataPackage) => {
+//     const a_y = DataPackage.data.acc.y;
+//     const a_x = DataPackage.data.acc.x;
+//     const mag  = Math.sqrt(Math.pow(a_y, 2) + Math.pow(a_x, 2));
+//     const alpha = Math.atan(a_x/(a_y))*( 180 / Math.PI);
+//     if (DataPackage.playerSelection == 0) {
+//         updateSpring(mag, alpha)
+//     } else if (DataPackage.playerSelection == 1) {
+//         drawBat(mag);
+//     } else console.log('Nope');
+// }
 
 export default class Lobby extends React.Component {
     constructor(props) {
@@ -73,7 +73,8 @@ export default class Lobby extends React.Component {
             modalIsOpen: false,
             drawerOpen: false,
             winner: null,
-            gameStart: true,
+            gameStartCount: 0,
+            gameStart: false,
             gameOver: false,
             hits: 0,
             swings: 0,
@@ -88,6 +89,7 @@ export default class Lobby extends React.Component {
 
     this.batWins = this.batWins.bind(this);
     this.pinataWins = this.pinataWins.bind(this);
+    this.inputEventHandler = this.inputEventHandler.bind(this);
 
     // bat state events
     this.batSwings = this.batSwings.bind(this);
@@ -177,7 +179,7 @@ export default class Lobby extends React.Component {
         document.querySelector('#canvas').classList.remove("hide");
         this.props.socket.on('connection-status', this.addChatMessage);
         this.props.socket.on('chat-message', this.addChatMessage);
-        this.props.socket.on('input', inputEventHandler);
+        this.props.socket.on('input', this.inputEventHandler);
         this.props.socket.on('admin', this.setNewStateAdmin);
     }
 
@@ -188,6 +190,23 @@ export default class Lobby extends React.Component {
         chatArray.push(DataPackage)
         console.log(chatArray)
         this.setState({messages: chatArray});
+    }
+
+    inputEventHandler(DataPackage) {
+            console.log('data packet befor')
+        if(this.state.gameStart) {
+            console.log('datapacket if statement')
+            const a_y = DataPackage.data.acc.y;
+            const a_x = DataPackage.data.acc.x;
+            const mag  = Math.sqrt(Math.pow(a_y, 2) + Math.pow(a_x, 2));
+            const alpha = Math.atan(a_x/(a_y))*( 180 / Math.PI);
+            
+            if (DataPackage.playerSelection == 0) {
+                updateSpring(mag, alpha)
+            } else if (DataPackage.playerSelection == 1) {
+                drawBat(mag);
+            } else console.log('Nope');
+        }
     }
 
     batWins() {
@@ -231,6 +250,7 @@ export default class Lobby extends React.Component {
     }
 
     winner(player) {
+        // need some logic here
         // console.log('done mm', player);
         // const data = {
         //     roomId: this.props.globalData.gameId,
@@ -244,6 +264,7 @@ export default class Lobby extends React.Component {
 
     // Sets new states from when receiving data from socket admin channel
     setNewStateAdmin(data) {
+        console.log('htis dta', data)
         switch(data.type) {
             case 'swing':
                 console.log('winner inside switch', data.result);
@@ -255,8 +276,16 @@ export default class Lobby extends React.Component {
                 this.setState({hits: data.result});
                 break;
 
-            default:
-                console.log('meh');
+            case 'gameStart':
+                console.log('prior gamestart', this.state.gameStartCount);
+                this.setState({gameStartCount: this.state.gameStartCount + data.result});
+                console.log('gamestartcounnnntt', this.state.gameStartCount, this.state.gameStart);
+                if(this.state.gameStartCount == 2) {
+                    this.state.gameStart = true;
+                    console.log('gamestartbool af', this.state.gameStart);
+                }
+            default: 
+                console.log('meh'); 
                 break;
         };
     }
