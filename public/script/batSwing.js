@@ -22,7 +22,7 @@ drawBat = (mag) => {
     bat.position.x = -magX*2;
     bat.position.x = constrain(bat.position.x, batX - 200, batX + 50);
 
-    
+
     batSwings++;
     document.getElementById('batSwings').click();
     console.log('bat swing', batSwings)
@@ -47,10 +47,3 @@ drawBat = (mag) => {
     restoreBatPos();
   }
 }
-/* --todo:
-1. make bat swing only after a positive x acc, with min magnitude
-2. restore bat position after swing.
-3. allow bat y-movement depending on user's swing direction
-  3a. if user swing with positive y-acc, have bat move up
-  3b. if y-acc nega. bat moves down
-*/
