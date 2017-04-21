@@ -49,6 +49,9 @@ export default class Lobby extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            
+            bitlyURL: null,
+            playerSelection: null,
             chatInput: null,
             messages: [],
             score: {
@@ -362,6 +365,14 @@ export default class Lobby extends React.Component {
         this.setState({modalIsOpen:false});
     }
 
+    componentWillMount() {
+        let playerSel = sessionStorage.getItem('player-selection');
+        let long_url = window.location.origin +"/control_device/" + this.props.globalData.gameId + "/" + this.props.globalData.playerId + "/" + this.state.playerSel;
+        helpers.runQuery(long_url).then(function(response) {
+        this.setState({ bitlyURL: response.url });
+        }.bind(this));
+    }
+
     render() {
 //     return (
 //     <div>
@@ -454,6 +465,10 @@ export default class Lobby extends React.Component {
                             href={`/control-device/${this.props.globalData.gameId}/${this.props.globalData.playerId}/${this.props.globalData.playerSelection}`}>go here to connect control device: <br/>
                             {`/control-device/${this.props.globalData.gameId}/${this.props.globalData.playerId}/${this.props.globalData.playerSelection}`}
                         </a>
+                        {/* --- bitly - shortened urls ---*/}
+                        <div>
+                            <h1>Control Device Link: <strong>{this.state.bitlyURL}</strong></h1>
+                        </div>
                         {/*Modal button*/}
                         <button
                           className="waves-effect waves-light btn valign-wrapper iconBtn"
@@ -480,7 +495,6 @@ export default class Lobby extends React.Component {
                     </div>
                     <div id="script-container">
                     </div>
-
             </div>
         );
     }

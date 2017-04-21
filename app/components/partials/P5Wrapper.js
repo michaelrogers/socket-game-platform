@@ -1,5 +1,7 @@
 import React from 'react';
 import p5 from 'p5';
+import 'p5/lib/addons/p5.sound';
+
 // import p5Play from 'p5.play'
 
 export default class P5Wrapper extends React.Component {
@@ -30,8 +32,9 @@ export default class P5Wrapper extends React.Component {
       <div>
         <div id="" ref={wrapper => this.wrapper = wrapper}></div>
          <script src="/lib/p5.play.js"></script>
-         
-      
+         {/* <script src="/lib/p5.sound.js"></script> */}
+
+
       </div>
       );
   }
