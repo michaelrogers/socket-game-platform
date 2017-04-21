@@ -90,7 +90,7 @@ export default class Main extends React.Component {
                       setMainState={this.setMainState}
                     />
                   )}/>
-                  <Route component={Error404}/>
+                  {/* <Route component={Error404}/> */}
                 </div>
               </Router>
               

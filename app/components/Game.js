@@ -62,6 +62,7 @@ export default class Lobby extends React.Component {
 
     componentWillUnmount() {
         document.querySelector('#canvas').classList.add("hidden");
+        console.log('Game Unmount')
         this.props.setMainState({
             gameId: undefined,
             playerSelection: undefined
@@ -74,28 +75,12 @@ export default class Lobby extends React.Component {
         if (!this.props.globalData.playerId) {
             window.location.pathname = "/";
         }
-        this.props.socket.off();
+        //Clear previous socket
 
     }
 
     componentWillReceiveProps() {
-        console.log('GameId', this.props.globalData.gameId, this.props);
-        if (this.props.globalData.gameId) {
-            this.requestJoinRoom(this.props);
-        } else {
-            console.log('Create game', this.props.globalData.playerId, this.props);
-            if (this.props.globalData.playerId !== null) {
-            helpers.createNewGame(this.props.globalData.playerId)
-            .then(response => {
-                this.props.setMainState({
-                    playerSelection: 0,
-                    gameId: response._id,
-                });
-                console.log('Game', this.props);
-                this.requestJoinRoom(this.props)
-            });
-        }
-        }
+       
     }
     
     
@@ -110,6 +95,28 @@ export default class Lobby extends React.Component {
 
 
     componentDidMount() {
+        console.log('GameId', this.props.globalData.gameId, this.props);
+        if (this.props.globalData.gameId) {
+            this.requestJoinRoom();
+        } else {
+            console.log('Create game', this.props.globalData.playerId, this.props);
+            if (this.props.globalData.playerId !== null) {
+            helpers.createNewGame(this.props.globalData.playerId)
+            .then(response => {
+                this.props.setMainState({
+                    playerSelection: 0,
+                    gameId: response._id,
+                });
+                console.log('Game', this.props);
+                this.requestJoinRoom();
+            });
+        }
+        }
+
+
+
+
+
         document.querySelector('#canvas').classList.remove("hidden");
         this.props.socket.on('connection-status', this.addChatMessage);
         this.props.socket.on('chat-message', this.addChatMessage);
@@ -136,7 +143,7 @@ export default class Lobby extends React.Component {
     addChatMessage(DataPackage) {
         console.log('Add Chat', DataPackage);
         let chatArray = this.state.messages;
-        chatArray.push(DataPackage.data)
+        chatArray.push(DataPackage)
         console.log(chatArray)
         this.setState({messages: chatArray});
     }
