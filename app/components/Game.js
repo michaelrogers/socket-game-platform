@@ -208,6 +208,7 @@ export default class Lobby extends React.Component {
     }
 
     winner(player) {
+        // need some logic here
         // console.log('done mm', player);
         // const data = {
         //     roomId: this.props.globalData.gameId,
