@@ -81,6 +81,7 @@ export default class Lobby extends React.Component {
 
   handleJoin(event) {
     const gameId = event.currentTarget.dataset.gameid || null;
+    console.log('Handle Join:gameId', gameId)
     if (gameId) {
       this.props.setGameId(gameId)
       // sessionStorage.setItem('room-id', gameId);
@@ -115,13 +116,14 @@ export default class Lobby extends React.Component {
       return (
         <ListItem
           key={i}
+          onClick={this.handleJoin} 
           containerElement={
             <Link
               to="/game"
               key={game._id}
               data-gameid={game._id}
-              onClick={this.handleJoin}>
-            </Link>
+              />
+
           }
           rightIcon={<a href="/" onClick={(e) => {e.stopPropagation(); this.removeGame(game._id)}}>x</a>}
         >
