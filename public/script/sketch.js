@@ -3,7 +3,7 @@
 // pendulum
 let pivot_x;
 let pivot_y;
-const len = 450;
+let len = 450;
 
 let angle = 0;
 const gravity = 0.01;
