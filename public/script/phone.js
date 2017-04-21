@@ -10,6 +10,7 @@ sessionStorage.setItem('player-selection', playerSelection);
 console.log(gameId, playerId, playerSelection)
 
 const startGameBtn = document.getElementById('startGame');
+const testBtn = document.getElementById('testBtn')
 // document.getElementById('startGame').onclick = () => {
 //   console.log('clickeeeedddd')
 // }

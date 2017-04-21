@@ -39,17 +39,17 @@ function DataPackage(globalData, playerSelection, dataType = null, data = null) 
     this.timestamp = Date.now();
 }
 
-const inputEventHandler = (DataPackage) => {
-    const a_y = DataPackage.data.acc.y;
-    const a_x = DataPackage.data.acc.x;
-    const mag  = Math.sqrt(Math.pow(a_y, 2) + Math.pow(a_x, 2));
-    const alpha = Math.atan(a_x/(a_y))*( 180 / Math.PI);
-    if (DataPackage.playerSelection == 0) {
-        updateSpring(mag, alpha)
-    } else if (DataPackage.playerSelection == 1) {
-        drawBat(mag);
-    } else console.log('Nope');
-}
+// const inputEventHandler = (DataPackage) => {
+//     const a_y = DataPackage.data.acc.y;
+//     const a_x = DataPackage.data.acc.x;
+//     const mag  = Math.sqrt(Math.pow(a_y, 2) + Math.pow(a_x, 2));
+//     const alpha = Math.atan(a_x/(a_y))*( 180 / Math.PI);
+//     if (DataPackage.playerSelection == 0) {
+//         updateSpring(mag, alpha)
+//     } else if (DataPackage.playerSelection == 1) {
+//         drawBat(mag);
+//     } else console.log('Nope');
+// }
 
 export default class Lobby extends React.Component {
     constructor(props) {
@@ -88,6 +88,7 @@ export default class Lobby extends React.Component {
 
     this.batWins = this.batWins.bind(this);
     this.pinataWins = this.pinataWins.bind(this);
+    this.inputEventHandler = this.inputEventHandler.bind(this);
 
     // bat state events
     this.batSwings = this.batSwings.bind(this);
@@ -174,7 +175,7 @@ export default class Lobby extends React.Component {
         document.querySelector('#canvas').classList.remove("hide");
         this.props.socket.on('connection-status', this.addChatMessage);
         this.props.socket.on('chat-message', this.addChatMessage);
-        this.props.socket.on('input', inputEventHandler);
+        this.props.socket.on('input', this.inputEventHandler);
         this.props.socket.on('admin', this.setNewStateAdmin);
     }
 
@@ -185,6 +186,23 @@ export default class Lobby extends React.Component {
         chatArray.push(DataPackage)
         console.log(chatArray)
         this.setState({messages: chatArray});
+    }
+
+    inputEventHandler(DataPackage) {
+            console.log('data packet befor')
+        if(this.state.gameStart) {
+            console.log('datapacket if statement')
+            const a_y = DataPackage.data.acc.y;
+            const a_x = DataPackage.data.acc.x;
+            const mag  = Math.sqrt(Math.pow(a_y, 2) + Math.pow(a_x, 2));
+            const alpha = Math.atan(a_x/(a_y))*( 180 / Math.PI);
+            
+            if (DataPackage.playerSelection == 0) {
+                updateSpring(mag, alpha)
+            } else if (DataPackage.playerSelection == 1) {
+                drawBat(mag);
+            } else console.log('Nope');
+        }
     }
 
     batWins() {
@@ -443,12 +461,12 @@ export default class Lobby extends React.Component {
                     </div>
 
              <div>
-             <Link to="#" id="batWins" className="btn btn-primary" onClick={this.batWins} style={{display:"block"}}>bat wins</Link>
-             <Link to="#" id="pinataWins" className="btn btn-primary" onClick={this.pinataWins} style={{display:"block"}}>pinata wins</Link>
+             <Link to="#" id="batWins" className="btn btn-primary" onClick={this.batWins} style={{display:"none"}}>bat wins</Link>
+             <Link to="#" id="pinataWins" className="btn btn-primary" onClick={this.pinataWins} style={{display:"none"}}>pinata wins</Link>
 
-             <Link to="#" id="batSwings" className="btn btn-primary" onClick={this.batSwings} style={{display:"block"}}>bat swings</Link>
+             <Link to="#" id="batSwings" className="btn btn-primary" onClick={this.batSwings} style={{display:"none"}}>bat swings</Link>
 
-             <Link to="#" id="batHits" className="btn btn-primary" onClick={this.batHits} style={{display:"block"}}>bat hits</Link>
+             <Link to="#" id="batHits" className="btn btn-primary" onClick={this.batHits} style={{display:"none"}}>bat hits</Link>
          </div>
             </div>
         );
