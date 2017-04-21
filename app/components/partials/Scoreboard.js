@@ -60,12 +60,12 @@ export default class Scoreboard extends React.Component {
         <div className="row">
             <h3>Scoreboard</h3>
             <div className="col-xs-6">
-                Player 1: 
-                <h3>{this.props.score.player1}</h3>
+                bat swings: 
+                <h3>{this.props.score.batSwings}</h3>
             </div>
             <div className="col-xs-6">
-                Player 2: 
-                <h3>{this.props.score.player2}</h3>
+                hits: 
+                <h3>{this.props.score.hits}</h3>
             </div>
         </div>
         <div className ="row">

@@ -41,8 +41,8 @@ export default class Lobby extends React.Component {
             chatInput: null,
             messages: [],
             score: {
-                player1: 0,
-                player2: 0
+                hits: 0,
+                batSwings: 0
             },
             acceleration: {
                 x: 0,
@@ -50,15 +50,16 @@ export default class Lobby extends React.Component {
                 z: 0
             },
             winner: null,
-            playing: false,
-            batSwings: 0
+            gameStart: true,
+            gameOver: false,
+            // batSwings: 0
     };
 
     this.handleChatInput = this.handleChatInput.bind(this);
     this.addChatMessage = this.addChatMessage.bind(this);
     this.displayChatMessages = this.displayChatMessages.bind(this);
     this.sendChatMessage = this.sendChatMessage.bind(this);
-    this.sendSocketInput = this.sendSocketInput.bind(this);
+    // this.sendSocketInput = this.sendSocketInput.bind(this);
     this.batWins = this.batWins.bind(this);
     this.pinataWins = this.pinataWins.bind(this);
     this.batSwings = this.batSwings.bind(this);
@@ -112,34 +113,44 @@ export default class Lobby extends React.Component {
 
 // send through socket and bring back to update DOM
     batSwings() {
+        
+        // this.state.score.batSwings++;
+        console.log('real swing', this.state.score.batSwings)
+        const result = this.state.score.batSwings + 1
         const data = {
             roomId: this.props.globalData.gameId,
-            result: player
+            result: result,
+            type: 'swing'
         }
-        if(this.props.globalData.playerSelection == 0) {
+        if(this.props.globalData.playerSelection == 0 && this.state.gameStart) {
+            // console.log('inside if')
             this.props.socket.emit('admin', data);
         }
     }
 
     winner(player) {
-        console.log('done mm', player)
-        const str = 'ouiiiiiiiiiiiiiiiiiii boooyyyyy';
-        // const player = 1;
-        const data = {
-            roomId: this.props.globalData.gameId,
-            result: player
-        }
-        if(this.props.globalData.playerSelection == 0) {
-            this.props.socket.emit('admin', data);
-        }
+        // console.log('done mm', player);
+        // const data = {
+        //     roomId: this.props.globalData.gameId,
+        //     result: player,
+        //     type: 'winner'
+        // }
+        // if(this.props.globalData.playerSelection == 0 && this.gameStart) {
+        //     this.props.socket.emit('admin', data);
+        // }
     }
     
 
     declareWinner(data) {
         console.log('winner is', data.result);
-        this.setState({winner: data.result});
-        // this.setState({winner: data.result});
-        console.log('le winner', this.state.winner);
+        
+        // this.state.score.batSwings = data.result;
+        this.setState({
+            score: {
+                batSwings: data.result
+            }
+        })
+        // this.setState({score: {batSwings: data.result}});
     }
 
 
@@ -167,22 +178,25 @@ export default class Lobby extends React.Component {
         });
     }
 
-    sendSocketInput(x,y) {
-        const data = {
-        acc: {
-                x: x,
-                y: y
-            }
-        }
-        this.props.socket.emit('input',
-            new DataPackage(
-                this.props.globalData,
-                this.props.globalData.playerSelection,
-                'acceleration',
-                data
-            )
-        );
-    }
+    // sendSocketInput(x,y) {
+    //     const data = {
+    //     acc: {
+    //             x: x,
+    //             y: y
+    //         }
+    //     }
+    //     if(this.gameStart) {
+    //         this.props.socket.emit('input',
+    //             new DataPackage(
+    //                 this.props.globalData,
+    //                 this.props.globalData.playerSelection,
+    //                 'acceleration',
+    //                 data
+    //             )
+    //         );
+    //     }
+        
+    // }
     render() {
     return (
     <div>

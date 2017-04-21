@@ -114,7 +114,7 @@ draw = () => {
             candies[i].show();
         }
     } 
-    else if(batSwings > 1) {
+    else if(batSwings > 100) {
         document.getElementById('pinataWins').click();
         batSwings = 0;
     }
