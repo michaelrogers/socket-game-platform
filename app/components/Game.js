@@ -142,15 +142,29 @@ export default class Lobby extends React.Component {
     
 
     declareWinner(data) {
-        console.log('winner is', data.result);
-        
-        // this.state.score.batSwings = data.result;
-        this.setState({
-            score: {
-                batSwings: data.result
-            }
-        })
-        // this.setState({score: {batSwings: data.result}});
+        switch(data.type) {
+            case 'swing':
+            console.log('winner inside switch', data.result);
+            this.setState({
+                score: {
+                    batSwings: data.result
+                }
+            });
+            break;
+
+            default: 
+                console.log('meh'); 
+                break;
+        };
+      
+        // if(data.type == 'swing') {
+        //     console.log('winner is in if', data.result);
+        //     this.setState({
+        //         score: {
+        //             batSwings: data.result
+        //         }
+        //     })
+        // }
     }
 
 
