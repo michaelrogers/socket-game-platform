@@ -242,6 +242,7 @@ export default class Lobby extends React.Component {
     
     // Sets new states from when receiving data from socket admin channel
     setNewStateAdmin(data) {
+        console.log('htis dta', data)
         switch(data.type) {
             case 'swing':
                 console.log('winner inside switch', data.result);
@@ -255,7 +256,11 @@ export default class Lobby extends React.Component {
             case 'gameStart':
                 console.log('prior gamestart', this.state.gameStartCount);
                 this.setState({gameStartCount: this.state.gameStartCount + data.result});
-                console.log('gamestartcounnnntt', this.state.gameStartCount);
+                console.log('gamestartcounnnntt', this.state.gameStartCount, this.state.gameStart);
+                if(this.state.gameStartCount == 2) {
+                    this.state.gameStart = true;
+                    console.log('gamestartbool af', this.state.gameStart);
+                }
             default: 
                 console.log('meh'); 
                 break;

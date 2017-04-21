@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
-            document.getElementById('startGame').onclick = () => {
+            startGameBtn.onclick = () => {
                 console.log('clickeeeedddd in connection')
                 let data = {
                     roomId: gameId,
@@ -75,7 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     type: 'gameStart'
                 }
                 console.log(data)
-
+                startGameBtn.disabled = true;
                 socket.emit('admin', data);
             }
 
