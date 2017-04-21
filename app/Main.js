@@ -72,6 +72,7 @@ export default class Main extends React.Component {
                       playerName={this.state.playerName}
                       // setPlayerInfo={this.setPlayerInfo}
                     />
+
                     <Route path="/" exact render={ () => (
                       <Lobby
                         globalData={this.state}
@@ -99,6 +100,7 @@ export default class Main extends React.Component {
                 </Router>
 
               </div>
+
             </div>
 
           {/*}
