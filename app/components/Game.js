@@ -211,7 +211,7 @@ export default class Lobby extends React.Component {
                     </div>
                 </div>
                 
-                {/* --- Drawer Button ---*/}
+                {/* --- Drawer & Drawer Button ---*/}
                 <div className="row">
                     <div className="col s1">
                         <Paper style={{display: "block", marginLeft:"auto", marginRight:"auto", width:70, height:70}} zDepth={2} circle={true}>
@@ -226,54 +226,54 @@ export default class Lobby extends React.Component {
                         </Paper>
                         
                         { /* ---- Drawer / Chat Messages---- */}
-                                <Drawer 
-                                    open={this.state.drawerOpen}
-                                    docked={false}
-                                    width={350}
-                                    onRequestChange={(open) => this.setState({open})}
-                                    >
-                                    <FlatButton 
-                                        label="Close"
-                                        style={{float:"right"}}
-                                        onClick={this.handleDrawerClose}
-                                     />
-                                     <div className="row">
-                                        <div className="chat-wrapper col s12">
-                                            <Card>
-                                                <CardHeader
-                                                    title="Chat Messages"
+                        <Drawer 
+                            open={this.state.drawerOpen}
+                            docked={false}
+                            width={350}
+                            onRequestChange={(open) => this.setState({open})}
+                            >
+                            <FlatButton 
+                                label="Close"
+                                style={{float:"right"}}
+                                onClick={this.handleDrawerClose}
+                                />
+                                <div className="row">
+                                <div className="chat-wrapper col s12">
+                                    <Card>
+                                        <CardHeader
+                                            title="Chat Messages"
+                                        />
+                                        <List id="messages" className="list-unstyled" style={{paddingLeft:"10px", paddingRight:"10px"}}>
+                                                <form onSubmit={this.sendChatMessage}>
+                                                <TextField
+                                                    id="message-input"
+                                                    hintText="Send a Message"
+                                                    multiLine={true}
+                                                    rows={2}
+                                                    onChange={this.handleChatInput}
                                                 />
-                                                <List id="messages" className="list-unstyled" style={{paddingLeft:"10px", paddingRight:"10px"}}>
-                                                        <form onSubmit={this.sendChatMessage}>
-                                                        <TextField
-                                                            id="message-input"
-                                                            hintText="Send a Message"
-                                                            multiLine={true}
-                                                            rows={2}
-                                                            onChange={this.handleChatInput}
-                                                        />
-                                                        <RaisedButton
-                                                            fullWidth={true}
-                                                            label="Send"
-                                                            primary={true}
-                                                            containerElement={
-                                                                <button id="message-button" type="submit"></button>
-                                                            }
-                                                            />
-                                                        </form>
-                                                    {this.displayChatMessages()}
-                                                </List>
-                                            </Card>
-                                        </div>
-                                    </div>
-                                </Drawer>
+                                                <RaisedButton
+                                                    fullWidth={true}
+                                                    label="Send"
+                                                    primary={true}
+                                                    containerElement={
+                                                        <button id="message-button" type="submit"></button>
+                                                    }
+                                                    />
+                                                </form>
+                                            {this.displayChatMessages()}
+                                        </List>
+                                    </Card>
+                                </div>
+                            </div>
+                        </Drawer>
                     </div>
                 </div>
-
-                
+                {/* ------ Connect Device ------*/}
+                {/* ---- qr code ----*/}
                 <div className="row">
                     <div className="col s1">
-                        {/* --- Connect Device ---*/}
+                        {/*Modal button*/}
                         <Paper style={{display: "block", marginLeft:"auto", marginRight:"auto", width:70, height:70}} zDepth={2} circle={true}>
                             <IconButton
                                 tooltip="QR Code"
@@ -306,9 +306,6 @@ export default class Lobby extends React.Component {
                             {`/control-device/${this.props.globalData.gameId}/${this.props.globalData.playerId}/${this.props.globalData.playerSelection}`}
                         </a>
                         */}
-                        
-                        {/*Modal button*/}
-                        
                     </div>
                 </div>
                     <div id="script-container">
