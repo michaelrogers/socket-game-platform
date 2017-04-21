@@ -31,6 +31,7 @@ drawBat = (mag) => {
   bat.overlap(pinata, () => {
     if (acceptingData) {
       hits++;
+      document.getElementById('batHits').click();
       acceptingData = false;
       timeoutVariable = setTimeout(() => {
           acceptingData = true;

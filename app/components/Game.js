@@ -49,15 +49,15 @@ export default class Lobby extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            
             bitlyURL: null,
             playerSelection: null,
             chatInput: null,
             messages: [],
-            score: {
-                hits: 0,
-                batSwings: 0
-            },
+            // was having a very strange problem, will try again tomorrow to have this data structure.... it should work... but was getting a weird result
+            // score: {
+            //     hits: 0,
+            //     swings: 0
+            // },
             acceleration: {
                 x: 0,
                 y: 0,
@@ -67,12 +67,10 @@ export default class Lobby extends React.Component {
             winner: null,
             gameStart: true,
             gameOver: false,
-            // batSwings: 0
+            hits: 0,
+            swings: 0,
             modalIsOpen: false
     };
-
-        
-
 
     this.handleChatInput = this.handleChatInput.bind(this);
     this.addChatMessage = this.addChatMessage.bind(this);
@@ -81,17 +79,25 @@ export default class Lobby extends React.Component {
 
     this.batWins = this.batWins.bind(this);
     this.pinataWins = this.pinataWins.bind(this);
+
+    // bat state events
     this.batSwings = this.batSwings.bind(this);
+    this.batHits = this.batHits.bind(this);
+    
+    // general function to send data to admin channel
+    this.sendDataAdmin = this.sendDataAdmin.bind(this);
+
     this.winner = this.winner.bind(this);
-    this.declareWinner = this.declareWinner.bind(this);
+
+    // setNewState from data coming from admin channel
+    this.setNewStateAdmin = this.setNewStateAdmin.bind(this);
+    
 
     this.requestJoinRoom = this.requestJoinRoom.bind(this);
 
     // --modals--
     this.openModal = this.openModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
-
-
     }
 
 
@@ -112,14 +118,12 @@ export default class Lobby extends React.Component {
             window.location.pathname = "/";
         }
         //Clear previous socket
-
     }
 
     componentWillReceiveProps() {
        
     }
-    
-    
+
     requestJoinRoom() {
         console.log('Request join room', this.props.globalData);
 
@@ -127,9 +131,6 @@ export default class Lobby extends React.Component {
             new DataPackage(this.props.globalData, this.props.globalData.playerSelection)
         );
     }
-
-
-
 
     componentDidMount() {
         console.log('GameId', this.props.globalData.gameId, this.props);
@@ -147,36 +148,15 @@ export default class Lobby extends React.Component {
                 console.log('Game', this.props);
                 this.requestJoinRoom();
             });
+            }
         }
-        }
-
-
-
-
 
         document.querySelector('#canvas').classList.remove("hide");
         this.props.socket.on('connection-status', this.addChatMessage);
         this.props.socket.on('chat-message', this.addChatMessage);
         this.props.socket.on('input', inputEventHandler);
-        this.props.socket.on('admin', this.declareWinner);
+        this.props.socket.on('admin', this.setNewStateAdmin);
     }
-
-    // onKeyPress(e){
-    //     if (this.state.playerSelection == 1 || this.state.playerSelection == 2) {
-    //         const acceptedKeys = [119, 97, 115, 100, 32];
-
-    //         if (acceptedKeys.indexOf(e.charCode) !== -1) {
-    //             e.preventDefault();
-    //             this.props.socket.emit('input',
-    //                 new DataPackage(
-    //                     this.props.globalData,
-    //                     this.state.playerSelection,
-    //                 )
-    //             );
-    //         }
-    //     }
-    // }
-
 
     addChatMessage(DataPackage) {
         console.log('Add Chat', DataPackage);
@@ -195,19 +175,34 @@ export default class Lobby extends React.Component {
         this.winner(0)
     }
 
-// send through socket and bring back to update DOM
+// Collect appropriate data for swings and hits
     batSwings() {
-        
-        // this.state.score.batSwings++;
-        console.log('real swing', this.state.score.batSwings)
-        const result = this.state.score.batSwings + 1
+        // Data package to send to admin channel
         const data = {
             roomId: this.props.globalData.gameId,
-            result: result,
+            result: this.state.swings + 1,
             type: 'swing'
         }
+        // Send data to socket admin channel only once (player 0) and when game is playing
+       this.sendDataAdmin(data)
+    }
+
+    batHits() {
+        // Data package to send to admin channel
+        const data = {
+            roomId: this.props.globalData.gameId,
+            result: this.state.hits + 1,
+            type: 'hit'
+        }
+
+        // Send data to socket admin channel only once (player 0) and when game is playing
+        this.sendDataAdmin(data)
+    }
+
+    // send data to socket admin channel
+    sendDataAdmin(data) {
+        console.log('in senddataadmin')
         if(this.props.globalData.playerSelection == 0 && this.state.gameStart) {
-            // console.log('inside if')
             this.props.socket.emit('admin', data);
         }
     }
@@ -224,31 +219,23 @@ export default class Lobby extends React.Component {
         // }
     }
     
-
-    declareWinner(data) {
+    // Sets new states from when receiving data from socket admin channel
+    setNewStateAdmin(data) {
         switch(data.type) {
             case 'swing':
-            console.log('winner inside switch', data.result);
-            this.setState({
-                score: {
-                    batSwings: data.result
-                }
-            });
-            break;
+                console.log('winner inside switch', data.result);
+                this.setState({swings: data.result});
+                break;
+
+            case 'hit':
+                console.log('inside switch and hitting', data.result);
+                this.setState({hits: data.result});
+                break;
 
             default: 
                 console.log('meh'); 
                 break;
         };
-      
-        // if(data.type == 'swing') {
-        //     console.log('winner is in if', data.result);
-        //     this.setState({
-        //         score: {
-        //             batSwings: data.result
-        //         }
-        //     })
-        // }
     }
 
 
@@ -282,67 +269,6 @@ export default class Lobby extends React.Component {
         });
     }
 
-//     render() {
-//     return (
-//     <div>
-//         <div className="row">
-//             <Scoreboard
-//                 score={this.state.score}/>
-//             <div className="col-xs-2">
-//             <div className="input-group">
-//                 <p> gameId: {this.props.globalData.gameId}</p>
-//                 <p> playerId: {this.props.globalData.playerId}</p>
-//             </div>
-//         </div>
-//     </div>
-//     <div className="row">
-// 	<div className="col-xs-12">
-// 	</div>
-// 		</div>
-// 		<div className="row">
-// 			<div className="col-xs-8 col-xs-offset-2">
-// 				<ul id="messages" className="list-unstyled">
-//                     {this.displayChatMessages()}
-//                 </ul>
-// 			</div>
-// 		</div>
-// 		<div className="row">
-// 			<div className="col-xs-8 col-xs-offset-2">
-// 				<div className="input-group">
-//                 <form onSubmit={this.sendChatMessage}>
-//                     <input type="text" className="form-control" id="message-input" onChange={this.handleChatInput} placeholder="Send a message."/>
-// 					<span className="input-group-btn">
-// 						<button className="btn btn-default" id="message-button" type="submit">Send</button>
-// 					</span>
-//                 </form>
-// 				</div>
-// 			</div>
-//         </div>
-//         <div className="row">
-//         <div className="col-xs-8 col-xs-offset-2">
-//             <a target="_blank"
-//                 href={`/control-device/${this.props.globalData.gameId}/${this.props.globalData.playerId}/${this.props.globalData.playerSelection}`}>go here to connect control device: <br/>
-//                 {`/control-device/${this.props.globalData.gameId}/${this.props.globalData.playerId}/${this.props.globalData.playerSelection}`}
-//             </a>
-//             <div>
-//                 <QRCode value={`${window.location.origin}/control-device/${this.props.globalData.gameId}/${this.props.globalData.playerId}/${this.props.globalData.playerSelection}`} />,
-//             </div>
-//         </div>
-//         </div>
-//         <div id="script-container">
-//         </div>
-//         <div>
-//             <Link to="#" id="batWins" className="btn btn-primary" onClick={this.batWins} style={{display:"hide"}}>bat wins</Link>
-//             <Link to="#" id="pinataWins" className="btn btn-primary" onClick={this.pinataWins} style={{display:"hide"}}>pinata wins</Link>
-
-//             <Link to="#" id="batSwings" className="btn btn-primary" onClick={this.batSwings} style={{display:"block"}}>bat swings</Link>
-//         </div>
-        
-//         </div>
-        
-
-   
-
     openModal() {
         this.setState({modalIsOpen: true});
     }
@@ -359,50 +285,6 @@ export default class Lobby extends React.Component {
     }
 
     render() {
-//     return (
-//     <div>
-//         <div className="row">
-//             <Scoreboard
-//                 score={this.state.score}
-//             />
-//             <div className="col-xs-2">
-//             <div className="input-group">
-//                 <p> gameId: {this.props.globalData.gameId}</p>
-//                 <p> playerId: {this.props.globalData.playerId}</p>
-//             </div>
-//         </div>
-//     </div>
-//     <div className="row">
-// 	<div className="col-xs-12">
-// 	</div>
-// 		</div>
-// 		<div className="row">
-// 			<div className="col-xs-8 col-xs-offset-2">
-// 				<ul id="messages" className="list-unstyled">
-//                     {this.displayChatMessages()}
-//                 </ul>
-// 			</div>
-// 		</div>
-// 		<div className="row">
-// 			<div className="col-xs-8 col-xs-offset-2">
-// 				<div className="input-group">
-//                 <form onSubmit={this.sendChatMessage}>
-//                     <input type="text" className="form-control" id="message-input" onChange={this.handleChatInput} placeholder="Send a message."/>
-// 					<span className="input-group-btn">
-// 						<button className="btn btn-default" id="message-button" type="submit">Send</button>
-// 					</span>
-//                 </form>
-// 				</div>
-// 			</div>
-//         </div>
-//         <div className="row">
-//         <div className="col-xs-8 col-xs-offset-2">
-//             <a target="_blank"
-//                 href={`/control-device/${this.props.globalData.gameId}/${this.props.globalData.playerId}/${this.props.globalData.playerSelection}`}>go here to connect control device: <br/>
-//                 {`/control-device/${this.props.globalData.gameId}/${this.props.globalData.playerId}/${this.props.globalData.playerSelection}`}
-//             </a>
-//             <div>
-//                 <QRCode value={`${window.location.origin}/control-device/${this.props.globalData.gameId}/${this.props.globalData.playerId}/${this.props.globalData.playerSelection}`} />,
 
         return (
             <div className="container game-wrapper">
@@ -411,7 +293,7 @@ export default class Lobby extends React.Component {
                     <div className="col s6 playerHeader valign-wrapper">
                         <img style={{float:"left"}} className="circle responsive-img" src="/img/bird-sm.png" />
                         <h4>{this.props.globalData.playerName}</h4>
-                        <Scoreboard score={this.state.score}/>
+                        <Scoreboard swings={this.state.swings} hits={this.state.hits}/>
                     </div>
                     
                     { /* --player header: Right corner-- */}
@@ -488,6 +370,8 @@ export default class Lobby extends React.Component {
              <Link to="#" id="pinataWins" className="btn btn-primary" onClick={this.pinataWins} style={{display:"none"}}>pinata wins</Link>
 
              <Link to="#" id="batSwings" className="btn btn-primary" onClick={this.batSwings} style={{display:"none"}}>bat swings</Link>
+
+             <Link to="#" id="batHits" className="btn btn-primary" onClick={this.batHits} style={{display:"none"}}>bat hits</Link>
          </div>
             </div>
         );
