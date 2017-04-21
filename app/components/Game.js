@@ -484,10 +484,10 @@ export default class Lobby extends React.Component {
                     </div>
 
              <div>
-             <Link to="#" id="batWins" className="btn btn-primary" onClick={this.batWins} style={{display:"hide"}}>bat wins</Link>
-             <Link to="#" id="pinataWins" className="btn btn-primary" onClick={this.pinataWins} style={{display:"hide"}}>pinata wins</Link>
+             <Link to="#" id="batWins" className="btn btn-primary" onClick={this.batWins} style={{display:"none"}}>bat wins</Link>
+             <Link to="#" id="pinataWins" className="btn btn-primary" onClick={this.pinataWins} style={{display:"none"}}>pinata wins</Link>
 
-             <Link to="#" id="batSwings" className="btn btn-primary" onClick={this.batSwings} style={{display:"block"}}>bat swings</Link>
+             <Link to="#" id="batSwings" className="btn btn-primary" onClick={this.batSwings} style={{display:"none"}}>bat swings</Link>
          </div>
             </div>
         );
