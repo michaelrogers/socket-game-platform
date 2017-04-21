@@ -65,9 +65,9 @@ export default class Lobby extends React.Component {
             gameStart: true,
             gameOver: false,
             // batSwings: 0
+            modalIsOpen: false
     };
 
-            modalIsOpen: false
         
 
 
