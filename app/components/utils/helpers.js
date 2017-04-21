@@ -7,9 +7,9 @@ const helpers = {
         let queryURL = "https://api-ssl.bitly.com/v3/shorten?access_token=" + bitlyToken + "&longUrl=" + long_url;
 
         return axios.get(queryURL).then(function(apiResponse) {
-          console.log("axios long url: " + long_url);
-          console.log(apiResponse);
-          console.log("axios shortened url: " + apiResponse.data.data.url)
+          // console.log("axios long url: " + long_url);
+          // console.log(apiResponse);
+          // console.log("axios shortened url: " + apiResponse.data.data.url)
           return apiResponse.data.data;
         });
     },

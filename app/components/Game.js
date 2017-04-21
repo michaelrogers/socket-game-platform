@@ -39,6 +39,7 @@ export default class Lobby extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            
             bitlyURL: null,
             playerSelection: null,
             chatInput: null,
@@ -62,7 +63,7 @@ export default class Lobby extends React.Component {
     }
 
     componentWillUnmount() {
-        ClearCanvas();
+        // ClearCanvas();
         document.querySelector('#canvas').classList.add("hidden");
         this.props.setMainState({
             gameId: undefined,

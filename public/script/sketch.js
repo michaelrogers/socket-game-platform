@@ -32,7 +32,6 @@ let springHeight = 32,
 const M = 5, // Mass
     K = 3, // Spring constant
     D = 0.7; // Damping
-// R = 0;
 
 // Spring simulation variables
 let ps = 0, // Position   ps = R,
@@ -40,20 +39,30 @@ let ps = 0, // Position   ps = R,
     as = 0, // Acceleration
     f = 0; // Force
 
-// candy spill
+// images and sounds
 let candies = [];
 let sweet = [];
 let hitSound = [];
-let chicken;
+// let chicken;
+var dummyImg; // index of dummy images array
+var dummy = []  // pinata before
+var broken = [] // pinata after
+var dummySound = [] // dummy sounds
 
 // preload image to sprite
 preload = () => {
+    // dummy = loadImage('/img/bird.png');
+    // broken = loadImage('/img/bird2.png')
+    // broken = loadImage('/img/winner.png')
+    // chicken = loadSound('/sounds/chicken.mp3')
     arm = loadImage('/img/arm125.png');
-    dummy = loadImage('/img/bird.png');
-    // broken = loadImage('/img/bird3.png')
-    broken = loadImage('/img/bird2.png')
-    // broken = loadImage('/img/empty.png')
-    //  broken = loadImage('/img/winner.png')
+
+    for (var i=0; i < 3; i++ ) {
+      dummy[i] = loadImage('/img/dummy' + i + '.png');
+      broken[i] = loadImage('/img/broken' + i + '.png');
+      dummySound[i] = loadSound('/sounds/sound' + i + '.mp3')
+    }
+
     for (var i=0; i < 3; i++ ) {
      sweet[i] = loadImage("/img/sweet" + i + ".png");
      console.log(sweet.length)
@@ -62,7 +71,6 @@ preload = () => {
     for (var j=0; j < 6; j++) {
       hitSound[j] = loadSound('/sounds/hit' + j + '.mp3');
     }
-    chicken = loadSound('/sounds/chicken1.mp3')
 }
 // console.log('Sketch file loaded')
 // *************** //
@@ -75,8 +83,10 @@ setup = () => {
 
     // pinata
     pinata = createSprite(pivot_x, pivot_y, 50, 50);
-    pinata.addImage(dummy);
-    pinata.shapeColor = color(0, 100);
+    dummyImg = Math.floor(random(0, dummy.length));
+    pinata.addImage(dummy[dummyImg])
+    // pinata.addImage(dummy);
+    // pinata.shapeColor = color(0, 100);
     pinata.velocity.y = 0;
     pinata.velocity.x = 0;
 
@@ -117,25 +127,21 @@ draw = () => {
         var rSound = Math.floor(random(0, hitSound.length));
         hitSound[rSound].setVolume(0.5, 2);
         hitSound[rSound].play();
-        chicken.setVolume(0.05);
-        chicken.play();
+        dummySound[dummyImg].setVolume(0.2, 0.6);
+        dummySound[dummyImg].play();
+        // chicken.setVolume(0.05);
+        // chicken.play();
       }
     }
-
 
     // what happens after screwing up pinata
     if (hits >= 7) {
       jit = 2;
       len = 345;
-      pinata.addImage(broken);
+      pinata.addImage(broken[dummyImg]);
+      // pinata.addImage(broken0);
         // pinata.remove();
-        // replace here with broken pinata
-        // pinata.velocity.x = 0;
-        // pinata.velocity.y = 0;
-        // line(pivot_x, pivot_y, pivot_x, pivot_y + len);
         for (var i = 0; i < candies.length; i++) {
-
-            //   if (candies[i].pos.x > 0) {
             candies[i].applyForce();
             candies[i].update();
             candies[i].show();
@@ -183,12 +189,9 @@ updateSpring = (mag, alpha) => {
 
 }
 
-
-
 pinataSwing = () => {
     acc = -gravity * sin(angle);
 
-    // rotating object to align with rope plus some jittering - fix jittering to re-start after every hit, not really needed
     if (angle != 0) {
         pinata.rotation = -(angle * 180 / PI) + random(-jit, jit);
         jit *= 0.995;
@@ -228,7 +231,6 @@ class Candy {
   }
 
   this.show = () => {
-    // fill(125, 125, 255);
     noStroke();
     stroke(0);
     strokeWeight(1);
@@ -242,10 +244,6 @@ class Candy {
     }
 }
 
-// function mousePressed() {
-// //   remove(); // remove whole sketch on mouse press
-// // }
-
-function ClearCanvas() {
-  remove(); // remove whole sketch on mouse press
-}
+// function ClearCanvas() {
+//   remove();
+// }
