@@ -1,9 +1,10 @@
 // let timeoutVariable;
 // let acceptingData = true;
 // pendulum
-const pivot_x = 200;
-const pivot_y = 0;
+let pivot_x;
+let pivot_y;
 let len = 450;
+
 let angle = 0;
 const gravity = 0.01;
 let acc;
@@ -80,9 +81,11 @@ preload = () => {
 // console.log('Sketch file loaded')
 // *************** //
 setup = () => {
-  var myCanvas = createCanvas(700, 700);
+  var myCanvas = createCanvas(windowWidth, 700);
   myCanvas.parent('canvas');
-
+  
+  pivot_x = width / 2 -100; //x-position of sprite, relative to middle of screen
+  pivot_y = 0;
   // cord
   line(pivot_x, pivot_y, 300, 250);
 
@@ -103,8 +106,8 @@ setup = () => {
   //-----------setup bat swing---------
   calcAngle; //
   swingAngle = -2;
-  batX = width - 150; //x-position of bat sprite, to right side of screen
-  batY = len + 100; //y-position of bat sprite, equal to pinata resting
+  batX = pivot_x + 300; //x-position of bat sprite, relative to x pos of pinata
+  batY = len + 100; //y-position of bat sprite, relative to pinata resting y
   bat = createSprite(batX, batY, 20, 200)
   bat.shapeColor = color(128);
   bat.addImage(arm)
@@ -113,9 +116,6 @@ setup = () => {
   for (var i = 0; i < 150; i++) {
     candies.push(new Candy());
   }
-  // console.log('Sketch file setup')
-  // } catch (e) { console.log(e); }
-
 }
 
 draw = () => {
