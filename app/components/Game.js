@@ -14,6 +14,12 @@ import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import SvgIcon from 'material-ui/SvgIcon';
 import Dialog from 'material-ui/Dialog';
+import Drawer from 'material-ui/Drawer';
+import CommunicationChatBubble from 'material-ui/svg-icons/communication/chat-bubble';
+import IconButton from 'material-ui/IconButton';
+import Paper from 'material-ui/Paper';
+
+import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
 
 const appendScript = (scriptArray, selector) => {
     scriptArray.map(scriptPath => {
@@ -64,6 +70,8 @@ export default class Lobby extends React.Component {
                 z: 0
             },
 
+            modalIsOpen: false,
+            drawerOpen: false,
             winner: null,
             gameStart: true,
             gameOver: false,
@@ -98,6 +106,11 @@ export default class Lobby extends React.Component {
     // --modals--
     this.openModal = this.openModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
+
+    // --drawer--
+    this.handleToggle = this.handleToggle.bind(this);
+    this.handleDrawerClose = this.handleDrawerClose.bind(this);
+
     }
 
 
@@ -118,6 +131,12 @@ export default class Lobby extends React.Component {
             window.location.pathname = "/";
         }
         //Clear previous socket
+        //---below: master's latest items---
+        let playerSel = sessionStorage.getItem('player-selection');
+        let long_url = window.location.origin +"/control_device/" + this.props.globalData.gameId + "/" + this.props.globalData.playerId + "/" + this.state.playerSel;
+        helpers.runQuery(long_url).then(function(response) {
+        this.setState({ bitlyURL: response.url });
+        }.bind(this));
     }
 
     componentWillReceiveProps() {
@@ -276,13 +295,12 @@ export default class Lobby extends React.Component {
         this.setState({modalIsOpen:false});
     }
 
-    componentWillMount() {
-        let playerSel = sessionStorage.getItem('player-selection');
-        let long_url = window.location.origin +"/control_device/" + this.props.globalData.gameId + "/" + this.props.globalData.playerId + "/" + this.state.playerSel;
-        helpers.runQuery(long_url).then(function(response) {
-        this.setState({ bitlyURL: response.url });
-        }.bind(this));
-    }
+
+    handleToggle () { this.setState({drawerOpen: !this.state.drawerOpen});}
+
+    handleDrawerClose() { this.setState({drawerOpen: false});}
+
+
 
     render() {
 
@@ -302,34 +320,71 @@ export default class Lobby extends React.Component {
                         <h4 style={{float:"right"}}>{this.props.globalData.playerName}</h4>
                     </div>
                 </div>
-                { /* ----Chat Messages---- */}
+                
+                {/* --- Drawer & Drawer Button ---*/}
                 <div className="row">
-                    <div className="col s3">
-                        <List id="messages" className="list-unstyled">
-                        <form onSubmit={this.sendChatMessage}>
-                          <TextField
-                            id="message-input"
-                            hintText="Send a Message"
-                            multiLine={true}
-                            rows={2}
-                            onChange={this.handleChatInput}
-                          />
-                          <RaisedButton
-                              fullWidth={true}
-                              label="Send"
-                              primary={true}
-                              containerElement={
-                                  <button id="message-button" type="submit"></button>
-                              }
-                               />
-                        </form>
-                            {this.displayChatMessages()}
-                        </List>
+                    <div className="col s1">
+                        <Paper style={{display: "block", marginLeft:"auto", marginRight:"auto", width:70, height:70}} zDepth={2} circle={true}>
+                            <IconButton
+                                tooltip="Chat"
+                                tooltipPosition="top-center"
+                                iconStyle={{width:45, height:45}}
+                                onClick={this.handleToggle}
+                                >
+                                <CommunicationChatBubble />
+                            </IconButton>
+                        </Paper>
+                        
+                        { /* ---- Drawer / Chat Messages---- */}
+                        <Drawer 
+                            open={this.state.drawerOpen}
+                            docked={false}
+                            width={350}
+                            onRequestChange={(open) => this.setState({open})}
+                            >
+                            <FlatButton 
+                                label="Close"
+                                style={{float:"right"}}
+                                onClick={this.handleDrawerClose}
+                                />
+                                <div className="row">
+                                <div className="chat-wrapper col s12">
+                                    <Card>
+                                        <CardHeader
+                                            title="Chat Messages"
+                                        />
+                                        <List id="messages" className="list-unstyled" style={{paddingLeft:"10px", paddingRight:"10px"}}>
+                                                <form onSubmit={this.sendChatMessage}>
+                                                <TextField
+                                                    id="message-input"
+                                                    hintText="Send a Message"
+                                                    multiLine={true}
+                                                    rows={2}
+                                                    onChange={this.handleChatInput}
+                                                />
+                                                <RaisedButton
+                                                    fullWidth={true}
+                                                    label="Send"
+                                                    primary={true}
+                                                    containerElement={
+                                                        <button id="message-button" type="submit"></button>
+                                                    }
+                                                    />
+                                                </form>
+                                            {this.displayChatMessages()}
+                                        </List>
+                                    </Card>
+                                </div>
+                            </div>
+                        </Drawer>
                     </div>
                 </div>
 
-                {/* --- Connect Device ---*/}
-                    <div className="col s3">
+                {/* ------ Connect Device ------*/}
+                {/* ---- qr code ----*/}
+                <div className="row">
+                    <div className="col s1">
+
                         <a target="_blank"
                             href={`/control-device/${this.props.globalData.gameId}/${this.props.globalData.playerId}/${this.props.globalData.playerSelection}`}>go here to connect control device: <br/>
                             {`/control-device/${this.props.globalData.gameId}/${this.props.globalData.playerId}/${this.props.globalData.playerSelection}`}
@@ -338,13 +393,18 @@ export default class Lobby extends React.Component {
                         <div>
                             <h1>Control Device Link: <strong>{this.state.bitlyURL}</strong></h1>
                         </div>
+
                         {/*Modal button*/}
-                        <button
-                          className="waves-effect waves-light btn valign-wrapper iconBtn"
-                          onClick={this.openModal}
-                          >
-                          <img style={{padding:"5px"}} src='img/qr-code-icon.png' /> Scan
-                        </button>
+                        <Paper style={{display: "block", marginLeft:"auto", marginRight:"auto", width:70, height:70}} zDepth={2} circle={true}>
+                            <IconButton
+                                tooltip="QR Code"
+                                tooltipPosition="top-center"
+                                className="iconBtn"
+                                onClick={this.openModal}
+                                >
+                                <img  src='img/qr-code-icon.png' />
+                            </IconButton>
+                        </Paper>
                         {/* ---QR Code Modal---*/}
                         <Dialog
                           style={{zIndex:10000, width:"260px"}}
@@ -361,7 +421,14 @@ export default class Lobby extends React.Component {
                         >
                           <QRCode className="QRcanvas" value={`${window.location.origin}/control-device/${this.props.globalData.gameId}/${this.props.globalData.playerId}/${this.props.globalData.playerSelection}`} />
                         </Dialog>
+                        {/* 
+                        <a target="_blank"
+                            href={`/control-device/${this.props.globalData.gameId}/${this.props.globalData.playerId}/${this.props.globalData.playerSelection}`}>go here to connect control device: <br/>
+                            {`/control-device/${this.props.globalData.gameId}/${this.props.globalData.playerId}/${this.props.globalData.playerSelection}`}
+                        </a>
+                        */}
                     </div>
+                </div>
                     <div id="script-container">
                     </div>
 
