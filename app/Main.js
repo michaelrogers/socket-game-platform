@@ -8,6 +8,12 @@ import Login from './components/Login';
 import Game from './components/Game';
 import Error404 from './components/Error404';
 
+// ----Materialize--
+import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+
+
 //Pass socket down as props to children components
 const socket = io();
 
@@ -21,7 +27,7 @@ export default class Main extends React.Component {
         gameId: undefined,
         playerSelection: undefined,
         //Lobby values
-        // activeGames: [], 
+        // activeGames: [],
         // playerCount: 0
     };
     // this.handleClick = this.handleClick.bind(this);
@@ -40,7 +46,7 @@ export default class Main extends React.Component {
     this.setState(stateObject)
   }
 
-  
+
 
   setPlayerInfo(playerName, playerId) {
     console.log('Main setPlayerInfo', playerName, playerId)
@@ -56,51 +62,50 @@ export default class Main extends React.Component {
 
   render() {
     return (
-      <div className="starter-template">
-        <div className="container">
-          <div className="row">
-            <div className="col-md-12">
-              
-              <Router>
-                <div>
-                  <Navigation
-                    playerName={this.state.playerName}
-                    // setPlayerInfo={this.setPlayerInfo}
-                  />
-                  <Route path="/" exact render={ () => (
-                    <Lobby 
-                      globalData={this.state}
-                      setGameId={this.setGameId}
-                      socket={socket}
-                      setMainState={this.setMainState}
+      <MuiThemeProvider >
+            <div className="row">
+              <div className="col s12">
+
+                <Router>
+                  <div>
+                    <Navigation
+                      playerName={this.state.playerName}
+                      // setPlayerInfo={this.setPlayerInfo}
                     />
-                  )}/>
-                  <Route path="/game" render={ () => (
-                    <Game 
-                      globalData={this.state}
-                      socket={socket}
-                      setMainState={this.setMainState}
-                      
-                    />
-                  )}/>
-                  <Route path="/login" render={ () => (
-                    <Login 
-                      globalData={this.state}
-                      setPlayerInfo={this.setPlayerInfo}
-                      setMainState={this.setMainState}
-                    />
-                  )}/>
-                </div>
-              </Router>
-              
+                    <Route path="/" exact render={ () => (
+                      <Lobby
+                        globalData={this.state}
+                        setGameId={this.setGameId}
+                        socket={socket}
+                        setMainState={this.setMainState}
+                      />
+                    )}/>
+                    <Route path="/game" render={ () => (
+                      <Game
+                        globalData={this.state}
+                        socket={socket}
+                        setMainState={this.setMainState}
+
+                      />
+                    )}/>
+                    <Route path="/login" render={ () => (
+                      <Login
+                        globalData={this.state}
+                        setPlayerInfo={this.setPlayerInfo}
+                        setMainState={this.setMainState}
+                      />
+                    )}/>
+                  </div>
+                </Router>
+
+              </div>
             </div>
-          </div>
-        </div>
-        {/*}
-            <script src="/lib/p5.js"></script>
-            <script src="/lib/p5.play.js"></script>
-            */}
-      </div>
+
+          {/*}
+              <script src="/lib/p5.js"></script>
+              <script src="/lib/p5.play.js"></script>
+              */}
+      </MuiThemeProvider>
     );
   }
 }

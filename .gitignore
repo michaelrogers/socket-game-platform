@@ -36,5 +36,9 @@ jspm_packages
 # Optional REPL history
 .node_repl_history
 
+
 .DS_Store
 bundle.js
+
+public/bundle.js
+
