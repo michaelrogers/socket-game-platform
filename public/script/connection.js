@@ -67,6 +67,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
+            document.getElementById('startGame').onclick = () => {
+                console.log('clickeeeedddd in connection')
+                let data = {
+                    roomId: gameId,
+                    result: 1,
+                    type: 'gameStart'
+                }
+                console.log(data)
+
+                socket.emit('admin', data);
+            }
+
             e.preventDefault();
             // send acceleration components to 'input' socket
             socket.emit('input', new DataPackage(roomId, data, 'acceleration', playerId, playerSelection));

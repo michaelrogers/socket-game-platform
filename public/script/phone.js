@@ -8,3 +8,7 @@ sessionStorage.setItem('player-id', playerId);
 sessionStorage.setItem('player-selection', playerSelection);
 
 console.log(gameId, playerId, playerSelection)
+
+// document.getElementById('startGame').onclick = () => {
+//   console.log('clickeeeedddd')
+// }

@@ -73,7 +73,8 @@ export default class Lobby extends React.Component {
             modalIsOpen: false,
             drawerOpen: false,
             winner: null,
-            gameStart: true,
+            gameStartCount: 0,
+            gameStart: false,
             gameOver: false,
             hits: 0,
             swings: 0,
@@ -251,7 +252,10 @@ export default class Lobby extends React.Component {
                 console.log('inside switch and hitting', data.result);
                 this.setState({hits: data.result});
                 break;
-
+            case 'gameStart':
+                console.log('prior gamestart', this.state.gameStartCount);
+                this.setState({gameStartCount: this.state.gameStartCount + data.result});
+                console.log('gamestartcounnnntt', this.state.gameStartCount);
             default: 
                 console.log('meh'); 
                 break;
@@ -434,12 +438,12 @@ export default class Lobby extends React.Component {
                     </div>
 
              <div>
-             <Link to="#" id="batWins" className="btn btn-primary" onClick={this.batWins} style={{display:"none"}}>bat wins</Link>
-             <Link to="#" id="pinataWins" className="btn btn-primary" onClick={this.pinataWins} style={{display:"none"}}>pinata wins</Link>
+             <Link to="#" id="batWins" className="btn btn-primary" onClick={this.batWins} style={{display:"block"}}>bat wins</Link>
+             <Link to="#" id="pinataWins" className="btn btn-primary" onClick={this.pinataWins} style={{display:"block"}}>pinata wins</Link>
 
-             <Link to="#" id="batSwings" className="btn btn-primary" onClick={this.batSwings} style={{display:"none"}}>bat swings</Link>
+             <Link to="#" id="batSwings" className="btn btn-primary" onClick={this.batSwings} style={{display:"block"}}>bat swings</Link>
 
-             <Link to="#" id="batHits" className="btn btn-primary" onClick={this.batHits} style={{display:"none"}}>bat hits</Link>
+             <Link to="#" id="batHits" className="btn btn-primary" onClick={this.batHits} style={{display:"block"}}>bat hits</Link>
          </div>
             </div>
         );
