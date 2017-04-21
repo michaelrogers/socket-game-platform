@@ -74,10 +74,10 @@ export default class Lobby extends React.Component {
             drawerOpen: false,
             winner: null,
             gameStartCount: 0,
-            gameStart: false,
+            gameStart: true,
             gameOver: false,
             hits: 0,
-            swings: 0,
+            swings: 10,
             modalIsOpen: false,
             bitlyOpen: false
     };
@@ -220,10 +220,25 @@ export default class Lobby extends React.Component {
 // Collect appropriate data for swings and hits
     batSwings() {
         // Data package to send to admin channel
-        const data = {
-            roomId: this.props.globalData.gameId,
-            result: this.state.swings + 1,
-            type: 'swing'
+        let data;
+        console.log('swingssss', this.state.swings)
+        if(this.state.swings > 1 && this.state.hits < 3) {
+            console.log('inside if > 0')
+            data = {
+                roomId: this.props.globalData.gameId,
+                result: this.state.swings - 1,
+                type: 'swing'
+            }
+        }
+        else if(this.state.swings < 1 && this.state.hits < 3) {
+            console.log('pinata wins!');
+            data = {
+                roomId: this.props.globalData.gameId,
+                result: this.state.swings,
+                type: 'win'
+            }
+            // this.setState({gameStart: false, gameOver: true});
+            // console.log('start',this.state.gameStart, 'over', this.state.gameOver);
         }
         // Send data to socket admin channel only once (player 0) and when game is playing
        this.sendDataAdmin(data)
@@ -267,7 +282,7 @@ export default class Lobby extends React.Component {
         console.log('htis dta', data)
         switch(data.type) {
             case 'swing':
-                console.log('winner inside switch', data.result);
+                console.log('inside switch', data.result);
                 this.setState({swings: data.result});
                 break;
 
@@ -284,6 +299,12 @@ export default class Lobby extends React.Component {
                     this.state.gameStart = true;
                     console.log('gamestartbool af', this.state.gameStart);
                 }
+                break;
+            case 'win':
+                console.log('pinata wingsssss');
+                this.state.gameStart = false;
+                console.log('fallalalla')
+                break;
             default: 
                 console.log('meh'); 
                 break;
@@ -491,12 +512,12 @@ export default class Lobby extends React.Component {
                     </div>
 
              <div>
-             <Link to="#" id="batWins" className="btn btn-primary" onClick={this.batWins} style={{display:"none"}}>bat wins</Link>
-             <Link to="#" id="pinataWins" className="btn btn-primary" onClick={this.pinataWins} style={{display:"none"}}>pinata wins</Link>
+             <Link to="#" id="batWins" className="btn btn-primary" onClick={this.batWins} style={{display:"block"}}>bat wins</Link>
+             <Link to="#" id="pinataWins" className="btn btn-primary" onClick={this.pinataWins} style={{display:"block"}}>pinata wins</Link>
 
-             <Link to="#" id="batSwings" className="btn btn-primary" onClick={this.batSwings} style={{display:"none"}}>bat swings</Link>
+             <Link to="#" id="batSwings" className="btn btn-primary" onClick={this.batSwings} style={{display:"block"}}>bat swings</Link>
 
-             <Link to="#" id="batHits" className="btn btn-primary" onClick={this.batHits} style={{display:"none"}}>bat hits</Link>
+             <Link to="#" id="batHits" className="btn btn-primary" onClick={this.batHits} style={{display:"block"}}>bat hits</Link>
          </div>
             </div>
         );
