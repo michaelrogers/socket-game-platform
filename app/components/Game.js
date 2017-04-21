@@ -18,7 +18,7 @@ import Drawer from 'material-ui/Drawer';
 import CommunicationChatBubble from 'material-ui/svg-icons/communication/chat-bubble';
 import IconButton from 'material-ui/IconButton';
 import Paper from 'material-ui/Paper';
-
+import Snackbar from 'material-ui/Snackbar';
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
 
 const appendScript = (scriptArray, selector) => {
@@ -78,7 +78,8 @@ export default class Lobby extends React.Component {
             gameOver: false,
             hits: 0,
             swings: 0,
-            modalIsOpen: false
+            modalIsOpen: false,
+            bitlyOpen: false
     };
 
     this.handleChatInput = this.handleChatInput.bind(this);
@@ -93,7 +94,7 @@ export default class Lobby extends React.Component {
     // bat state events
     this.batSwings = this.batSwings.bind(this);
     this.batHits = this.batHits.bind(this);
-    
+
     // general function to send data to admin channel
     this.sendDataAdmin = this.sendDataAdmin.bind(this);
 
@@ -101,7 +102,7 @@ export default class Lobby extends React.Component {
 
     // setNewState from data coming from admin channel
     this.setNewStateAdmin = this.setNewStateAdmin.bind(this);
-    
+
 
     this.requestJoinRoom = this.requestJoinRoom.bind(this);
 
@@ -110,9 +111,12 @@ export default class Lobby extends React.Component {
     this.closeModal = this.closeModal.bind(this);
 
     // --drawer--
-    this.handleToggle = this.handleToggle.bind(this);
+    this.handleDrawerToggle = this.handleDrawerToggle.bind(this);
     this.handleDrawerClose = this.handleDrawerClose.bind(this);
 
+    //--bitly snackbar--
+    this.openBitlySnackbar = this.openBitlySnackbar.bind(this);
+    this.closeBitlySnackbar = this.closeBitlySnackbar.bind(this);
     }
 
 
@@ -142,7 +146,7 @@ export default class Lobby extends React.Component {
     }
 
     componentWillReceiveProps() {
-       
+
     }
 
     requestJoinRoom() {
@@ -257,7 +261,7 @@ export default class Lobby extends React.Component {
         //     this.props.socket.emit('admin', data);
         // }
     }
-    
+
     // Sets new states from when receiving data from socket admin channel
     setNewStateAdmin(data) {
         console.log('htis dta', data)
@@ -271,6 +275,7 @@ export default class Lobby extends React.Component {
                 console.log('inside switch and hitting', data.result);
                 this.setState({hits: data.result});
                 break;
+
             case 'gameStart':
                 console.log('prior gamestart', this.state.gameStartCount);
                 this.setState({gameStartCount: this.state.gameStartCount + data.result});
@@ -316,19 +321,17 @@ export default class Lobby extends React.Component {
         });
     }
 
-    openModal() {
-        this.setState({modalIsOpen: true});
-    }
-    closeModal() {
-        this.setState({modalIsOpen:false});
-    }
+    openModal() {this.setState({modalIsOpen: true});}
+    closeModal() {this.setState({modalIsOpen:false});}
 
 
-    handleToggle () { this.setState({drawerOpen: !this.state.drawerOpen});}
+    handleDrawerToggle () { this.setState({drawerOpen: !this.state.drawerOpen});}
 
     handleDrawerClose() { this.setState({drawerOpen: false});}
 
+    openBitlySnackbar() { this.setState({bitlyOpen: true});}
 
+    closeBitlySnackbar() {this.setState({bitlyOpen: false});}
 
     render() {
 
@@ -336,19 +339,21 @@ export default class Lobby extends React.Component {
             <div className="container game-wrapper">
                 <div className="row">
                     { /* --player header: Left corner-- */}
-                    <div className="col s6 playerHeader valign-wrapper">
+                    <div className="col s3 playerHeader valign-wrapper">
                         <img style={{float:"left"}} className="circle responsive-img" src="/img/bird-sm.png" />
                         <h4>{this.props.globalData.playerName}</h4>
-                        <Scoreboard swings={this.state.swings} hits={this.state.hits}/>
                     </div>
-                    
+                    { /* --GAME TITLE-- */}
+                    <div className="col s6">
+                      <h1 className="center-align">Piñata Smash</h1>
+                    </div>
                     { /* --player header: Right corner-- */}
-                    <div className="col s6 playerHeader valign-wrapper">
+                    <div className="col s3 playerHeader valign-wrapper">
                         <img style={{float:"right", right:0, position:"relative", width:"45px"}} className="circle responsive-img" src="/img/arm125.png" />
                         <h4 style={{float:"right"}}>{this.props.globalData.playerName}</h4>
                     </div>
                 </div>
-                
+
                 {/* --- Drawer & Drawer Button ---*/}
                 <div className="row">
                     <div className="col s1">
@@ -357,20 +362,44 @@ export default class Lobby extends React.Component {
                                 tooltip="Chat"
                                 tooltipPosition="top-center"
                                 iconStyle={{width:45, height:45}}
-                                onClick={this.handleToggle}
+                                onClick={this.handleDrawerToggle}
                                 >
                                 <CommunicationChatBubble />
                             </IconButton>
                         </Paper>
-                        
+
+                        {/*Modal button*/}
+                        <Paper style={{marginTop:30, display: "block", marginLeft:"auto", marginRight:"auto", width:70, height:70}} zDepth={2} circle={true}>
+                            <IconButton
+                                tooltip="QR Code"
+                                tooltipPosition="top-center"
+                                className="iconBtn"
+                                onClick={this.openModal}
+                                >
+                                <img  src='img/qr-code-icon.svg' />
+                            </IconButton>
+                        </Paper>
+
+                        {/* --- bitly - shortened urls ---*/}
+                        <Paper style={{marginTop:30, display: "block", marginLeft:"auto", marginRight:"auto", width:70, height:70}} zDepth={2} circle={true}>
+                            <IconButton
+                                tooltip="URL Connect"
+                                tooltipPosition="top-center"
+                                className="iconBtn"
+                                onClick={this.openBitlySnackbar}
+                                >
+                                <img  src='img/phone-web-icon.svg' />
+                            </IconButton>
+                        </Paper>
+
                         { /* ---- Drawer / Chat Messages---- */}
-                        <Drawer 
+                        <Drawer
                             open={this.state.drawerOpen}
                             docked={false}
                             width={350}
                             onRequestChange={(open) => this.setState({open})}
                             >
-                            <FlatButton 
+                            <FlatButton
                                 label="Close"
                                 style={{float:"right"}}
                                 onClick={this.handleDrawerClose}
@@ -406,6 +435,10 @@ export default class Lobby extends React.Component {
                             </div>
                         </Drawer>
                     </div>
+                    { /* --scoreboard-- */}
+                    <div className="col s11">
+                      <Scoreboard swings={this.state.swings} hits={this.state.hits}/>
+                    </div>
                 </div>
 
                 {/* ------ Connect Device ------*/}
@@ -413,26 +446,13 @@ export default class Lobby extends React.Component {
                 <div className="row">
                     <div className="col s1">
 
+                      {/*
                         <a target="_blank"
                             href={`/control-device/${this.props.globalData.gameId}/${this.props.globalData.playerId}/${this.props.globalData.playerSelection}`}>go here to connect control device: <br/>
                             {`/control-device/${this.props.globalData.gameId}/${this.props.globalData.playerId}/${this.props.globalData.playerSelection}`}
                         </a>
-                        {/* --- bitly - shortened urls ---*/}
-                        <div>
-                            <h1>Control Device Link: <strong>{this.state.bitlyURL}</strong></h1>
-                        </div>
+                      */}
 
-                        {/*Modal button*/}
-                        <Paper style={{display: "block", marginLeft:"auto", marginRight:"auto", width:70, height:70}} zDepth={2} circle={true}>
-                            <IconButton
-                                tooltip="QR Code"
-                                tooltipPosition="top-center"
-                                className="iconBtn"
-                                onClick={this.openModal}
-                                >
-                                <img  src='img/qr-code-icon.png' />
-                            </IconButton>
-                        </Paper>
                         {/* ---QR Code Modal---*/}
                         <Dialog
                           style={{zIndex:10000, width:"260px"}}
@@ -449,13 +469,23 @@ export default class Lobby extends React.Component {
                         >
                           <QRCode className="QRcanvas" value={`${window.location.origin}/control-device/${this.props.globalData.gameId}/${this.props.globalData.playerId}/${this.props.globalData.playerSelection}`} />
                         </Dialog>
-                        {/* 
+                        {/*
                         <a target="_blank"
                             href={`/control-device/${this.props.globalData.gameId}/${this.props.globalData.playerId}/${this.props.globalData.playerSelection}`}>go here to connect control device: <br/>
                             {`/control-device/${this.props.globalData.gameId}/${this.props.globalData.playerId}/${this.props.globalData.playerSelection}`}
                         </a>
                         */}
                     </div>
+                </div>
+                <div className="row">
+                  <div className="col s1">
+
+                    <Snackbar
+                      open={this.state.bitlyOpen}
+                      message={"Connect: " + this.state.bitlyURL}
+                      onRequestClose={this.closeBitlySnackbar}
+                    />
+                  </div>
                 </div>
                     <div id="script-container">
                     </div>
