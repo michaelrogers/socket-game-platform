@@ -10,6 +10,7 @@
     "start-socket": "nodemon server.js",
     "start-hot": "webpack-dev-server --hot",
     "start": "node server.js",
+    "heroku-postbuild": "webpack -p --config ./webpack.config.js --progress",
     "webpack-dev-server": "NODE_ENV=development PORT=3000 webpack-dev-server --content-base public/ --hot --inline --devtool inline-source-map --history-api-fallback"
   },
   "repository": {

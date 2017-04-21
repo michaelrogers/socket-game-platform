@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import Scoreboard from './partials/Scoreboard';
 import Pinata from './partials/Pinata';
 import QRCode from 'qrcode-react';
+import helpers from "./utils/helpers";
+
 // ---Styling--
 import Styles from './styles/customStyles.js';
 import {List, ListItem} from 'material-ui/List';
@@ -53,37 +55,68 @@ export default class Lobby extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            bitlyURL: null,
+            playerSelection: null,
             chatInput: null,
             messages: [],
-            score: {
-                player1: 0,
-                player2: 0
-            },
+            // was having a very strange problem, will try again tomorrow to have this data structure.... it should work... but was getting a weird result
+            // score: {
+            //     hits: 0,
+            //     swings: 0
+            // },
             acceleration: {
                 x: 0,
                 y: 0,
                 z: 0
             },
+
             modalIsOpen: false,
-            drawerOpen: false
-        };
+            drawerOpen: false,
+            winner: null,
+            gameStart: true,
+            gameOver: false,
+            hits: 0,
+            swings: 0,
+            modalIsOpen: false
+    };
 
     this.handleChatInput = this.handleChatInput.bind(this);
     this.addChatMessage = this.addChatMessage.bind(this);
     this.displayChatMessages = this.displayChatMessages.bind(this);
     this.sendChatMessage = this.sendChatMessage.bind(this);
-    this.sendSocketInput = this.sendSocketInput.bind(this);
+
+    this.batWins = this.batWins.bind(this);
+    this.pinataWins = this.pinataWins.bind(this);
+
+    // bat state events
+    this.batSwings = this.batSwings.bind(this);
+    this.batHits = this.batHits.bind(this);
+    
+    // general function to send data to admin channel
+    this.sendDataAdmin = this.sendDataAdmin.bind(this);
+
+    this.winner = this.winner.bind(this);
+
+    // setNewState from data coming from admin channel
+    this.setNewStateAdmin = this.setNewStateAdmin.bind(this);
+    
+
+    this.requestJoinRoom = this.requestJoinRoom.bind(this);
 
     // --modals--
     this.openModal = this.openModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
+
     // --drawer--
     this.handleToggle = this.handleToggle.bind(this);
     this.handleDrawerClose = this.handleDrawerClose.bind(this);
+
     }
 
 
     componentWillUnmount() {
+        // document.querySelector('#canvas').classList.add("hidden");
+        console.log('Game Unmount')
         document.querySelector('#canvas').classList.add("hide");
         this.props.setMainState({
             gameId: undefined,
@@ -92,58 +125,147 @@ export default class Lobby extends React.Component {
     }
 
     componentWillMount() {
-        console.log('Game', this.props);
         // Redirect users away from page if not logged in or no gameId
         //!this.props.globalData.gameId ||
         if (!this.props.globalData.playerId) {
             window.location.pathname = "/";
         }
+        //Clear previous socket
+        //---below: master's latest items---
+        let playerSel = sessionStorage.getItem('player-selection');
+        let long_url = window.location.origin +"/control_device/" + this.props.globalData.gameId + "/" + this.props.globalData.playerId + "/" + this.state.playerSel;
+        helpers.runQuery(long_url).then(function(response) {
+        this.setState({ bitlyURL: response.url });
+        }.bind(this));
+    }
+
+    componentWillReceiveProps() {
+       
+    }
+
+    requestJoinRoom() {
+        console.log('Request join room', this.props.globalData);
+
+        this.props.socket.emit('room',
+            new DataPackage(this.props.globalData, this.props.globalData.playerSelection)
+        );
     }
 
     componentDidMount() {
-        // this.setState({playerSelection: sessionStorage.getItem('player-selection')});
-        document.querySelector('#canvas').classList.remove("hide");
-        this.props.socket.emit('room',
-            new DataPackage(this.props.globalData, this.state.playerSelection)
-        );
+        console.log('GameId', this.props.globalData.gameId, this.props);
+        if (this.props.globalData.gameId) {
+            this.requestJoinRoom();
+        } else {
+            console.log('Create game', this.props.globalData.playerId, this.props);
+            if (this.props.globalData.playerId !== null) {
+            helpers.createNewGame(this.props.globalData.playerId)
+            .then(response => {
+                this.props.setMainState({
+                    playerSelection: 0,
+                    gameId: response._id,
+                });
+                console.log('Game', this.props);
+                this.requestJoinRoom();
+            });
+            }
+        }
 
+        document.querySelector('#canvas').classList.remove("hide");
         this.props.socket.on('connection-status', this.addChatMessage);
         this.props.socket.on('chat-message', this.addChatMessage);
         this.props.socket.on('input', inputEventHandler);
+        this.props.socket.on('admin', this.setNewStateAdmin);
     }
 
-    // onKeyPress(e){
-    //     if (this.state.playerSelection == 1 || this.state.playerSelection == 2) {
-    //         const acceptedKeys = [119, 97, 115, 100, 32];
+    addChatMessage(DataPackage) {
+        console.log('Add Chat', DataPackage);
 
-    //         if (acceptedKeys.indexOf(e.charCode) !== -1) {
-    //             e.preventDefault();
-    //             this.props.socket.emit('input',
-    //                 new DataPackage(
-    //                     this.props.globalData,
-    //                     this.state.playerSelection,
-    //                 )
-    //             );
-    //         }
-    //     }
-    // }
-
-
-    addChatMessage(message) {
         let chatArray = this.state.messages;
-        chatArray.push(message)
+        chatArray.push(DataPackage)
+        console.log(chatArray)
         this.setState({messages: chatArray});
+    }
+
+    batWins() {
+        this.winner(1)
+    }
+
+    pinataWins() {
+        this.winner(0)
+    }
+
+// Collect appropriate data for swings and hits
+    batSwings() {
+        // Data package to send to admin channel
+        const data = {
+            roomId: this.props.globalData.gameId,
+            result: this.state.swings + 1,
+            type: 'swing'
+        }
+        // Send data to socket admin channel only once (player 0) and when game is playing
+       this.sendDataAdmin(data)
+    }
+
+    batHits() {
+        // Data package to send to admin channel
+        const data = {
+            roomId: this.props.globalData.gameId,
+            result: this.state.hits + 1,
+            type: 'hit'
+        }
+
+        // Send data to socket admin channel only once (player 0) and when game is playing
+        this.sendDataAdmin(data)
+    }
+
+    // send data to socket admin channel
+    sendDataAdmin(data) {
+        console.log('in senddataadmin')
+        if(this.props.globalData.playerSelection == 0 && this.state.gameStart) {
+            this.props.socket.emit('admin', data);
+        }
+    }
+
+    winner(player) {
+        // console.log('done mm', player);
+        // const data = {
+        //     roomId: this.props.globalData.gameId,
+        //     result: player,
+        //     type: 'winner'
+        // }
+        // if(this.props.globalData.playerSelection == 0 && this.gameStart) {
+        //     this.props.socket.emit('admin', data);
+        // }
+    }
+    
+    // Sets new states from when receiving data from socket admin channel
+    setNewStateAdmin(data) {
+        switch(data.type) {
+            case 'swing':
+                console.log('winner inside switch', data.result);
+                this.setState({swings: data.result});
+                break;
+
+            case 'hit':
+                console.log('inside switch and hitting', data.result);
+                this.setState({hits: data.result});
+                break;
+
+            default: 
+                console.log('meh'); 
+                break;
+        };
     }
 
 
     sendChatMessage(e) {
         e.preventDefault();
         if (this.state.chatInput.length > 0) {
+            // console.log(new DataPackage(this.props.globalData, this.state.playerSelection, 'chat', this.state.chatInput))
         this.props.socket.emit(
             'chat-message',
-            new DataPackage(this.props.globalData, this.state.playerSelection, this.state.chatInput)
+            new DataPackage(this.props.globalData, this.state.playerSelection, 'chat', this.state.chatInput)
         );
-        // this.setState({chatInput: ""});
         document.getElementById('message-input').value = "";
 
         }
@@ -166,23 +288,6 @@ export default class Lobby extends React.Component {
         });
     }
 
-    sendSocketInput(x,y) {
-        const data = {
-        acc: {
-                x: x,
-                y: y
-            }
-        }
-        this.props.socket.emit('input',
-            new DataPackage(
-                this.props.globalData,
-                this.props.globalData.playerSelection,
-                'acceleration',
-                data
-            )
-        );
-    }
-
     openModal() {
         this.setState({modalIsOpen: true});
     }
@@ -190,9 +295,12 @@ export default class Lobby extends React.Component {
         this.setState({modalIsOpen:false});
     }
 
+
     handleToggle () { this.setState({drawerOpen: !this.state.drawerOpen});}
 
     handleDrawerClose() { this.setState({drawerOpen: false});}
+
+
 
     render() {
 
@@ -203,7 +311,9 @@ export default class Lobby extends React.Component {
                     <div className="col s6 playerHeader valign-wrapper">
                         <img style={{float:"left"}} className="circle responsive-img" src="/img/bird-sm.png" />
                         <h4>{this.props.globalData.playerName}</h4>
+                        <Scoreboard swings={this.state.swings} hits={this.state.hits}/>
                     </div>
+                    
                     { /* --player header: Right corner-- */}
                     <div className="col s6 playerHeader valign-wrapper">
                         <img style={{float:"right", right:0, position:"relative", width:"45px"}} className="circle responsive-img" src="/img/arm125.png" />
@@ -269,10 +379,21 @@ export default class Lobby extends React.Component {
                         </Drawer>
                     </div>
                 </div>
+
                 {/* ------ Connect Device ------*/}
                 {/* ---- qr code ----*/}
                 <div className="row">
                     <div className="col s1">
+
+                        <a target="_blank"
+                            href={`/control-device/${this.props.globalData.gameId}/${this.props.globalData.playerId}/${this.props.globalData.playerSelection}`}>go here to connect control device: <br/>
+                            {`/control-device/${this.props.globalData.gameId}/${this.props.globalData.playerId}/${this.props.globalData.playerSelection}`}
+                        </a>
+                        {/* --- bitly - shortened urls ---*/}
+                        <div>
+                            <h1>Control Device Link: <strong>{this.state.bitlyURL}</strong></h1>
+                        </div>
+
                         {/*Modal button*/}
                         <Paper style={{display: "block", marginLeft:"auto", marginRight:"auto", width:70, height:70}} zDepth={2} circle={true}>
                             <IconButton
@@ -298,7 +419,7 @@ export default class Lobby extends React.Component {
                           open={this.state.modalIsOpen}
                           onRequestClose={this.closeModal}
                         >
-                          <QRCode className="QRcanvas" value={`${window.location.origin}/control_device/${this.props.globalData.gameId}/${this.props.globalData.playerId}/${this.state.playerSelection}`} />
+                          <QRCode className="QRcanvas" value={`${window.location.origin}/control-device/${this.props.globalData.gameId}/${this.props.globalData.playerId}/${this.props.globalData.playerSelection}`} />
                         </Dialog>
                         {/* 
                         <a target="_blank"
@@ -311,6 +432,14 @@ export default class Lobby extends React.Component {
                     <div id="script-container">
                     </div>
 
+             <div>
+             <Link to="#" id="batWins" className="btn btn-primary" onClick={this.batWins} style={{display:"none"}}>bat wins</Link>
+             <Link to="#" id="pinataWins" className="btn btn-primary" onClick={this.pinataWins} style={{display:"none"}}>pinata wins</Link>
+
+             <Link to="#" id="batSwings" className="btn btn-primary" onClick={this.batSwings} style={{display:"none"}}>bat swings</Link>
+
+             <Link to="#" id="batHits" className="btn btn-primary" onClick={this.batHits} style={{display:"none"}}>bat hits</Link>
+         </div>
             </div>
         );
     }

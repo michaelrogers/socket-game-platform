@@ -36,6 +36,11 @@ export default class Lobby extends React.Component {
     console.log('Lobby', this.props);
   }
 
+  componentWillUnmount() {
+    console.log('Lobby unmount')
+    this.props.socket.off();
+  }
+
 
   componentDidMount() {
     helpers.viewActiveGames()
@@ -52,16 +57,21 @@ export default class Lobby extends React.Component {
 
   // Called by create game button
   createGame(event) {
-    console.log('Create game', this.props.globalData.playerId, this.props)
-    if (this.props.globalData.playerId !== null) {
-      helpers.createNewGame(this.props.globalData.playerId)
-        .then(response => {
-          this.props.setMainState({
-            playerSelection: 0,
-            gameId: response._id,
-          });
-        });
-    }
+    //Moved createGame request to Game component to avoid async delay
+    this.props.setMainState({
+      playerSelection: 0,
+      gameId: undefined
+    });
+    // console.log('Create game', this.props.globalData.playerId, this.props)
+    // if (this.props.globalData.playerId !== null) {
+    //   helpers.createNewGame(this.props.globalData.playerId)
+    //     .then(response => {
+    //       this.props.setMainState({
+    //         playerSelection: 0,
+    //         gameId: response._id,
+    //       });
+    //     });
+    // }
   }
 
   removeGame(gameId) {
@@ -71,12 +81,12 @@ export default class Lobby extends React.Component {
 
   handleJoin(event) {
     const gameId = event.currentTarget.dataset.gameid || null;
+    console.log('Handle Join:gameId', gameId)
     if (gameId) {
       this.props.setGameId(gameId)
       // sessionStorage.setItem('room-id', gameId);
       helpers.joinGame(gameId, this.props.globalData.playerId)
       .then(response => {
-        console.log(response)
         Array.from(response.player)
         .map((player, i) => {
           console.log(player, this.props.globalData.playerId, player == this.props.globalData.playerId)
@@ -106,13 +116,14 @@ export default class Lobby extends React.Component {
       return (
         <ListItem
           key={i}
+          onClick={this.handleJoin} 
           containerElement={
             <Link
               to="/game"
               key={game._id}
               data-gameid={game._id}
-              onClick={this.handleJoin}>
-            </Link>
+              />
+
           }
           rightIcon={<a href="/" onClick={(e) => {e.stopPropagation(); this.removeGame(game._id)}}>x</a>}
         >

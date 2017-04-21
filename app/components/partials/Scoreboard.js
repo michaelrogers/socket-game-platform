@@ -32,45 +32,24 @@ export default class Scoreboard extends React.Component {
         }, 1000)
     }
 
-    // handleChange(e) {
-    //     let newState = {};
-    //     newState[e.target.id] = e.target.value;
-    //     this.setState(newState);
-    // }
-
-    // handleLogin(e) {
-    //     helpers.login(this.state.username);
-    // }
-
-    // handleNewUser(e) {
-    //     helpers.createNewPlayer(this.state.username);
-    // }
-
-
-    // handleSubmit(e) {
-    //     e.preventDefault();
-    //     console.log(this.state);
-    //     // sessionStorage.setItem('username', this.state.username)
-    // }
-
 
  render() {
     return (
-    <div className="col-xs-6 col-xs-offset-3">
+    <div className="">
         <div className="row">
             <h3>Scoreboard</h3>
-            <div className="col-xs-6">
-                Player 1: 
-                <h3>{this.props.score.player1}</h3>
+            <div className="">
+                
+                <h3>bat swings:{this.props.swings}</h3>
             </div>
-            <div className="col-xs-6">
-                Player 2: 
-                <h3>{this.props.score.player2}</h3>
+            <div className="">
+                 
+                <h3>hits:{this.props.hits}</h3>
             </div>
         </div>
         <div className ="row">
             <h2>{this.state.timer}</h2>
-            <button className="btn btn-large" onClick={this.startCountdown}>Start Game</button>
+            <button className="btn" onClick={this.startCountdown}>Start Game</button>
         </div>
     </div>
     );
