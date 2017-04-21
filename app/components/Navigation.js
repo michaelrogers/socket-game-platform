@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
 
 export default class Navigation extends React.Component {
     constructor(props) {
@@ -11,31 +12,35 @@ export default class Navigation extends React.Component {
         // console.log('Nav:playerName', this.props.playerName)
         if (this.props.playerName) {
             return (
-                <li><Link to="/login">{this.props.playerName}</Link></li>
+                <ToolbarGroup>
+                    <Link to="/login">Playing as: {this.props.playerName}</Link>
+                </ToolbarGroup>
             )
         } else {
-            return <li><Link to="/login">Login</Link></li>
+            return (
+                <ToolbarGroup>
+                    <Link to="/login">Login</Link>
+                </ToolbarGroup>
+            ) 
         }
     }
 
     render() {
         return (
-            <nav className="navbar navbar-inverse navbar-fixed-top">
-                <div className="container">
-                    <div className="navbar-header">
-                        <Link className="navbar-brand" to="/">Socket-Game-Platform</Link>
-                    </div>
-                    <div id="navbar" className="collapse navbar-collapse">
-                        <ul className="nav navbar-nav">
-                            <li><Link to="/">Lobby</Link></li>
-                            {/*
-                            <li><a href="/game.html">Redirect Game</a></li>
-                            */}
-                            {this.populateLogin()}
-                        </ul>
-                    </div>
-                </div>
-            </nav>
+            <Toolbar style={{
+                          top:0,
+                          left:0,
+                          right:0,
+                          position:"absolute"
+                        }
+                      }>
+                <ToolbarGroup firstChild={false}>
+                    <Link className="navbar-brand" to="/">Socket-Game-Platform</Link>
+                    <ToolbarSeparator />
+                    <Link to="/">Lobby</Link>
+                </ToolbarGroup>
+                {this.populateLogin()} 
+            </Toolbar>
         )
     }
 }
