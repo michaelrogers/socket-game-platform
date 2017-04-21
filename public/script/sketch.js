@@ -54,7 +54,7 @@ setup = () => {
     // try {
 
 
-    var myCanvas = createCanvas(700, 700);
+    var myCanvas = createCanvas(windowWidth, 700);
     myCanvas.parent('canvas');
 
     // cord
