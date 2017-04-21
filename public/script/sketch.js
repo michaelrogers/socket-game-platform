@@ -83,7 +83,7 @@ preload = () => {
 setup = () => {
   var myCanvas = createCanvas(windowWidth, 700);
   myCanvas.parent('canvas');
-  
+
   pivot_x = width / 2 -100; //x-position of sprite, relative to middle of screen
   pivot_y = 0;
   // cord
@@ -97,11 +97,6 @@ setup = () => {
   pinata.velocity.y = 0;
   pinata.velocity.x = 0;
   candyTime = false;
-  // bat
-  bat = createSprite(1000, 1000, 20, 200);
-  bat.shapeColor = color(128);
-  bat.addImage(arm)
-  bat.velocity.x = 0;
 
   //-----------setup bat swing---------
   calcAngle; //
@@ -111,6 +106,7 @@ setup = () => {
   bat = createSprite(batX, batY, 20, 200)
   bat.shapeColor = color(128);
   bat.addImage(arm)
+  bat.velocity.x = 0;
 
   // candies
   for (var i = 0; i < 150; i++) {
