@@ -43,12 +43,13 @@ module.exports = {
             //--------------Data--channels---------------------
             //A client requests to join a room and the server joins them
             socket.on('room', (DataPackage) => {
+                console.log('Join Room', DataPackage)
                 leaveRooms(socket);
                 // Then join the specified room
                 socket.join(DataPackage.roomId);
                 let phoneCount = 0;
-                if (DataPackage.phone) { phoneCount++ }
-                if (phoneCount > 1) { console.log('Game started') }
+                // if (DataPackage.phone) { phoneCount++ }
+                // if (phoneCount > 1) { console.log('Game started') }
                 io.sockets.in(DataPackage.roomId).emit('connection-status', `New player joined room ${DataPackage.roomId}`)
             });
             //Note: No auto teardown of sockets necessary

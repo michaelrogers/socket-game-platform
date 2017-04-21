@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import Scoreboard from './partials/Scoreboard';
 import Pinata from './partials/Pinata';
 import QRCode from 'qrcode-react';
+import helpers from "./utils/helpers";
 
 const appendScript = (scriptArray, selector) => {
     scriptArray.map(scriptPath => {
@@ -56,6 +57,7 @@ export default class Lobby extends React.Component {
     this.displayChatMessages = this.displayChatMessages.bind(this);
     this.sendChatMessage = this.sendChatMessage.bind(this);
     this.sendSocketInput = this.sendSocketInput.bind(this);
+    this.requestJoinRoom = this.requestJoinRoom.bind(this);
     }
 
     componentWillUnmount() {
@@ -67,21 +69,48 @@ export default class Lobby extends React.Component {
     }
 
     componentWillMount() {
-        console.log('Game', this.props);
         // Redirect users away from page if not logged in or no gameId
         //!this.props.globalData.gameId || 
         if (!this.props.globalData.playerId) {
             window.location.pathname = "/";
         }
+        this.props.socket.off();
+
     }
 
-    componentDidMount() {
-        // this.setState({playerSelection: sessionStorage.getItem('player-selection')});
-        document.querySelector('#canvas').classList.remove("hidden");
+    componentWillReceiveProps() {
+        console.log('GameId', this.props.globalData.gameId, this.props);
+        if (this.props.globalData.gameId) {
+            this.requestJoinRoom(this.props);
+        } else {
+            console.log('Create game', this.props.globalData.playerId, this.props);
+            if (this.props.globalData.playerId !== null) {
+            helpers.createNewGame(this.props.globalData.playerId)
+            .then(response => {
+                this.props.setMainState({
+                    playerSelection: 0,
+                    gameId: response._id,
+                });
+                console.log('Game', this.props);
+                this.requestJoinRoom(this.props)
+            });
+        }
+        }
+    }
+    
+    
+    requestJoinRoom() {
+        console.log('Request join room', this.props.globalData);
         this.props.socket.emit('room',
-            new DataPackage(this.props.globalData, this.state.playerSelection)
+            new DataPackage(this.props.globalData, this.props.globalData.playerSelection)
         );
+    }
 
+
+
+
+    componentDidMount() {
+        document.querySelector('#canvas').classList.remove("hidden");
         this.props.socket.on('connection-status', this.addChatMessage);
         this.props.socket.on('chat-message', this.addChatMessage);
         this.props.socket.on('input', inputEventHandler);
@@ -104,9 +133,11 @@ export default class Lobby extends React.Component {
     // }
 
 
-    addChatMessage(message) {
+    addChatMessage(DataPackage) {
+        console.log('Add Chat', DataPackage);
         let chatArray = this.state.messages;
-        chatArray.push(message)
+        chatArray.push(DataPackage.data)
+        console.log(chatArray)
         this.setState({messages: chatArray});
     }
 
@@ -114,11 +145,11 @@ export default class Lobby extends React.Component {
     sendChatMessage(e) {
         e.preventDefault();
         if (this.state.chatInput.length > 0) {
+            // console.log(new DataPackage(this.props.globalData, this.state.playerSelection, 'chat', this.state.chatInput))
         this.props.socket.emit(
             'chat-message',
-            new DataPackage(this.props.globalData, this.state.playerSelection, this.state.chatInput)
+            new DataPackage(this.props.globalData, this.state.playerSelection, 'chat', this.state.chatInput)
         );
-        // this.setState({chatInput: ""});
         document.getElementById('message-input').value = "";
 
         }
@@ -137,10 +168,7 @@ export default class Lobby extends React.Component {
 
     sendSocketInput(x,y) {
         const data = {
-        acc: {
-                x: x,
-                y: y
-            }
+        acc: { x: x, y: y }
         }
         this.props.socket.emit('input',
             new DataPackage(
@@ -157,23 +185,7 @@ export default class Lobby extends React.Component {
         <div className="row">
             <Scoreboard
                 score={this.state.score}
-
             />
-        {/*<div className="col-xs-8 col-xs-offset-2">*/}
-        {/* Motion Component*/}
-        {/*< Motion childData={this.childData}/>*/}
-
-                {/*<input type="text" onKeyPress={this.onKeyPress} />*/}
-           {/*
-            <div className="input-group">
-                <select name="player-selection" id="player-selection" className="form-control" onChange={this.updatePlayerSelection}>
-                    <option value="1">Player 1</option>
-                    <option value="2">Player 2</option>
-                    <option value="0">Spectator</option>
-                </select>
-            </div>
-            */}
-            {/*</div>*/}
             <div className="col-xs-2">
             <div className="input-group">
                 <p> gameId: {this.props.globalData.gameId}</p>
