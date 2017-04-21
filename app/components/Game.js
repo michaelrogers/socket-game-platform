@@ -71,7 +71,7 @@ export default class Lobby extends React.Component {
     };
 
             modalIsOpen: false
-        };
+        
 
 
     this.handleChatInput = this.handleChatInput.bind(this);
@@ -87,6 +87,7 @@ export default class Lobby extends React.Component {
     this.declareWinner = this.declareWinner.bind(this);
 
     this.sendSocketInput = this.sendSocketInput.bind(this);
+    this.requestJoinRoom = this.requestJoinRoom.bind(this);
 
     // --modals--
     this.openModal = this.openModal.bind(this);
@@ -97,6 +98,8 @@ export default class Lobby extends React.Component {
 
 
     componentWillUnmount() {
+        // document.querySelector('#canvas').classList.add("hidden");
+        console.log('Game Unmount')
         document.querySelector('#canvas').classList.add("hide");
         this.props.setMainState({
             gameId: undefined,
@@ -105,30 +108,84 @@ export default class Lobby extends React.Component {
     }
 
     componentWillMount() {
-        console.log('Game', this.props);
         // Redirect users away from page if not logged in or no gameId
         //!this.props.globalData.gameId ||
         if (!this.props.globalData.playerId) {
             window.location.pathname = "/";
         }
+        //Clear previous socket
+
     }
 
-    componentDidMount() {
-        // this.setState({playerSelection: sessionStorage.getItem('player-selection')});
-        document.querySelector('#canvas').classList.remove("hide");
-        this.props.socket.emit('room',
-            new DataPackage(this.props.globalData, this.state.playerSelection)
-        );
+    componentWillReceiveProps() {
+       
+    }
+    
+    
+    requestJoinRoom() {
+        console.log('Request join room', this.props.globalData);
 
+        this.props.socket.emit('room',
+            new DataPackage(this.props.globalData, this.props.globalData.playerSelection)
+        );
+    }
+
+
+
+
+    componentDidMount() {
+        console.log('GameId', this.props.globalData.gameId, this.props);
+        if (this.props.globalData.gameId) {
+            this.requestJoinRoom();
+        } else {
+            console.log('Create game', this.props.globalData.playerId, this.props);
+            if (this.props.globalData.playerId !== null) {
+            helpers.createNewGame(this.props.globalData.playerId)
+            .then(response => {
+                this.props.setMainState({
+                    playerSelection: 0,
+                    gameId: response._id,
+                });
+                console.log('Game', this.props);
+                this.requestJoinRoom();
+            });
+        }
+        }
+
+
+
+
+
+        document.querySelector('#canvas').classList.remove("hide");
         this.props.socket.on('connection-status', this.addChatMessage);
         this.props.socket.on('chat-message', this.addChatMessage);
         this.props.socket.on('input', inputEventHandler);
         this.props.socket.on('admin', this.declareWinner);
     }
 
-    addChatMessage(message) {
+    // onKeyPress(e){
+    //     if (this.state.playerSelection == 1 || this.state.playerSelection == 2) {
+    //         const acceptedKeys = [119, 97, 115, 100, 32];
+
+    //         if (acceptedKeys.indexOf(e.charCode) !== -1) {
+    //             e.preventDefault();
+    //             this.props.socket.emit('input',
+    //                 new DataPackage(
+    //                     this.props.globalData,
+    //                     this.state.playerSelection,
+    //                 )
+    //             );
+    //         }
+    //     }
+    // }
+
+
+    addChatMessage(DataPackage) {
+        console.log('Add Chat', DataPackage);
+
         let chatArray = this.state.messages;
-        chatArray.push(message)
+        chatArray.push(DataPackage)
+        console.log(chatArray)
         this.setState({messages: chatArray});
     }
 
@@ -200,11 +257,11 @@ export default class Lobby extends React.Component {
     sendChatMessage(e) {
         e.preventDefault();
         if (this.state.chatInput.length > 0) {
+            // console.log(new DataPackage(this.props.globalData, this.state.playerSelection, 'chat', this.state.chatInput))
         this.props.socket.emit(
             'chat-message',
-            new DataPackage(this.props.globalData, this.state.playerSelection, this.state.chatInput)
+            new DataPackage(this.props.globalData, this.state.playerSelection, 'chat', this.state.chatInput)
         );
-        // this.setState({chatInput: ""});
         document.getElementById('message-input').value = "";
 
         }
@@ -227,7 +284,19 @@ export default class Lobby extends React.Component {
         });
     }
 
-   
+    sendSocketInput(x,y) {
+        const data = {
+        acc: { x: x, y: y }
+        }
+        this.props.socket.emit('input',
+            new DataPackage(
+                this.props.globalData,
+                this.props.globalData.playerSelection,
+                'acceleration',
+                data
+            )
+        );
+    }
 //     render() {
 //     return (
 //     <div>
@@ -305,6 +374,50 @@ export default class Lobby extends React.Component {
     }
 
     render() {
+//     return (
+//     <div>
+//         <div className="row">
+//             <Scoreboard
+//                 score={this.state.score}
+//             />
+//             <div className="col-xs-2">
+//             <div className="input-group">
+//                 <p> gameId: {this.props.globalData.gameId}</p>
+//                 <p> playerId: {this.props.globalData.playerId}</p>
+//             </div>
+//         </div>
+//     </div>
+//     <div className="row">
+// 	<div className="col-xs-12">
+// 	</div>
+// 		</div>
+// 		<div className="row">
+// 			<div className="col-xs-8 col-xs-offset-2">
+// 				<ul id="messages" className="list-unstyled">
+//                     {this.displayChatMessages()}
+//                 </ul>
+// 			</div>
+// 		</div>
+// 		<div className="row">
+// 			<div className="col-xs-8 col-xs-offset-2">
+// 				<div className="input-group">
+//                 <form onSubmit={this.sendChatMessage}>
+//                     <input type="text" className="form-control" id="message-input" onChange={this.handleChatInput} placeholder="Send a message."/>
+// 					<span className="input-group-btn">
+// 						<button className="btn btn-default" id="message-button" type="submit">Send</button>
+// 					</span>
+//                 </form>
+// 				</div>
+// 			</div>
+//         </div>
+//         <div className="row">
+//         <div className="col-xs-8 col-xs-offset-2">
+//             <a target="_blank"
+//                 href={`/control-device/${this.props.globalData.gameId}/${this.props.globalData.playerId}/${this.props.globalData.playerSelection}`}>go here to connect control device: <br/>
+//                 {`/control-device/${this.props.globalData.gameId}/${this.props.globalData.playerId}/${this.props.globalData.playerSelection}`}
+//             </a>
+//             <div>
+//                 <QRCode value={`${window.location.origin}/control-device/${this.props.globalData.gameId}/${this.props.globalData.playerId}/${this.props.globalData.playerSelection}`} />,
 
         return (
             <div className="container game-wrapper">
@@ -377,7 +490,7 @@ export default class Lobby extends React.Component {
                           open={this.state.modalIsOpen}
                           onRequestClose={this.closeModal}
                         >
-                          <QRCode className="QRcanvas" value={`${window.location.origin}/control_device/${this.props.globalData.gameId}/${this.props.globalData.playerId}/${this.state.playerSelection}`} />
+                          <QRCode className="QRcanvas" value={`${window.location.origin}/control-device/${this.props.globalData.gameId}/${this.props.globalData.playerId}/${this.props.globalData.playerSelection}`} />
                         </Dialog>
                     </div>
                     <div id="script-container">

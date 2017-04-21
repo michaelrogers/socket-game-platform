@@ -30,7 +30,7 @@ const gameController = {
       });
     },
     createGame: (req, res) => { 
-      console.log('Create game', req)
+      console.log('gameController: Create game')
       const newGame = new Models.Game();
       console.log(newGame, req.params.playerid)
       newGame.player.push(req.params.playerid);

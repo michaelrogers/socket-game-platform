@@ -22,8 +22,11 @@ const db = mongoose.connection;
 db.once("open", () => { console.log("Mongoose connection successful."); });
 db.on("error", (error) => { console.log("Mongoose Error:", error); });
 
-// const oplog = MongoOplog(URI, { ns: 'games' })
-// .tail().then(() => {
+const oplog = MongoOplog(URI, { ns: 'games' });
+// oplog.tail().then(() => {
+//   console.log('tailing started')
+// }).catch(err => console.error(err))
+// .then(() => {
 //   console.log('oplog tailing started');
 // }).catch(err => console.error(err));
 
