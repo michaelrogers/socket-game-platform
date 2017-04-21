@@ -79,14 +79,12 @@ export default class Lobby extends React.Component {
     this.displayChatMessages = this.displayChatMessages.bind(this);
     this.sendChatMessage = this.sendChatMessage.bind(this);
 
-    // this.sendSocketInput = this.sendSocketInput.bind(this);
     this.batWins = this.batWins.bind(this);
     this.pinataWins = this.pinataWins.bind(this);
     this.batSwings = this.batSwings.bind(this);
     this.winner = this.winner.bind(this);
     this.declareWinner = this.declareWinner.bind(this);
 
-    this.sendSocketInput = this.sendSocketInput.bind(this);
     this.requestJoinRoom = this.requestJoinRoom.bind(this);
 
     // --modals--
@@ -284,19 +282,6 @@ export default class Lobby extends React.Component {
         });
     }
 
-    sendSocketInput(x,y) {
-        const data = {
-        acc: { x: x, y: y }
-        }
-        this.props.socket.emit('input',
-            new DataPackage(
-                this.props.globalData,
-                this.props.globalData.playerSelection,
-                'acceleration',
-                data
-            )
-        );
-    }
 //     render() {
 //     return (
 //     <div>
@@ -426,7 +411,9 @@ export default class Lobby extends React.Component {
                     <div className="col s6 playerHeader valign-wrapper">
                         <img style={{float:"left"}} className="circle responsive-img" src="/img/bird-sm.png" />
                         <h4>{this.props.globalData.playerName}</h4>
+                        <Scoreboard score={this.state.score}/>
                     </div>
+                    
                     { /* --player header: Right corner-- */}
                     <div className="col s6 playerHeader valign-wrapper">
                         <img style={{float:"right", right:0, position:"relative", width:"45px"}} className="circle responsive-img" src="/img/arm125.png" />
@@ -495,6 +482,13 @@ export default class Lobby extends React.Component {
                     </div>
                     <div id="script-container">
                     </div>
+
+             <div>
+             <Link to="#" id="batWins" className="btn btn-primary" onClick={this.batWins} style={{display:"hide"}}>bat wins</Link>
+             <Link to="#" id="pinataWins" className="btn btn-primary" onClick={this.pinataWins} style={{display:"hide"}}>pinata wins</Link>
+
+             <Link to="#" id="batSwings" className="btn btn-primary" onClick={this.batSwings} style={{display:"block"}}>bat swings</Link>
+         </div>
             </div>
         );
     }
