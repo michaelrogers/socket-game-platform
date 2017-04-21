@@ -61,6 +61,11 @@ module.exports = {
             socket.on('input', (DataPackage) => {
                 io.sockets.in(DataPackage.roomId).emit('input', DataPackage);
             });
+
+            socket.on('admin', (data) => {
+                console.log(data)
+                io.sockets.in(data.roomId).emit('admin', data);
+            })
         }); //End connection
 
     }

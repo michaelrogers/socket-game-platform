@@ -22,9 +22,12 @@ drawBat = (mag) => {
     bat.position.x = -magX*2;
     bat.position.x = constrain(bat.position.x, batX - 200, batX + 50);
 
+    
     batSwings++;
+    document.getElementById('batSwings').click();
     console.log('bat swing', batSwings)
   }
+
   bat.overlap(pinata, () => {
     if (acceptingData) {
       hits++;

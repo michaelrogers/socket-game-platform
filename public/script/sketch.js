@@ -98,12 +98,14 @@ draw = () => {
     ellipse(250, len + 20, 5, 5);
 
     // what happens after screwing up pinata
-    if (hits >= 3) {
+    if (hits >= 3 ) {
         pinata.remove();
+        document.getElementById('batWins').click();
         // replace here with broken pinata
         pinata.velocity.x = 0;
         pinata.velocity.y = 0;
         line(pivot_x, pivot_y, pivot_x, pivot_y + len);
+        hits = 0;
         for (var i = 0; i < candies.length; i++) {
 
             //   if (candies[i].pos.x > 0) {
@@ -111,7 +113,13 @@ draw = () => {
             candies[i].update();
             candies[i].show();
         }
-    } else {
+    } 
+    else if(batSwings > 100) {
+        document.getElementById('pinataWins').click();
+        batSwings = 0;
+    }
+
+    else {
         pinataSwing()
     }
     drawSprites();
