@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
         this.data = data;
         this.dataType = dataType;
         this.playerId = playerId;
-        this.playerSelection = playerSelection; 
+        this.playerSelection = playerSelection;
         this.timestamp = Date.now();
     }
     
