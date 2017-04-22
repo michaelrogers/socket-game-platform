@@ -1,4 +1,4 @@
-var bubbles = [];
+var asteroids = [];
 var hot_air_ballon;
 var backImg;
 var ufo;
@@ -67,7 +67,7 @@ let candyTime = false;
 // preload image to sprite
 preload = () => {
   balloon = loadImage('/img/hot_air_balloon.png');
-  bubble = loadImage('/img/asteroid1.png')
+  asteroid = loadImage('/img/asteroid1.png')
   backFill = loadImage('/img/moonscape.jpg');
   ufo = loadImage('/img/ufo.png');
   spidy = loadImage('/img/spidy.png')
@@ -102,7 +102,7 @@ setup = () => {
   // pivot_y = 0;
 
   for (var j=0; j < 9; j++) {
-        bubbles[j] = new Bubble();
+        asteroids[j] = new Asteroid();
     }
 
     hot_air_balloon = new Balloon();
@@ -142,9 +142,9 @@ draw = () => {
 
   image(backFill, 0, 0, windowWidth, 700);
 
-for (var i=0; i<bubbles.length; i++) {
-bubbles[i].move();
-bubbles[i].show();
+for (var i=0; i<asteroids.length; i++) {
+asteroids[i].move();
+asteroids[i].show();
 }
 
 hot_air_balloon.move();
@@ -281,9 +281,9 @@ class Candy {
     }
 
     this.show = () => {
-      noStroke();
-      stroke(0);
-      strokeWeight(1);
+      // noStroke();
+      // stroke(0);
+      // strokeWeight(1);
       imageMode(CENTER);
       var randImg = Math.floor(random(0, sweet.length));
       this.img = sweet[randImg];
@@ -292,7 +292,7 @@ class Candy {
   }
 }
 
-function Bubble() {
+function Asteroid() {
   var bub_x = 0
   var vel_x = random(-1, 1);
   var vel_y = random(-1, 1);
@@ -300,7 +300,7 @@ function Bubble() {
   this.x = random(0, width);
   this.y = random(0, height);
 
-  this.img = bubble;
+  this.img = asteroid;
 
   this.show = function() {
     stroke(255);

@@ -74,7 +74,7 @@ export default class Lobby extends React.Component {
             drawerOpen: false,
             winner: null,
             gameStartCount: 0,
-            gameStart: false,
+            gameStart: true,
             gameOver: false,
             hits: 0,
             swings: 0,
@@ -467,7 +467,7 @@ export default class Lobby extends React.Component {
                           open={this.state.modalIsOpen}
                           onRequestClose={this.closeModal}
                         >
-                          <QRCode className="QRcanvas" value={`${window.location.origin}/control-device/${this.props.globalData.gameId}/${this.props.globalData.playerId}/${this.props.globalData.playerSelection}`} />
+                          <QRCode className="QRcanvas" value={`http://192.168.1.66:3000/control-device/${this.props.globalData.gameId}/${this.props.globalData.playerId}/${this.props.globalData.playerSelection}`} />
                         </Dialog>
                         {/*
                         <a target="_blank"
