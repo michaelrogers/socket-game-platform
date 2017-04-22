@@ -34,12 +34,10 @@ module.exports = {
         io.on('connection', (socket) => {
             //--------------Connection-status-----------------
             connectionCount(socket);
-
             socket.on('disconnect', (socket) => {
                 connectionCount(socket);
                 leaveRooms(socket);
             });
-
             //--------------Data--channels---------------------
             //A client requests to join a room and the server joins them
             socket.on('room', (DataPackage) => {
@@ -50,7 +48,12 @@ module.exports = {
                 let phoneCount = 0;
                 // if (DataPackage.phone) { phoneCount++ }
                 // if (phoneCount > 1) { console.log('Game started') }
-                io.sockets.in(DataPackage.roomId).emit('connection-status', `New player joined room ${DataPackage.roomId}`)
+                let joiningPlayerName = 'Mobile Device';
+                if (DataPackage && DataPackage.globalData && DataPackage.globalData.playerName) {
+                    joiningPlayerName = DataPackage.globalData.playerName;
+                }
+                io.sockets.in(DataPackage.roomId).emit('connection-status', `${joiningPlayerName} joined  the room.`)
+                io.sockets.in(DataPackage.roomId).emit('player:name', DataPackage);
             });
             //Note: No auto teardown of sockets necessary
             socket.on('chat-message', (DataPackage) => {
@@ -59,14 +62,25 @@ module.exports = {
 
             // Relay device input to all connected clients in the room
             socket.on('input', (DataPackage) => {
-                console.log(DataPackage)
                 io.sockets.in(DataPackage.roomId).emit('input', DataPackage);
+            });
+            
+            socket.on('player:name', (DataPackage) => {
+                io.sockets.in(DataPackage.roomId).emit('player:name', DataPackage);
             });
 
             socket.on('admin', (data) => {
-                console.log(data)
                 io.sockets.in(data.roomId).emit('admin', data);
-            })
+            });
+
+            socket.on('declareWinner', (data) => {
+                console.log(data)
+                io.sockets.in(data.roomId).emit('declareWinner', data);
+            });
+
+            socket.on('player:count', (_) => {
+                io.emit('player:count', socket.server.engine.clientsCount);
+            });
         }); //End connection
 
     }

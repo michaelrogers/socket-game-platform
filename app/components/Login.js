@@ -2,6 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import Styles from './styles/customStyles.js';
 import Paper from 'material-ui/Paper';
+import generateName from 'sillyname';
 import helpers from "./utils/helpers";
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
 
@@ -9,7 +10,8 @@ export default class Lobby extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            inputUsername: undefined
+            inputUsername: undefined,
+            suggestedPlayerName: undefined
         }
         // Functions must be bound manually with ES6 classNames
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -18,7 +20,7 @@ export default class Lobby extends React.Component {
         this.handleLogout = this.handleLogout.bind(this);
         this.handleNewUser = this.handleNewUser.bind(this);
         this.displayControls = this.displayControls.bind(this);
-        console.log('Login', this.props)
+        this.showInput = this.showInput.bind(this);
     }
 
     handleChange(e) {
@@ -29,6 +31,13 @@ export default class Lobby extends React.Component {
 
     handleLogin(e) {
         helpers.login(this.state.inputUsername);
+    }
+
+    componentWillMount() {
+        const sillyName = generateName();
+        this.setState({suggestedPlayerName: sillyName});
+        console.log('Login', this.props, this.state);
+        
     }
 
     handleLogout(e) {
@@ -43,7 +52,7 @@ export default class Lobby extends React.Component {
     }
 
     handleNewUser(e) {
-        helpers.createNewPlayer(this.state.inputUsername)
+        helpers.createNewPlayer(this.state.inputUsername || this.state.suggestedPlayerName)
         .then(response => {
             console.log('New User Response', response)
             this.props.setPlayerInfo(response.name, response._id);
@@ -59,6 +68,7 @@ export default class Lobby extends React.Component {
                     <label htmlFor="inputUsername">Username</label>
                     <input type="text" disabled className="form-control" id="inputUsername" placeholder="Username" onChange={this.handleChange} defaultValue={this.props.globalData.playerName} />
                     <button style={Styles.button} type="submit" onClick={this.handleLogout} className="btn btn-primary">Log Out</button>
+
                     </div>
                 </div>
             );
@@ -70,10 +80,15 @@ export default class Lobby extends React.Component {
                         <label htmlFor="inputUsername">Username</label>
                         <input type="text" className="form-control" id="inputUsername" placeholder="Username" onChange={this.handleChange} defaultValue={this.state.suggestedPlayerName} />
                         <button style={Styles.button} type="submit" onClick={this.handleNewUser} className="btn btn-primary">Create Account</button>
+
                     </div>
                 </div>
             );
         }
+    }
+
+    showInput() {
+
     }
 
  render() {
@@ -81,6 +96,7 @@ export default class Lobby extends React.Component {
       <div className="col s6 offset-s3">
         <Paper zDepth={2}>
           <Card style={{padding:30, marginTop: 15}}>
+
             <div className="row">
                 <div className="center-align">
                     <h2>Login</h2>
@@ -96,6 +112,7 @@ export default class Lobby extends React.Component {
         </Paper>
 
       </div>
+
     );
     }
 }
