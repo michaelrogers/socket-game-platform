@@ -42,6 +42,7 @@ export default class Lobby extends React.Component {
     this.handleJoin = this.handleJoin.bind(this);
     this.updatePlayerCount = this.updatePlayerCount.bind(this);
     this.populateButtons = this.populateButtons.bind(this);
+    this.getGames = this.getGames.bind(this);
 
     console.log('Lobby', this.props);
   }
@@ -49,17 +50,22 @@ export default class Lobby extends React.Component {
   componentWillUnmount() {
     console.log('Lobby unmount');
     this.props.socket.off('player:count');
+    this.props.socket.off('game:updates');
   }
 
-
-  componentDidMount() {
+  getGames() {
     helpers.viewActiveGames()
       .then(response => {
         this.setState({ activeGames: response.data });
       });
+  }
 
+
+  componentDidMount() {
+    this.getGames();    
     this.props.socket.on('player:count', this.updatePlayerCount);
     this.props.socket.emit('player:count', "");
+    this.props.socket.on('game:updates', this.getGames);
   }
 
   updatePlayerCount(playerCount) {
