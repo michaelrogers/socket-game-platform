@@ -35,9 +35,12 @@ export default class Navigation extends React.Component {
                         }
                       }>
                 <ToolbarGroup firstChild={false}>
-                    <Link className="navbar-brand" to="/">Socket-Game-Platform</Link>
+                    <a className="navbar-brand" href="/">Socket-Game-Platform</a>
                     <ToolbarSeparator />
-                    <Link to="/">Lobby</Link>
+                    <a href="/">Lobby</a>
+                    {/*<Link className="navbar-brand" to="/">Socket-Game-Platform</Link>
+                    <ToolbarSeparator />
+                    <Link to="/">Lobby</Link>*/}
                 </ToolbarGroup>
                 {this.populateLogin()} 
             </Toolbar>
