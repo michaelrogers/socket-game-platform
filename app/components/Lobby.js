@@ -148,7 +148,7 @@ export default class Lobby extends React.Component {
             />
 
           }
-          rightIcon={<a href="/" onClick={(e) => {e.stopPropagation(); this.removeGame(game._id)}}>x</a>}
+          rightIcon={<Link to="/" onClick={(e) => {e.stopPropagation(); this.removeGame(game._id); this.getGames();}}>x</Link>}
         >
 
           <h5>Piñata game</h5>
