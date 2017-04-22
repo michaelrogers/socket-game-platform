@@ -220,26 +220,24 @@ export default class Lobby extends React.Component {
 // Collect appropriate data for swings and hits
     batSwings() {
         // Data package to send to admin channel
-        let data;
-        console.log('swingssss', this.state.swings)
-        if(this.state.swings > 1 && this.state.hits < 3) {
-            console.log('inside if > 0')
-            data = {
-                roomId: this.props.globalData.gameId,
-                result: this.state.swings - 1,
-                type: 'swing'
-            }
+        const result = this.state.swings - 1;
+        let data = {
+            roomId: this.props.globalData.gameId,
+            result: result,
+            type: null
+        };
+        
+        // console.log('swingssss', this.state.swings)
+        if(result >= 1 && this.state.hits < 3) {
+            data.type = 'swing'
         }
-        else if(this.state.swings < 1 && this.state.hits < 3) {
-            console.log('pinata wins!');
-            data = {
-                roomId: this.props.globalData.gameId,
-                result: this.state.swings,
-                type: 'win'
-            }
+        else if(result < 1 && this.state.hits < 3) {
+            console.log('ici')
+            data.type = 'win'
+        }
             // this.setState({gameStart: false, gameOver: true});
             // console.log('start',this.state.gameStart, 'over', this.state.gameOver);
-        }
+
         // Send data to socket admin channel only once (player 0) and when game is playing
        this.sendDataAdmin(data)
     }
@@ -258,7 +256,6 @@ export default class Lobby extends React.Component {
 
     // send data to socket admin channel
     sendDataAdmin(data) {
-        console.log('in senddataadmin')
         if(this.props.globalData.playerSelection == 0 && this.state.gameStart) {
             this.props.socket.emit('admin', data);
         }
@@ -282,7 +279,7 @@ export default class Lobby extends React.Component {
         console.log('htis dta', data)
         switch(data.type) {
             case 'swing':
-                console.log('inside switch', data.result);
+                console.log('swing', data.result);
                 this.setState({swings: data.result});
                 break;
 
@@ -300,6 +297,7 @@ export default class Lobby extends React.Component {
                     console.log('gamestartbool af', this.state.gameStart);
                 }
                 break;
+
             case 'win':
                 console.log('pinata wingsssss');
                 this.state.gameStart = false;
