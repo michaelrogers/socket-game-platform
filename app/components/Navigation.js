@@ -1,6 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
+import FlatButton from 'material-ui/FlatButton';
+import Styles from './styles/customStyles.js';
 
 export default class Navigation extends React.Component {
     constructor(props) {
@@ -19,31 +21,25 @@ export default class Navigation extends React.Component {
         } else {
             return (
                 <ToolbarGroup>
-                    <Link to="/login">Login</Link>
+                    <FlatButton style={Styles.button}>
+                      <Link to="/login">Login</Link>
+                    </FlatButton>
                 </ToolbarGroup>
-            ) 
+            )
         }
     }
 
     render() {
         return (
-            <Toolbar style={
-                {
-                    // top:0,
-                    // left:0,
-                    // right:0,
-                    // position:"absolute",
-                    // display: "block"
-                }
-            }>
+            <Toolbar>
+
                 <ToolbarGroup firstChild={false}>
 
                     <Link className="navbar-brand" to="/">Socket-Game-Platform</Link>
-                    <ToolbarSeparator />
-                    <Link to="/">Lobby</Link>
+                    <Link style={{marginLeft:15}} to="/">Lobby</Link>
 
                 </ToolbarGroup>
-                {this.populateLogin()} 
+                {this.populateLogin()}
             </Toolbar>
         )
     }

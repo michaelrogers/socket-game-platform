@@ -1,7 +1,10 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import Styles from './styles/customStyles.js';
+import Paper from 'material-ui/Paper';
 import generateName from 'sillyname';
 import helpers from "./utils/helpers";
+import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
 
 export default class Lobby extends React.Component {
     constructor(props) {
@@ -64,7 +67,8 @@ export default class Lobby extends React.Component {
                     <div className="form-group">
                     <label htmlFor="inputUsername">Username</label>
                     <input type="text" disabled className="form-control" id="inputUsername" placeholder="Username" onChange={this.handleChange} defaultValue={this.props.globalData.playerName} />
-                    <button type="submit" onClick={this.handleLogout} className="btn btn-primary">Log Out</button>
+                    <button style={Styles.button} type="submit" onClick={this.handleLogout} className="btn btn-primary">Log Out</button>
+
                     </div>
                 </div>
             );
@@ -75,7 +79,8 @@ export default class Lobby extends React.Component {
                     <div className="form-group">
                         <label htmlFor="inputUsername">Username</label>
                         <input type="text" className="form-control" id="inputUsername" placeholder="Username" onChange={this.handleChange} defaultValue={this.state.suggestedPlayerName} />
-                        <button type="submit" onClick={this.handleNewUser} className="btn btn-primary">Create Account</button>
+                        <button style={Styles.button} type="submit" onClick={this.handleNewUser} className="btn btn-primary">Create Account</button>
+
                     </div>
                 </div>
             );
@@ -88,7 +93,10 @@ export default class Lobby extends React.Component {
 
  render() {
     return (
-        <div className="col s12">
+      <div className="col s6 offset-s3">
+        <Paper zDepth={2}>
+          <Card style={{padding:30, marginTop: 15}}>
+
             <div className="row">
                 <div className="center-align">
                     <h2>Login</h2>
@@ -96,11 +104,15 @@ export default class Lobby extends React.Component {
             </div>
 
             <div className="row">
-                <div className="col m4 offset-m4 s6 offset-s3">
+                <div className="col s12">
                     {this.displayControls()}
                 </div>
             </div>
-        </div>
+          </Card>
+        </Paper>
+
+      </div>
+
     );
     }
 }

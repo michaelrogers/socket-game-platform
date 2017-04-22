@@ -80,7 +80,9 @@ export default class Lobby extends React.Component {
     this.addChatMessage = this.addChatMessage.bind(this);
     this.displayChatMessages = this.displayChatMessages.bind(this);
     this.sendChatMessage = this.sendChatMessage.bind(this);
+    this.createBitly = this.createBitly.bind(this);
     this.requestBitly = this.requestBitly.bind(this);
+
 
     this.inputEventHandler = this.inputEventHandler.bind(this);
     this.setupRoom = this.setupRoom.bind(this);
@@ -134,6 +136,9 @@ export default class Lobby extends React.Component {
         if (!this.props.globalData.playerId) {
             window.location.pathname = "/";
         }
+        //Clear previous socket
+        this.createBitly();
+
         
     }
 
@@ -183,6 +188,11 @@ export default class Lobby extends React.Component {
         
         
         if (this.props.globalData.gameId) {
+
+            this.requestJoinRoom();
+
+
+
             helpers.joinGame(this.props.globalData.gameId, this.props.globalData.playerId)
             .then(response => {
                 Array.from(response.player)
@@ -203,6 +213,7 @@ export default class Lobby extends React.Component {
                 });
 
             });
+
         } else {
             console.log('Create game', this.props.globalData.playerId, this.props);
             if (this.props.globalData.playerId !== null) {
@@ -212,11 +223,27 @@ export default class Lobby extends React.Component {
                     playerSelection: 0,
                     gameId: response._id,
                 });
+                console.log('Game', this.props);
+                this.requestJoinRoom();
+                this.createBitly();
+      
+
                 this.setupRoom();
             });
             } else console.log('Problem here.')
         }
         document.querySelector('#canvas').classList.remove("hide");
+
+
+
+    }
+
+    createBitly() {
+        let long_url = window.location.origin +"/control-device/" + this.props.globalData.gameId + "/" + this.props.globalData.playerId + "/" + this.props.globalData.playerSelection;
+        console.log("long device url! " + long_url)
+        helpers.runQuery(long_url).then(function(response) {
+        this.setState({ bitlyURL: response.url });
+        }.bind(this));
 
     }
 
@@ -338,6 +365,7 @@ export default class Lobby extends React.Component {
                 if(this.state.gameStartCount == 2) {
                     this.state.gameStart = true;
                 }
+
                 break;
 
             case 'pinataWins':
