@@ -241,7 +241,7 @@ export default class Lobby extends React.Component {
             const a_x = DataPackage.data.acc.x;
             const mag  = Math.sqrt(Math.pow(a_y, 2) + Math.pow(a_x, 2));
             const alpha = Math.atan(a_x/(a_y))*( 180 / Math.PI);
-            
+
             if (DataPackage.playerSelection == 0) {
                 updateSpring(mag, alpha)
             } else if (DataPackage.playerSelection == 1) {
