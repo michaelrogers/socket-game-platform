@@ -30,8 +30,8 @@ const appendScript = (scriptArray, selector) => {
     });
 };
 
-const killHits = 10;
-const avoidHits = 8;
+const killHits = 5;
+const avoidHits = 10;
 
 function DataPackage(globalData, playerSelection, dataType = null, data = null) {
     this.roomId = globalData.gameId;
@@ -77,7 +77,6 @@ export default class Lobby extends React.Component {
     this.addChatMessage = this.addChatMessage.bind(this);
     this.displayChatMessages = this.displayChatMessages.bind(this);
     this.sendChatMessage = this.sendChatMessage.bind(this);
-    this.createBitly = this.createBitly.bind(this);
 
     // this.batWins = this.batWins.bind(this);
     // this.pinataWins = this.pinataWins.bind(this);
@@ -131,7 +130,6 @@ export default class Lobby extends React.Component {
             window.location.pathname = "/";
         }
         //Clear previous socket
-        this.createBitly();
 
     }
 
