@@ -38,10 +38,10 @@ export default class Scoreboard extends React.Component {
     return (
     <div className="scoreboard-wrapper">
         <Card style={{borderRadius:15, textAlign:"center"}}>
-          <CardActions>
+          {/*<CardActions>
             <h5>{this.state.timer}</h5>
             <button className="btn" onClick={this.startCountdown}>Start Game</button>
-          </CardActions>
+          </CardActions> */}
           <CardText>
             <div className="row">
               <div className="col s3">

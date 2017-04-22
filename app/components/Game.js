@@ -30,8 +30,8 @@ const appendScript = (scriptArray, selector) => {
     });
 };
 
-const killHits = 10;
-const avoidHits = 8;
+const killHits = 5;
+const avoidHits = 10;
 
 function DataPackage(globalData, playerSelection, dataType = null, data = null) {
     this.globalData = globalData;
@@ -134,7 +134,7 @@ export default class Lobby extends React.Component {
         if (!this.props.globalData.playerId) {
             window.location.pathname = "/";
         }
-        
+
     }
 
     componentWillReceiveProps() {
@@ -183,6 +183,7 @@ export default class Lobby extends React.Component {
         
         
         if (this.props.globalData.gameId) {
+
             helpers.joinGame(this.props.globalData.gameId, this.props.globalData.playerId)
             .then(response => {
                 Array.from(response.player)
@@ -203,6 +204,10 @@ export default class Lobby extends React.Component {
                 });
 
             });
+
+            // MERGE CONFLICT socket-fixes
+           // this.requestJoinRoom();
+
         } else {
             console.log('Create game', this.props.globalData.playerId, this.props);
             if (this.props.globalData.playerId !== null) {
@@ -212,11 +217,28 @@ export default class Lobby extends React.Component {
                     playerSelection: 0,
                     gameId: response._id,
                 });
+
                 this.setupRoom();
             });
             } else console.log('Problem here.')
+
+             // MERGE CONFLICT sockets-fixes
+             //   this.requestJoinRoom();
+           // });
+            //}
+
         }
         document.querySelector('#canvas').classList.remove("hide");
+
+
+            // MERGE CONFLICT socket-fixes
+//         this.props.socket.on('connection-status', this.addChatMessage);
+//         this.props.socket.on('chat-message', this.addChatMessage);
+//         this.props.socket.on('input', this.inputEventHandler);
+//         this.props.socket.on('admin', this.setNewStateAdmin);
+
+//         this.props.socket.on('declareWinner', this.declareWinner)
+
 
     }
 
@@ -241,7 +263,7 @@ export default class Lobby extends React.Component {
             const a_x = DataPackage.data.acc.x;
             const mag  = Math.sqrt(Math.pow(a_y, 2) + Math.pow(a_x, 2));
             const alpha = Math.atan(a_x/(a_y))*( 180 / Math.PI);
-            
+
             if (DataPackage.playerSelection == 0) {
                 updateSpring(mag, alpha)
             } else if (DataPackage.playerSelection == 1) {
@@ -311,7 +333,7 @@ export default class Lobby extends React.Component {
     }
 
     // Declare winner of game data comes from socket
-    declareWinner(data) {
+    declareWinner(data) { 
         if(data.type == 'destroyBat') {
             console.log('destroy bat.... PINATA WINS');
             bat.remove();
@@ -320,6 +342,8 @@ export default class Lobby extends React.Component {
             console.log('destroy pinata.... BAT WINS')
             candyTime = true;
         }
+        // set isComplete = true in Game document
+        helpers.completeGame(this.props.globalData.gameId);
     }
 
     // Sets new states from when receiving data from socket admin channel and acts as middle ground from admin socket channel
@@ -338,6 +362,7 @@ export default class Lobby extends React.Component {
                 if(this.state.gameStartCount == 2) {
                     this.state.gameStart = true;
                 }
+
                 break;
 
             case 'pinataWins':
