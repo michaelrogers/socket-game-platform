@@ -77,6 +77,7 @@ export default class Lobby extends React.Component {
     this.addChatMessage = this.addChatMessage.bind(this);
     this.displayChatMessages = this.displayChatMessages.bind(this);
     this.sendChatMessage = this.sendChatMessage.bind(this);
+    this.createBitly = this.createBitly.bind(this);
 
     // this.batWins = this.batWins.bind(this);
     // this.pinataWins = this.pinataWins.bind(this);
@@ -130,12 +131,8 @@ export default class Lobby extends React.Component {
             window.location.pathname = "/";
         }
         //Clear previous socket
-        //---below: master's latest items---
-        let playerSel = sessionStorage.getItem('player-selection');
-        let long_url = window.location.origin +"/control_device/" + this.props.globalData.gameId + "/" + this.props.globalData.playerId + "/" + this.state.playerSel;
-        helpers.runQuery(long_url).then(function(response) {
-        this.setState({ bitlyURL: response.url });
-        }.bind(this));
+        this.createBitly();
+
     }
 
     componentWillReceiveProps() {
@@ -154,6 +151,8 @@ export default class Lobby extends React.Component {
         console.log('GameId', this.props.globalData.gameId, this.props);
         if (this.props.globalData.gameId) {
             this.requestJoinRoom();
+
+
         } else {
             console.log('Create game', this.props.globalData.playerId, this.props);
             if (this.props.globalData.playerId !== null) {
@@ -165,8 +164,11 @@ export default class Lobby extends React.Component {
                 });
                 console.log('Game', this.props);
                 this.requestJoinRoom();
+                this.createBitly();
             });
             }
+
+
         }
 
         document.querySelector('#canvas').classList.remove("hide");
@@ -174,7 +176,9 @@ export default class Lobby extends React.Component {
         this.props.socket.on('chat-message', this.addChatMessage);
         this.props.socket.on('input', this.inputEventHandler);
         this.props.socket.on('admin', this.setNewStateAdmin);
+
         this.props.socket.on('declareWinner', this.declareWinner)
+
     }
 
     addChatMessage(DataPackage) {
@@ -194,7 +198,7 @@ export default class Lobby extends React.Component {
             const a_x = DataPackage.data.acc.x;
             const mag  = Math.sqrt(Math.pow(a_y, 2) + Math.pow(a_x, 2));
             const alpha = Math.atan(a_x/(a_y))*( 180 / Math.PI);
-            
+
             if (DataPackage.playerSelection == 0) {
                 updateSpring(mag, alpha)
             } else if (DataPackage.playerSelection == 1) {
@@ -282,6 +286,7 @@ export default class Lobby extends React.Component {
                 if(this.state.gameStartCount == 2) {
                     this.state.gameStart = true;
                 }
+
                 break;
 
             case 'pinataWins':

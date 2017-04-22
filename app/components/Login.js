@@ -1,7 +1,9 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
-
+import Styles from './styles/customStyles.js';
+import Paper from 'material-ui/Paper';
 import helpers from "./utils/helpers";
+import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
 
 export default class Lobby extends React.Component {
     constructor(props) {
@@ -52,44 +54,48 @@ export default class Lobby extends React.Component {
     displayControls() {
         if (this.props.globalData.playerId) {
             return (
-                <button type="submit" onClick={this.handleLogout} className="btn btn-primary">Log Out</button>
+                <div>
+                    <div className="form-group">
+                    <label htmlFor="inputUsername">Username</label>
+                    <input type="text" disabled className="form-control" id="inputUsername" placeholder="Username" onChange={this.handleChange} defaultValue={this.props.globalData.playerName} />
+                    <button style={Styles.button} type="submit" onClick={this.handleLogout} className="btn btn-primary">Log Out</button>
+                    </div>
+                </div>
             );
         } else {
             return (
-                <button type="submit" onClick={this.handleNewUser} className="btn btn-primary">Create Account</button>
+                <div>
+                    <h6 className="center-align">Suggested Player Name Below</h6>
+                    <div className="form-group">
+                        <label htmlFor="inputUsername">Username</label>
+                        <input type="text" className="form-control" id="inputUsername" placeholder="Username" onChange={this.handleChange} defaultValue={this.state.suggestedPlayerName} />
+                        <button style={Styles.button} type="submit" onClick={this.handleNewUser} className="btn btn-primary">Create Account</button>
+                    </div>
+                </div>
             );
         }
     }
 
  render() {
     return (
-    <div className="col-xs-12 col-xs-offset-0">
-        <div className="row">
-            <div className="jumbotron">
-                <h2>Login</h2>
+      <div className="col s6 offset-s3">
+        <Paper zDepth={2}>
+          <Card style={{padding:30, marginTop: 15}}>
+            <div className="row">
+                <div className="center-align">
+                    <h2>Login</h2>
+                </div>
             </div>
-        </div>        
 
-        <div className="row">
-        <div className="col-xs-8 col-xs-offset-2">
-            <div className="form-group">
-                <label htmlFor="inputUsername">Username</label>
-                <input type="text" className="form-control" id="inputUsername" placeholder="Username" onChange={this.handleChange} defaultValue={this.props.globalData.playerName} />
-                {this.displayControls()}
+            <div className="row">
+                <div className="col s12">
+                    {this.displayControls()}
+                </div>
             </div>
-            {/*
-            <div className="form-group">
-                <label htmlFor="password">Password </label>
-                <input type="password" className="form-control" id="password" placeholder="Password" onChange={this.handleChange}/>
-            </div>
-                {/* 
-            */}
-            
-            
-        </div>
-        </div>
-    
-    </div>
+          </Card>
+        </Paper>
+
+      </div>
     );
     }
 }
