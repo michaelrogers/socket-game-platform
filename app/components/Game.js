@@ -338,7 +338,7 @@ export default class Lobby extends React.Component {
     }
 
     // Declare winner of game data comes from socket
-    declareWinner(data) {
+    declareWinner(data) { 
         if(data.type == 'destroyBat') {
             console.log('destroy bat.... PINATA WINS');
             bat.remove();
@@ -347,6 +347,8 @@ export default class Lobby extends React.Component {
             console.log('destroy pinata.... BAT WINS')
             candyTime = true;
         }
+        // set isComplete = true in Game document
+        helpers.completeGame(this.props.globalData.gameId);
     }
 
     // Sets new states from when receiving data from socket admin channel and acts as middle ground from admin socket channel
