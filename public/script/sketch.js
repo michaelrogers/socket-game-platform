@@ -81,9 +81,17 @@ preload = () => {
     hitSound[j] = loadSound('/sounds/hit' + j + '.mp3');
   }
 }
+
 // console.log('Sketch file loaded')
 // *************** //
 
+
+
+
+initSketch = () => {
+  // pivot_x = width / 2 -100; //x-position of sprite, relative to middle of screen
+  // pivot_y = 0;
+  // cord
   for (var j=0; j < 9; j++) {
         asteroids[j] = new Asteroid();
     }
@@ -92,11 +100,6 @@ preload = () => {
     ufo = new UFO();
     spidy = new Spidy();
     cow = new Cow();
-
-initSketch = () => {
-  // pivot_x = width / 2 -100; //x-position of sprite, relative to middle of screen
-  // pivot_y = 0;
-  // cord
 
   line(pivot_x, pivot_y, 300, 250);
 
@@ -188,8 +191,8 @@ spidy.show();
   drawSprites();
 
   if (startGameText) {
-    fill(random(255), 102, random(153), random(200, 255));
-    text("Start Playing!!!", width/2, height/2);
+    fill(20, 0, 194, 200);
+    text("Start Playing!!!", width/2, 320);
   }
 }
 
@@ -414,4 +417,3 @@ function UFO() {
     }
   }
 }
-

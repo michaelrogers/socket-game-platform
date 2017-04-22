@@ -19,7 +19,7 @@ export default class Scoreboard extends React.Component {
     }
 
     startCountdown() {
-        this.setState({timer: 60});
+        this.setState({timer: 0});
         clearInterval(coundownInterval);
          coundownInterval = setInterval(() => {
             if (this.state.timer > 0) {
