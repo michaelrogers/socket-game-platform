@@ -4,10 +4,26 @@
     <title></title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/css/materialize.min.css">
+    <link rel="stylesheet" href="/css/phone.css">
   </head>
   <body>
-    <h1>fone data</h1>
-    <button id="startGame">Start Game</button>
+    <div class="container">
+      <div class="row">
+        <div class="col s12 img-wrapper">
+          <div id="spriteImage">
+            
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col s12">
+          <button class="btn amber lighten-2" id="startGame">Start Game</button>
+        </div>
+      </div>
+    </div>
+    
     <!--<button id="testBtn">test Game</button>-->
     <script src="/lib/socket.io.js"></script>
     <script src="/script/connection.js"></script>

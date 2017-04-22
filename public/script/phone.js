@@ -11,3 +11,24 @@ console.log(gameId, playerId, playerSelection)
 
 const startGameBtn = document.getElementById('startGame');
 const testBtn = document.getElementById('testBtn');
+
+//detect player selection
+const getImgSrc = (playerSelection) => {
+    if(playerSelection == 1) {
+        //player role is bat
+        return "/img/arm125.png";
+    } else if (playerSelection == 0) {
+        //player role is bird
+        return "/img/bird-sm.png"
+    }
+};
+
+//create image element
+const buildImageElem = () => {
+    let imgElem = document.createElement("img");
+    imgElem.src = getImgSrc(playerSelection);
+    document.getElementById("spriteImage").appendChild(imgElem);
+};
+
+//run above function
+buildImageElem();
