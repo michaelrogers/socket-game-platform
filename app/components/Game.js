@@ -120,6 +120,12 @@ export default class Lobby extends React.Component {
             gameId: undefined,
             playerSelection: undefined,
         });
+        this.props.socket.off('connection-status');
+        this.props.socket.off('chat-message');
+        this.props.socket.off('input');
+        this.props.socket.off('admin');
+        this.props.socket.off('player:name');
+        this.props.socket.off('declareWinner');
     }
 
     componentWillMount() {
@@ -172,6 +178,7 @@ export default class Lobby extends React.Component {
         this.props.socket.on('input', this.inputEventHandler);
         this.props.socket.on('admin', this.setNewStateAdmin);
         this.props.socket.on('player:name', this.setPlayerName);
+        this.props.socket.on('declareWinner', this.declareWinner);
         console.log('GameId', this.props.globalData.gameId, this.props);
         
         
@@ -210,11 +217,7 @@ export default class Lobby extends React.Component {
             } else console.log('Problem here.')
         }
         document.querySelector('#canvas').classList.remove("hide");
-        this.props.socket.on('connection-status', this.addChatMessage);
-        this.props.socket.on('chat-message', this.addChatMessage);
-        this.props.socket.on('input', this.inputEventHandler);
-        this.props.socket.on('admin', this.setNewStateAdmin);
-        this.props.socket.on('declareWinner', this.declareWinner)
+
     }
 
     setupRoom() {

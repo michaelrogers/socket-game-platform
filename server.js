@@ -9,6 +9,7 @@ const path = require('path');
 const port = process.env.PORT || 3000;
 const sockets = require('./sockets.js').listen(port, app);
 const MongoOplog = require('mongo-oplog');
+const mongoWatch = require('mongo-oplog-watch');
 const URI = process.env.MONGODB_URI || "mongodb://localhost/socket-game-platform";
 
 // Set mongoose to leverage built in JavaScript ES6 Promises
@@ -22,7 +23,26 @@ const db = mongoose.connection;
 db.once("open", () => { console.log("Mongoose connection successful."); });
 db.on("error", (error) => { console.log("Mongoose Error:", error); });
 
-const oplog = MongoOplog(URI, { ns: '"socket-game-platform".games' });
+const oplog = MongoOplog(URI, { ns: 'socket-game-platform.games' });
+
+// const watcher = mongoWatch(URI, { ns: 'socket-game-platform.games' });
+
+// watcher.on('update', function (doc) {
+//   doc = {
+//     db: 'db name',
+//     collection: 'collection name',
+//     query: {
+//       _id: 'Object Id'
+//     },
+//     object: {
+//       set: {
+//         field1: 'updated value',
+//         field2: 'updated value'
+//         // ...
+//       }
+//     }
+//   }
+// });
 // oplog.tail().then(() => {
 //   console.log('tailing started')
 // }).catch(err => console.error(err))

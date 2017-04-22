@@ -47,8 +47,8 @@ export default class Lobby extends React.Component {
   }
 
   componentWillUnmount() {
-    console.log('Lobby unmount')
-    this.props.socket.off();
+    console.log('Lobby unmount');
+    this.props.socket.off('player:count');
   }
 
 
@@ -59,6 +59,7 @@ export default class Lobby extends React.Component {
       });
 
     this.props.socket.on('player:count', this.updatePlayerCount);
+    this.props.socket.emit('player:count', "");
   }
 
   updatePlayerCount(playerCount) {

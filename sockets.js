@@ -48,7 +48,11 @@ module.exports = {
                 let phoneCount = 0;
                 // if (DataPackage.phone) { phoneCount++ }
                 // if (phoneCount > 1) { console.log('Game started') }
-                io.sockets.in(DataPackage.roomId).emit('connection-status', `${DataPackage.globalData.playerName} joined  the room.`)
+                let joiningPlayerName = 'Mobile Device';
+                if (DataPackage && DataPackage.globalData && DataPackage.globalData.playerName) {
+                    joiningPlayerName = DataPackage.globalData.playerName;
+                }
+                io.sockets.in(DataPackage.roomId).emit('connection-status', `${joiningPlayerName} joined  the room.`)
                 io.sockets.in(DataPackage.roomId).emit('player:name', DataPackage);
             });
             //Note: No auto teardown of sockets necessary
@@ -72,6 +76,10 @@ module.exports = {
             socket.on('declareWinner', (data) => {
                 console.log(data)
                 io.sockets.in(data.roomId).emit('declareWinner', data);
+            });
+
+            socket.on('player:count', (_) => {
+                io.emit('player:count', socket.server.engine.clientsCount);
             });
         }); //End connection
 
