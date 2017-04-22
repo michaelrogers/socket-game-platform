@@ -175,20 +175,18 @@ export default class Lobby extends React.Component {
           <div className="col s12 m6">
               <div className="row">
 
-//       MERGE CONFLICT socket-fixes
+{/*//       MERGE CONFLICT socket-fixes
 //                 <div className="col m6">
 //                 <Link to="/game">
 //                   <Card>
 //                     <CardMedia
-//                       overlay={<CardTitle title="Pinata" subtitle="Destroy the pinata, or survive the bat. Click to start." />}
+//                       overlay={<CardTitle title="Pinata" subtitle="Destroy the pinata, or survive the bat. Click to start." />}*/}
 
                 <div className="col s12">
                 <Link to="/game">
                   <Card>
                     <CardMedia
-                      overlay={<CardTitle title="Piñata" subtitle="Destroy the piñata, or survive the bat" />}
-
-                    >
+                      overlay={<CardTitle title="Piñata" subtitle="Destroy the piñata, or survive the bat" />}>
                       <img src="img/game.png" />
                     </CardMedia>
                   </Card>
@@ -208,34 +206,7 @@ export default class Lobby extends React.Component {
               </div>
           </div>
 
-//       MERGE CONFLICT sockets-fixes
-//           <div className="col s4 m4">
-//             <div>
-//               <div className="collection">
-//                 <h6 className="collection-item">Players Online:  {this.state.playerCount}</h6>
-//                 {/* <p className="collection-item">Playing as:  {this.props.globalData.playerName}</p> */}
-//               </div>
-//             </div>
-//           </div>
-//           <div className="col s8 m4">
-//             <Card>
-//               <CardHeader
-//                 title="Games"
-//                 subtitle="Which do you want to play?"
-//               />
-//               <RaisedButton 
-//                   fullWidth={true}
-//                   label="Create New Game" 
-//                   primary={true} 
-//                   onClick={this.createGame}
-//                   containerElement={
-//                     <Link to="/game" />
-//                   }
-//                 />
-//               <List>
-//                 {this.displayGames()}
-//               </List>
-//             </Card>
+
 
           <div className="col s12 m6">
             <div className="row">

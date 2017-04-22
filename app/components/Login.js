@@ -116,11 +116,7 @@ export default class Lobby extends React.Component {
 
             <div className="row">
 
-                <div className="col m4 offset-m4 s6 offset-s3">
-                    {this.displayControls()}
-                </div>
-            </div>
-        </div>
+                
 
                 <div className="col s12">
                     {this.displayControls()}
