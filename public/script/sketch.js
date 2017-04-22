@@ -58,6 +58,7 @@ var ufo;
 var spidy;
 var cow;
 var cowSecured = false;
+let startGameText = false;
 
 // preload image to sprite
 preload = () => {
@@ -118,6 +119,12 @@ setup = () => {
   for (var i = 0; i < 150; i++) {
     candies.push(new Candy());
   }
+
+  textSize(60);
+  textAlign(CENTER);
+  textStyle(BOLD);
+  textFont("Helvetica");
+
 }
 
 draw = () => {
@@ -182,6 +189,11 @@ spidy.show();
 
   pinataSwing();
   drawSprites();
+
+  if (startGameText) {
+    fill(random(255), 102, random(153), random(200, 255));
+    text("Start Playing!!!", width/2, height/2);
+  }
 }
 
 // ************************ //
