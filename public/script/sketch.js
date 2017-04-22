@@ -147,7 +147,7 @@ draw = () => {
   }
 
   // on collision
-  if (hits < 8) {
+  
     if (bat.overlap(pinata)) {
       jit = 10;
       var rSound = Math.floor(random(0, hitSound.length));
@@ -156,17 +156,17 @@ draw = () => {
       chicken.setVolume(0.05);
       chicken.play();
     }
-  }
+  
 
   // what happens after screwing up pinata
-  if (hits >= 3) {
-    document.getElementById('batWins').click();
-    hits = 0;
-    candyTime = true;
-  } else if (batSwings > 100) {
-    document.getElementById('pinataWins').click();
-    batSwings = 0;
-  }
+  // if (hits >= 3) {
+  //   document.getElementById('batWins').click();
+  //   hits = 0;
+  //   candyTime = true;
+  // } else if (batSwings > 100) {
+  //   document.getElementById('pinataWins').click();
+  //   batSwings = 0;
+  // }
 
   if (candyTime) {
     jit = 2;

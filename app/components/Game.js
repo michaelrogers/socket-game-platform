@@ -279,10 +279,6 @@ export default class Lobby extends React.Component {
         }.bind(this));
     }
 
-    batWins() { this.winner(1); }
-
-    pinataWins() { this.winner(0); }
-
 // Collect appropriate data for swings and hits
     batSwings() {
         // Data package to send to admin channel
