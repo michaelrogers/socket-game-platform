@@ -66,7 +66,12 @@ module.exports = {
             socket.on('admin', (data) => {
                 console.log(data)
                 io.sockets.in(data.roomId).emit('admin', data);
-            })
+            });
+
+            socket.on('declareWinner', (data) => {
+                console.log(data)
+                io.sockets.in(data.roomId).emit('declareWinner', data);
+            });
         }); //End connection
 
     }

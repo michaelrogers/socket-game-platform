@@ -99,6 +99,7 @@ export default class Lobby extends React.Component {
     this.sendDataAdmin = this.sendDataAdmin.bind(this);
 
     this.winner = this.winner.bind(this);
+    this.declareWinner = this.declareWinner.bind(this);
 
     // setNewState from data coming from admin channel
     this.setNewStateAdmin = this.setNewStateAdmin.bind(this);
@@ -181,6 +182,7 @@ export default class Lobby extends React.Component {
         this.props.socket.on('chat-message', this.addChatMessage);
         this.props.socket.on('input', this.inputEventHandler);
         this.props.socket.on('admin', this.setNewStateAdmin);
+        this.props.socket.on('declareWinner', this.declareWinner)
     }
 
     addChatMessage(DataPackage) {
@@ -229,14 +231,12 @@ export default class Lobby extends React.Component {
         
         // console.log('swingssss', this.state.swings)
         if(result >= 1 && this.state.hits < 3) {
-            data.type = 'swing'
+            data.type = 'swing';
         }
         else if(result < 1 && this.state.hits < 3) {
             console.log('ici')
-            data.type = 'win'
+            data.type = 'pinataWins';
         }
-            // this.setState({gameStart: false, gameOver: true});
-            // console.log('start',this.state.gameStart, 'over', this.state.gameOver);
 
         // Send data to socket admin channel only once (player 0) and when game is playing
        this.sendDataAdmin(data)
@@ -244,10 +244,18 @@ export default class Lobby extends React.Component {
 
     batHits() {
         // Data package to send to admin channel
+        const result = this.state.hits + 1;
         const data = {
             roomId: this.props.globalData.gameId,
-            result: this.state.hits + 1,
-            type: 'hit'
+            result: result,
+            type: null
+        }
+
+        if(result < 3 && this.state.swings <= 10) {
+            data.type = 'hit';
+        }
+        else if(result >= 3 && this.state.swings <= 10) {
+            data.type = 'batWins';
         }
 
         // Send data to socket admin channel only once (player 0) and when game is playing
@@ -258,6 +266,17 @@ export default class Lobby extends React.Component {
     sendDataAdmin(data) {
         if(this.props.globalData.playerSelection == 0 && this.state.gameStart) {
             this.props.socket.emit('admin', data);
+        }
+    }
+
+    declareWinner(data) {
+        console.log('winner!!!',data)
+        if(data.type == 'destroyBat') {
+            console.log('destroy bat.... PINATA WINS');
+        }
+        else if(data.type == 'destroyPinata') {
+            console.log('destroy pinata.... BAT WINS')
+            candyTime = true;
         }
     }
 
@@ -298,11 +317,31 @@ export default class Lobby extends React.Component {
                 }
                 break;
 
-            case 'win':
+            case 'pinataWins':
                 console.log('pinata wingsssss');
                 this.state.gameStart = false;
                 console.log('fallalalla')
+
+                const dataPinataWins = {
+                    roomId: this.props.globalData.gameId,
+                    result: null,
+                    type: 'destroyBat'
+                }           
+
+                this.props.socket.emit('declareWinner', dataPinataWins);
                 break;
+
+            case 'batWins':
+                console.log('battttt winsnsnsissnns')
+                this.state.gameStart = false;
+                const dataBatWins = {
+                    roomId: this.props.globalData.gameId,
+                    result: null,
+                    type: 'destroyPinata'
+                }
+                this.props.socket.emit('declareWinner', dataBatWins)
+                break;
+
             default: 
                 console.log('meh'); 
                 break;

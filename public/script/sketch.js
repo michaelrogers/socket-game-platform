@@ -135,16 +135,6 @@ draw = () => {
     }
   }
 
-  // what happens after screwing up pinata
-  if (hits >= 3) {
-    document.getElementById('batWins').click();
-    hits = 0;
-    candyTime = true;
-  } else if (batSwings > 100) {
-    document.getElementById('pinataWins').click();
-    batSwings = 0;
-  }
-
   if (candyTime) {
     jit = 2;
     len = 345;
@@ -161,6 +151,7 @@ draw = () => {
   pinataSwing();
   drawSprites();
 }
+
 
 // ************************ //
 
