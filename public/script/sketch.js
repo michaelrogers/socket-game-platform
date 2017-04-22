@@ -190,6 +190,10 @@ draw = () => {
     textStyle(BOLD);
     fill(20, 0, 194);
     text("Start Playing!!!", width/2, 320);
+
+    setTimeout(() => {
+      startGameText = false;
+    }, 3000);
   }
 }
 
