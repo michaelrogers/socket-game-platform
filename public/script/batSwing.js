@@ -1,5 +1,7 @@
-let acceptingData = true;
-let timeoutVariable;
+let acceptingDataHit = true;
+let acceptDataSwing = true;
+let timeoutVariableHit;
+let timeoutVariableSwing;
 restoreBatPos = () => {
   swingAngle = 0;
   calcAngle = 0;
@@ -22,19 +24,25 @@ drawBat = (mag) => {
     bat.position.x = -magX*2;
     bat.position.x = constrain(bat.position.x, batX - 200, batX + 50);
 
-
-    batSwings++;
-    document.getElementById('batSwings').click();
-    console.log('bat swing', batSwings)
+    if(acceptDataSwing) {
+      batSwings++;
+      document.getElementById('batSwings').click();
+      console.log('bat swing', batSwings);
+      acceptDataSwing = false;
+      timeoutVariableSwing = setTimeout(() => {
+        acceptDataSwing = true;
+      }, 500)
+    }
+    
   }
 
   bat.overlap(pinata, () => {
-    if (acceptingData) {
+    if (acceptingDataHit) {
       hits++;
       document.getElementById('batHits').click();
-      acceptingData = false;
-      timeoutVariable = setTimeout(() => {
-          acceptingData = true;
+      acceptingDataHit = false;
+      timeoutVariableHit = setTimeout(() => {
+          acceptingDataHit = true;
       }, 500);
     }
     console.log("bat overlaps pinata", hits);
