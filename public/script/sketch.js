@@ -83,9 +83,6 @@ preload = () => {
 }
 // console.log('Sketch file loaded')
 // *************** //
-setup = () => {
-  var myCanvas = createCanvas(1000, 700);
-  myCanvas.parent('canvas');
 
   for (var j=0; j < 9; j++) {
         asteroids[j] = new Asteroid();
@@ -95,6 +92,11 @@ setup = () => {
     ufo = new UFO();
     spidy = new Spidy();
     cow = new Cow();
+
+initSketch = () => {
+  // pivot_x = width / 2 -100; //x-position of sprite, relative to middle of screen
+  // pivot_y = 0;
+  // cord
 
   line(pivot_x, pivot_y, 300, 250);
 
@@ -127,6 +129,12 @@ setup = () => {
 
 }
 
+setup = () => {
+  var myCanvas = createCanvas(1000, 700);
+  myCanvas.parent('canvas');
+  initSketch();
+}
+
 draw = () => {
   background(0);
 
@@ -152,26 +160,15 @@ spidy.move();
 spidy.show();
 }
 
-// on collision
-  if (hits < 8) {
-    if (bat.overlap(pinata)) {
-      jit = 10;
-      var rSound = Math.floor(random(0, hitSound.length));
-      hitSound[rSound].setVolume(0.5, 2);
-      hitSound[rSound].play();
-      chicken.setVolume(0.05);
-      chicken.play();
-    }
-  }
-
-  // what happens after screwing up pinata
-  if (hits >= 3) {
-    document.getElementById('batWins').click();
-    hits = 0;
-    candyTime = true;
-  } else if (batSwings > 100) {
-    document.getElementById('pinataWins').click();
-    batSwings = 0;
+  if (bat.overlap(pinata)) {
+    jit = 10;
+    var rSound = Math.floor(random(0, hitSound.length));
+    hitSound[rSound].setVolume(0.5, 2);
+    hitSound[rSound].play();
+    //         dummySound[dummyImg].setVolume(0.2, 0.6);
+    //         dummySound[dummyImg].play();
+    chicken.setVolume(0.05);
+    chicken.play();
   }
 
   if (candyTime) {
@@ -195,6 +192,7 @@ spidy.show();
     text("Start Playing!!!", width/2, height/2);
   }
 }
+
 
 // ************************ //
 
@@ -335,7 +333,6 @@ function Balloon() {
     this.y += random(-0.5, 0.5);
     hot_air_ballon = this.x;
   }
-
 }
 
 function Spidy() {
@@ -417,3 +414,4 @@ function UFO() {
     }
   }
 }
+
