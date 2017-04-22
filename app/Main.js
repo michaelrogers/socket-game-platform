@@ -56,9 +56,7 @@ export default class Main extends React.Component {
     });
   }
 
-  setGameId(gameId) {
-    this.setState({gameId: gameId})
-  }
+  setGameId(gameId) { this.setState({gameId: gameId}) }
 
   render() {
     return (
