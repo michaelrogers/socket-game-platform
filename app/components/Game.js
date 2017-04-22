@@ -34,6 +34,7 @@ const killHits = 10;
 const avoidHits = 8;
 
 function DataPackage(globalData, playerSelection, dataType = null, data = null) {
+    this.globalData = globalData;
     this.roomId = globalData.gameId;
     this.data = data;
     this.playerId = globalData.playerId;
@@ -50,8 +51,7 @@ export default class Lobby extends React.Component {
             playerSelection: null,
             chatInput: null,
             messages: [],
-            // was having a very strange problem, will try again tomorrow to have this data structure.... it should work... but was getting a weird result
-            // score: {
+            // score: { 
             //     hits: 0,
             //     swings: 0
             // },
@@ -60,7 +60,10 @@ export default class Lobby extends React.Component {
                 y: 0,
                 z: 0
             },
-
+            playerNames: {
+                player0: undefined,
+                player1: undefined
+            },
             modalIsOpen: false,
             drawerOpen: false,
             winner: null,
@@ -77,34 +80,32 @@ export default class Lobby extends React.Component {
     this.addChatMessage = this.addChatMessage.bind(this);
     this.displayChatMessages = this.displayChatMessages.bind(this);
     this.sendChatMessage = this.sendChatMessage.bind(this);
+    this.createBitly = this.createBitly.bind(this);
+    this.requestBitly = this.requestBitly.bind(this);
 
-    // this.batWins = this.batWins.bind(this);
-    // this.pinataWins = this.pinataWins.bind(this);
+
     this.inputEventHandler = this.inputEventHandler.bind(this);
-
+    this.setupRoom = this.setupRoom.bind(this);
+    this.connectionUpdate = this.connectionUpdate.bind(this);
     // bat state events
     this.batSwings = this.batSwings.bind(this);
     this.batHits = this.batHits.bind(this);
-
     // general function to send data to admin channel
     this.sendDataAdmin = this.sendDataAdmin.bind(this);
+//     this.winner = this.winner.bind(this);
 
     this.declareWinner = this.declareWinner.bind(this);
 
     // setNewState from data coming from admin channel
     this.setNewStateAdmin = this.setNewStateAdmin.bind(this);
-
-
+    this.setPlayerName = this.setPlayerName.bind(this);
     this.requestJoinRoom = this.requestJoinRoom.bind(this);
-
     // --modals--
     this.openModal = this.openModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
-
     // --drawer--
     this.handleDrawerToggle = this.handleDrawerToggle.bind(this);
     this.handleDrawerClose = this.handleDrawerClose.bind(this);
-
     //--bitly snackbar--
     this.openBitlySnackbar = this.openBitlySnackbar.bind(this);
     this.closeBitlySnackbar = this.closeBitlySnackbar.bind(this);
@@ -119,8 +120,14 @@ export default class Lobby extends React.Component {
         document.querySelector('#canvas').classList.add("hide");
         this.props.setMainState({
             gameId: undefined,
-            playerSelection: undefined
+            playerSelection: undefined,
         });
+        this.props.socket.off('connection-status');
+        this.props.socket.off('chat-message');
+        this.props.socket.off('input');
+        this.props.socket.off('admin');
+        this.props.socket.off('player:name');
+        this.props.socket.off('declareWinner');
     }
 
     componentWillMount() {
@@ -130,12 +137,9 @@ export default class Lobby extends React.Component {
             window.location.pathname = "/";
         }
         //Clear previous socket
-        //---below: master's latest items---
-        let playerSel = sessionStorage.getItem('player-selection');
-        let long_url = window.location.origin +"/control_device/" + this.props.globalData.gameId + "/" + this.props.globalData.playerId + "/" + this.state.playerSel;
-        helpers.runQuery(long_url).then(function(response) {
-        this.setState({ bitlyURL: response.url });
-        }.bind(this));
+        this.createBitly();
+
+        
     }
 
     componentWillReceiveProps() {
@@ -144,16 +148,72 @@ export default class Lobby extends React.Component {
 
     requestJoinRoom() {
         console.log('Request join room', this.props.globalData);
-
         this.props.socket.emit('room',
             new DataPackage(this.props.globalData, this.props.globalData.playerSelection)
         );
+        
     }
 
+    connectionUpdate(data) {
+        console.log('Connection update', this.props.globalData.playerName)
+        // if (this.props.globalData.playerName) {
+        this.props.socket.emit('player:name',
+            new DataPackage(this.props.globalData, this.props.globalData.playerSelection)
+        );
+        // }
+        this.addChatMessage(data);
+    }
+
+    
+    setPlayerName(Data) {
+        let playerNames = this.state.playerNames;
+        if (Data.playerSelection < 2) {
+            console.log(Data.playerSelection, Data.globalData.playerName)
+            playerNames['player' + Data.playerSelection] = Data.globalData.playerName;
+            console.log('setPlayerName', playerNames, Data.globalData.playerName)
+            this.setState({ playerNames: playerNames});
+            console.log('State playerNames', this.state.playerNames)
+        }
+    }
+
+
     componentDidMount() {
+        this.props.socket.on('connection-status', this.connectionUpdate);
+        this.props.socket.on('chat-message', this.addChatMessage);
+        this.props.socket.on('input', this.inputEventHandler);
+        this.props.socket.on('admin', this.setNewStateAdmin);
+        this.props.socket.on('player:name', this.setPlayerName);
+        this.props.socket.on('declareWinner', this.declareWinner);
         console.log('GameId', this.props.globalData.gameId, this.props);
+        
+        
         if (this.props.globalData.gameId) {
+
             this.requestJoinRoom();
+
+
+
+            helpers.joinGame(this.props.globalData.gameId, this.props.globalData.playerId)
+            .then(response => {
+                Array.from(response.player)
+                .map((player, i) => {
+                // console.log(player, this.props.globalData.playerId, player == this.props.globalData.playerId)
+                if (player == this.props.globalData.playerId) {
+                    this.props.setMainState({
+                        playerSelection: i,
+                        gameId: this.props.globalData.gameId
+                    });
+                    this.props.socket.emit('player:name',
+                        new DataPackage(this.props.globalData, this.props.globalData.playerSelection)
+                    );
+                    // sessionStorage.setItem('player-selection', i);
+                    console.log('Player is', i)
+                    this.setupRoom();
+                }
+                });
+
+            });
+
         } else {
             console.log('Create game', this.props.globalData.playerId, this.props);
             if (this.props.globalData.playerId !== null) {
@@ -165,24 +225,38 @@ export default class Lobby extends React.Component {
                 });
                 console.log('Game', this.props);
                 this.requestJoinRoom();
-            });
-            }
-        }
+                this.createBitly();
+      
 
+                this.setupRoom();
+            });
+            } else console.log('Problem here.')
+        }
         document.querySelector('#canvas').classList.remove("hide");
-        this.props.socket.on('connection-status', this.addChatMessage);
-        this.props.socket.on('chat-message', this.addChatMessage);
-        this.props.socket.on('input', this.inputEventHandler);
-        this.props.socket.on('admin', this.setNewStateAdmin);
-        this.props.socket.on('declareWinner', this.declareWinner)
+
+
+
     }
 
-    addChatMessage(DataPackage) {
-        console.log('Add Chat', DataPackage);
+    createBitly() {
+        let long_url = window.location.origin +"/control-device/" + this.props.globalData.gameId + "/" + this.props.globalData.playerId + "/" + this.props.globalData.playerSelection;
+        console.log("long device url! " + long_url)
+        helpers.runQuery(long_url).then(function(response) {
+        this.setState({ bitlyURL: response.url });
+        }.bind(this));
 
+    }
+
+    setupRoom() {
+        this.requestJoinRoom();
+        this.requestBitly();
+        console.log('Game', this.props);
+        
+    }
+    addChatMessage(DataPackage) {
+        // console.log('Add Chat', DataPackage);
         let chatArray = this.state.messages;
         chatArray.push(DataPackage)
-        console.log(chatArray)
         this.setState({messages: chatArray});
     }
 
@@ -194,7 +268,7 @@ export default class Lobby extends React.Component {
             const a_x = DataPackage.data.acc.x;
             const mag  = Math.sqrt(Math.pow(a_y, 2) + Math.pow(a_x, 2));
             const alpha = Math.atan(a_x/(a_y))*( 180 / Math.PI);
-            
+
             if (DataPackage.playerSelection == 0) {
                 updateSpring(mag, alpha)
             } else if (DataPackage.playerSelection == 1) {
@@ -202,6 +276,17 @@ export default class Lobby extends React.Component {
             } else console.log('Nope');
         }
     }
+
+    requestBitly() {
+        let long_url = `${window.location.origin}/control-device/${this.props.globalData.gameId}/${this.props.globalData.playerId}/${this.props.globalData.playerSelection}`;
+        helpers.runQuery(long_url).then(function(response) {
+        this.setState({ bitlyURL: response.url });
+        }.bind(this));
+    }
+
+    batWins() { this.winner(1); }
+
+    pinataWins() { this.winner(0); }
 
 // Collect appropriate data for swings and hits
     batSwings() {
@@ -282,6 +367,7 @@ export default class Lobby extends React.Component {
                 if(this.state.gameStartCount == 2) {
                     this.state.gameStart = true;
                 }
+
                 break;
 
             case 'pinataWins':
@@ -313,17 +399,13 @@ export default class Lobby extends React.Component {
         };
     }
 
-
     sendChatMessage(e) {
         e.preventDefault();
         if (this.state.chatInput.length > 0) {
-            // console.log(new DataPackage(this.props.globalData, this.state.playerSelection, 'chat', this.state.chatInput))
-        this.props.socket.emit(
-            'chat-message',
+        this.props.socket.emit('chat-message',
             new DataPackage(this.props.globalData, this.state.playerSelection, 'chat', this.state.chatInput)
         );
         document.getElementById('message-input').value = "";
-
         }
     }
 
@@ -344,36 +426,30 @@ export default class Lobby extends React.Component {
         });
     }
 
-    openModal() {this.setState({modalIsOpen: true});}
-    closeModal() {this.setState({modalIsOpen:false});}
-
-
-    handleDrawerToggle () { this.setState({drawerOpen: !this.state.drawerOpen});}
-
-    handleDrawerClose() { this.setState({drawerOpen: false});}
-
-    openBitlySnackbar() { this.setState({bitlyOpen: true});}
-
-    closeBitlySnackbar() {this.setState({bitlyOpen: false});}
+    openModal() { this.setState({modalIsOpen: true}); }
+    closeModal() { this.setState({modalIsOpen:false}); }
+    handleDrawerToggle () { this.setState({drawerOpen: !this.state.drawerOpen}); }
+    handleDrawerClose() { this.setState({drawerOpen: false}); }
+    openBitlySnackbar() { this.setState({bitlyOpen: true}); }
+    closeBitlySnackbar() { this.setState({bitlyOpen: false}); }
 
     render() {
-
         return (
             <div className="container game-wrapper">
                 <div className="row">
                     { /* --player header: Left corner-- */}
                     <div className="col s3 playerHeader valign-wrapper">
                         <img style={{float:"left"}} className="circle responsive-img" src="/img/bird-sm.png" />
-                        <h4>{this.props.globalData.playerName}</h4>
+                        <h4>{this.state.playerNames.player0}</h4>
                     </div>
                     { /* --GAME TITLE-- */}
                     <div className="col s6">
-                      <h1 className="center-align">Piñata Smash</h1>
+                        <h1 className="center-align">Piñata Smash</h1>
                     </div>
                     { /* --player header: Right corner-- */}
                     <div className="col s3 playerHeader valign-wrapper">
                         <img style={{float:"right", right:0, position:"relative", width:"45px"}} className="circle responsive-img" src="/img/arm125.png" />
-                        <h4 style={{float:"right"}}>{this.props.globalData.playerName}</h4>
+                        <h4 style={{float:"right"}}>{this.state.playerNames.player1}</h4>
                     </div>
                 </div>
 

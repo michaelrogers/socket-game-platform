@@ -7,7 +7,7 @@ import Avatar from 'material-ui/Avatar';
 import RaisedButton from 'material-ui/RaisedButton';
 import Paper from 'material-ui/Paper';
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
-
+import Styles from './styles/customStyles.js';
 
 import helpers from "./utils/helpers";
 const appendScript = (scriptArray, selector) => {
@@ -17,6 +17,16 @@ const appendScript = (scriptArray, selector) => {
     document.querySelector(selector).appendChild(script);
   });
 };
+
+// function DataPackage(globalData, playerSelection, dataType = null, data = null) {
+//     this.globalData = globalData;
+//     this.roomId = globalData.gameId;
+//     this.data = data;
+//     this.playerId = globalData.playerId;
+//     this.playerSelection = playerSelection;
+//     this.dataType = dataType;
+//     this.timestamp = Date.now();
+// }
 
 export default class Lobby extends React.Component {
   constructor(props) {
@@ -37,8 +47,8 @@ export default class Lobby extends React.Component {
   }
 
   componentWillUnmount() {
-    console.log('Lobby unmount')
-    this.props.socket.off();
+    console.log('Lobby unmount');
+    this.props.socket.off('player:count');
   }
 
 
@@ -49,6 +59,7 @@ export default class Lobby extends React.Component {
       });
 
     this.props.socket.on('player:count', this.updatePlayerCount);
+    this.props.socket.emit('player:count', "");
   }
 
   updatePlayerCount(playerCount) {
@@ -85,22 +96,25 @@ export default class Lobby extends React.Component {
     if (gameId) {
       this.props.setGameId(gameId)
       // sessionStorage.setItem('room-id', gameId);
-      helpers.joinGame(gameId, this.props.globalData.playerId)
-      .then(response => {
-        Array.from(response.player)
-        .map((player, i) => {
-          console.log(player, this.props.globalData.playerId, player == this.props.globalData.playerId)
-          if (player == this.props.globalData.playerId) {
-              this.props.setMainState({
-                playerSelection: i,
-                gameId: gameId
-              });
-            // sessionStorage.setItem('player-selection', i);
-            console.log('Player is', i)
-          }
-        });
+      // helpers.joinGame(gameId, this.props.globalData.playerId)
+      // .then(response => {
+      //   Array.from(response.player)
+      //   .map((player, i) => {
+      //     // console.log(player, this.props.globalData.playerId, player == this.props.globalData.playerId)
+      //     if (player == this.props.globalData.playerId) {
+      //         this.props.setMainState({
+      //           playerSelection: i,
+      //           gameId: gameId
+      //         });
+      //          this.props.socket.emit('player:name',
+      //           new DataPackage(this.props.globalData, this.props.globalData.playerSelection)
+      //         );
+      //       // sessionStorage.setItem('player-selection', i);
+      //       console.log('Player is', i)
+      //     }
+      //   });
 
-      });
+      // });
     }
   }
 
@@ -113,23 +127,26 @@ export default class Lobby extends React.Component {
   displayGames() {
     return this.state.activeGames.map((game, i) => {
       // Each Game
+          /* Don't delete the data from listItem */
       return (
         <ListItem
           key={i}
-          onClick={this.handleJoin} 
+          onClick={this.handleJoin}
+
+          data-gameid={game._id}
           containerElement={
             <Link
               to="/game"
               key={game._id}
               data-gameid={game._id}
-              />
+            />
 
           }
           rightIcon={<a href="/" onClick={(e) => {e.stopPropagation(); this.removeGame(game._id)}}>x</a>}
         >
-        
+
           <h5>Piñata game</h5>
-          
+
           <span>Current players:</span>
           {this.displayPlayers(game.player)}
         </ListItem>
@@ -155,18 +172,23 @@ export default class Lobby extends React.Component {
     return (
       <div className="container lobby-wrapper">
         <div className="row">
-          <div className="col s12 m8">
+          <div className="col s12 m6">
               <div className="row">
-                <div className="col m6">
+                <div className="col s12">
+
+                <Link to="/game">
                   <Card>
                     <CardMedia
-                      overlay={<CardTitle title="Pinata" subtitle="Destroy the pinata, or survive the bat" />}
+                      overlay={<CardTitle title="Pinata" subtitle="Destroy the pinata, or survive the bat. Click to start." />}
                     >
                       <img src="img/game.png" />
                     </CardMedia>
                   </Card>
+                  </Link>
                 </div>
-                <div className="col m6">
+              </div>
+              <div className="row">
+                <div className="col s12">
                   <Card>
                     <CardMedia
                       overlay={<CardTitle title="Game 2" />}
@@ -177,38 +199,45 @@ export default class Lobby extends React.Component {
                 </div>
               </div>
           </div>
-          <div className="col s8 m4">
-            <Card>
-              <CardHeader
-                title="Games"
-                subtitle="Which do you want to play?"
-              />
-              <RaisedButton 
-                  fullWidth={true}
-                  label="Create New Game" 
-                  primary={true} 
-                  onClick={this.createGame}
-                  containerElement={
-                    <Link 
-                      to="/game" 
-                      >
-                    </Link>
-                  }
-                   />
-              <List>
-                {this.displayGames()}
-              </List>
-            </Card>
-          </div>
-          <div className="col s4 m4">
-            <div>
-              <h3>Controls</h3>
-              <div className="collection">
-                <h4 className="collection-item">Players Online:  {this.state.playerCount} </h4>
-                <h5 className="collection-item">Playing as:  {this.props.globalData.playerName} </h5>
+          <div className="col s12 m6">
+            <div className="row">
+              <div className="col s12">
+                <Card>
+                  <List>
+                    <ListItem disabled={true}>
+                      <h6>Players Online:  {this.state.playerCount}</h6>
+                    </ListItem>
+                  </List>
+                </Card>
+              </div>
+            </div>
+            <div className="row">
+              <div className="col s12">
+                <Card>
+                  <CardHeader
+                    title="Games"
+                    subtitle="Which do you want to play?"
+                  />
+                  <RaisedButton
+                      backgroundColor="#fccf48"
+                      fullWidth={true}
+                      label="Create New Game"
+                      onClick={this.createGame}
+                      containerElement={
+                        <Link
+                          to="/game"
+                          >
+                        </Link>
+                      }
+                       />
+                  <List>
+                    {this.displayGames()}
+                  </List>
+                </Card>
               </div>
             </div>
           </div>
+
         </div>
       </div>
     );

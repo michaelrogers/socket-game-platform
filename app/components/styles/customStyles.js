@@ -24,6 +24,10 @@ const customStyles = {
     marginLeft                 : 'auto',
     marginRight                : 'auto',
     display                    : 'block'
+  },
+  button: {
+    backgroundColor: "#fccf48",
+    color: "#000"
   }
 }
 

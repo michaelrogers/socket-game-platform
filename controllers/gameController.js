@@ -6,7 +6,7 @@ const Models = require('../models');
 const gameController = {
     viewActiveGames: (req, res) => {
       Models.Game.find({isCompleted: false})
-      // .sort(createdAt: -1)
+      .sort({createdAt: -1})
       .populate('player')
       .exec((error, games) => {
           error ?
