@@ -158,8 +158,8 @@ export default class Lobby extends React.Component {
         console.log('GameId', this.props.globalData.gameId, this.props);
         if (this.props.globalData.gameId) {
             this.requestJoinRoom();
-            
-            
+
+
         } else {
             console.log('Create game', this.props.globalData.playerId, this.props);
             if (this.props.globalData.playerId !== null) {
@@ -174,8 +174,8 @@ export default class Lobby extends React.Component {
                 this.createBitly();
             });
             }
-        
-            
+
+
         }
 
         document.querySelector('#canvas').classList.remove("hide");
@@ -184,7 +184,7 @@ export default class Lobby extends React.Component {
         this.props.socket.on('input', this.inputEventHandler);
         this.props.socket.on('admin', this.setNewStateAdmin);
 
-        
+
     }
 
     createBitly() {
@@ -212,7 +212,7 @@ export default class Lobby extends React.Component {
             const a_x = DataPackage.data.acc.x;
             const mag  = Math.sqrt(Math.pow(a_y, 2) + Math.pow(a_x, 2));
             const alpha = Math.atan(a_x/(a_y))*( 180 / Math.PI);
-            
+
             if (DataPackage.playerSelection == 0) {
                 updateSpring(mag, alpha)
             } else if (DataPackage.playerSelection == 1) {
@@ -296,8 +296,8 @@ export default class Lobby extends React.Component {
                     this.state.gameStart = true;
                     console.log('gamestartbool af', this.state.gameStart);
                 }
-            default: 
-                console.log('meh'); 
+            default:
+                console.log('meh');
                 break;
         };
     }

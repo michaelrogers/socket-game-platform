@@ -1,5 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import Styles from './styles/customStyles.js';
 
 import helpers from "./utils/helpers";
 
@@ -63,15 +64,11 @@ export default class Lobby extends React.Component {
 
  render() {
     return (
-    <div className="col-xs-12 col-xs-offset-0">
-        <div className="row">
-            <div className="jumbotron">
-                <h2>Login</h2>
-            </div>
-        </div>        
+    <div className="container">
+
 
         <div className="row">
-        <div className="col-xs-8 col-xs-offset-2">
+        <div className="ccol s6 offset-s4">
             <div className="form-group">
                 <label htmlFor="inputUsername">Username</label>
                 <input type="text" className="form-control" id="inputUsername" placeholder="Username" onChange={this.handleChange} defaultValue={this.props.globalData.playerName} />
@@ -82,13 +79,13 @@ export default class Lobby extends React.Component {
                 <label htmlFor="password">Password </label>
                 <input type="password" className="form-control" id="password" placeholder="Password" onChange={this.handleChange}/>
             </div>
-                {/* 
+                {/*
             */}
-            
-            
+
+
         </div>
         </div>
-    
+
     </div>
     );
     }
