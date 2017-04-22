@@ -30,8 +30,8 @@ const appendScript = (scriptArray, selector) => {
     });
 };
 
-const killHits = 5;
-const avoidHits = 10;
+const killHits = 10;
+const avoidHits = 8;
 
 function DataPackage(globalData, playerSelection, dataType = null, data = null) {
     this.roomId = globalData.gameId;
@@ -65,7 +65,7 @@ export default class Lobby extends React.Component {
             drawerOpen: false,
             winner: null,
             gameStartCount: 0,
-            gameStart: true,
+            gameStart: false,
             gameOver: false,
             hits: 0,
             swings: avoidHits,
@@ -113,6 +113,8 @@ export default class Lobby extends React.Component {
 
     componentWillUnmount() {
         // document.querySelector('#canvas').classList.add("hidden");
+
+        initSketch();
         console.log('Game Unmount')
         document.querySelector('#canvas').classList.add("hide");
         this.props.setMainState({
@@ -254,6 +256,7 @@ export default class Lobby extends React.Component {
     declareWinner(data) {
         if(data.type == 'destroyBat') {
             console.log('destroy bat.... PINATA WINS');
+            bat.remove();
         }
         else if(data.type == 'destroyPinata') {
             console.log('destroy pinata.... BAT WINS')
@@ -281,6 +284,7 @@ export default class Lobby extends React.Component {
 
             case 'pinataWins':
                 this.state.gameStart = false;
+                this.setState({swings: data.result});
                 const dataPinataWins = {
                     roomId: this.props.globalData.gameId,
                     result: null,
@@ -292,6 +296,7 @@ export default class Lobby extends React.Component {
 
             case 'batWins':
                 this.state.gameStart = false;
+                this.setState({hits: data.result})
                 const dataBatWins = {
                     roomId: this.props.globalData.gameId,
                     result: null,
@@ -507,9 +512,9 @@ export default class Lobby extends React.Component {
                     </div>
 
              <div>
-             <Link to="#" id="batSwings" className="btn btn-primary" onClick={this.batSwings} style={{display:"block"}}>bat swings</Link>
+             <Link to="#" id="batSwings" className="btn btn-primary" onClick={this.batSwings} style={{display:"none"}}>bat swings</Link>
 
-             <Link to="#" id="batHits" className="btn btn-primary" onClick={this.batHits} style={{display:"block"}}>bat hits</Link>
+             <Link to="#" id="batHits" className="btn btn-primary" onClick={this.batHits} style={{display:"none"}}>bat hits</Link>
          </div>
             </div>
         );

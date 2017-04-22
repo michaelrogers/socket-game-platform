@@ -81,10 +81,8 @@ preload = () => {
 }
 // console.log('Sketch file loaded')
 // *************** //
-setup = () => {
-  var myCanvas = createCanvas(1000, 700);
-  myCanvas.parent('canvas');
 
+initSketch = () => {
   // pivot_x = width / 2 -100; //x-position of sprite, relative to middle of screen
   // pivot_y = 0;
   // cord
@@ -115,6 +113,12 @@ setup = () => {
   }
 }
 
+setup = () => {
+  var myCanvas = createCanvas(1000, 700);
+  myCanvas.parent('canvas');
+  initSketch();
+}
+
 draw = () => {
   background(50);
   // reference pivot point - not needed
@@ -122,17 +126,15 @@ draw = () => {
   // reference equilibrium point - not needed
   ellipse(250, len + 20, 5, 5);
 
-  if (hits < 8) {
-    if (bat.overlap(pinata)) {
-      jit = 10;
-      var rSound = Math.floor(random(0, hitSound.length));
-      hitSound[rSound].setVolume(0.5, 2);
-      hitSound[rSound].play();
-      //         dummySound[dummyImg].setVolume(0.2, 0.6);
-      //         dummySound[dummyImg].play();
-      chicken.setVolume(0.05);
-      chicken.play();
-    }
+  if (bat.overlap(pinata)) {
+    jit = 10;
+    var rSound = Math.floor(random(0, hitSound.length));
+    hitSound[rSound].setVolume(0.5, 2);
+    hitSound[rSound].play();
+    //         dummySound[dummyImg].setVolume(0.2, 0.6);
+    //         dummySound[dummyImg].play();
+    chicken.setVolume(0.05);
+    chicken.play();
   }
 
   if (candyTime) {
