@@ -30,8 +30,8 @@ const appendScript = (scriptArray, selector) => {
     });
 };
 
-const killHits = 5;
-const avoidHits = 10;
+const killHits = 10;
+const avoidHits = 13;
 
 function DataPackage(globalData, playerSelection, dataType = null, data = null) {
     this.globalData = globalData;
