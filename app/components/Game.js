@@ -51,7 +51,7 @@ export default class Lobby extends React.Component {
             playerSelection: null,
             chatInput: null,
             messages: [],
-            // score: { 
+            // score: {
             //     hits: 0,
             //     swings: 0
             // },
@@ -146,7 +146,7 @@ export default class Lobby extends React.Component {
         this.props.socket.emit('room',
             new DataPackage(this.props.globalData, this.props.globalData.playerSelection)
         );
-        
+
     }
 
     connectionUpdate(data) {
@@ -159,7 +159,7 @@ export default class Lobby extends React.Component {
         this.addChatMessage(data);
     }
 
-    
+
     setPlayerName(Data) {
         let playerNames = this.state.playerNames;
         if (Data.playerSelection < 2) {
@@ -180,8 +180,8 @@ export default class Lobby extends React.Component {
         this.props.socket.on('player:name', this.setPlayerName);
         this.props.socket.on('declareWinner', this.declareWinner);
         console.log('GameId', this.props.globalData.gameId, this.props);
-        
-        
+
+
         if (this.props.globalData.gameId) {
 
             helpers.joinGame(this.props.globalData.gameId, this.props.globalData.playerId)
@@ -246,7 +246,7 @@ export default class Lobby extends React.Component {
         this.requestJoinRoom();
         this.requestBitly();
         console.log('Game', this.props);
-        
+
     }
     addChatMessage(DataPackage) {
         // console.log('Add Chat', DataPackage);
@@ -292,7 +292,7 @@ export default class Lobby extends React.Component {
             result: result,
             type: null
         };
-        
+
         // determine if you have won or lost the game at this point
         if(result >= 1 && this.state.hits < killHits) {
             data.type = 'swing';
@@ -333,7 +333,7 @@ export default class Lobby extends React.Component {
     }
 
     // Declare winner of game data comes from socket
-    declareWinner(data) { 
+    declareWinner(data) {
         if(data.type == 'destroyBat') {
             console.log('destroy bat.... PINATA WINS');
             bat.remove();
@@ -372,7 +372,7 @@ export default class Lobby extends React.Component {
                     roomId: this.props.globalData.gameId,
                     result: null,
                     type: 'destroyBat'
-                }           
+                }
 
                 this.props.socket.emit('declareWinner', dataPinataWins);
                 break;
@@ -388,8 +388,8 @@ export default class Lobby extends React.Component {
                 this.props.socket.emit('declareWinner', dataBatWins)
                 break;
 
-            default: 
-                console.log('meh'); 
+            default:
+                console.log('meh');
                 break;
         };
     }
