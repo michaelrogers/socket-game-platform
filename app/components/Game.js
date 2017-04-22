@@ -256,9 +256,7 @@ export default class Lobby extends React.Component {
     }
 
     inputEventHandler(DataPackage) {
-            console.log('data packet befor')
         if(this.state.gameStart) {
-            console.log('datapacket if statement')
             const a_y = DataPackage.data.acc.y;
             const a_x = DataPackage.data.acc.x;
             const mag  = Math.sqrt(Math.pow(a_y, 2) + Math.pow(a_x, 2));
