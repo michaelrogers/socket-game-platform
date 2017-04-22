@@ -28,7 +28,10 @@ const appendScript = (scriptArray, selector) => {
         try { document.querySelector(selector).appendChild(script);
         } catch (e) { }
     });
-}
+};
+
+const killHits = 5;
+const avoidHits = 10;
 
 function DataPackage(globalData, playerSelection, dataType = null, data = null) {
     this.roomId = globalData.gameId;
@@ -38,18 +41,6 @@ function DataPackage(globalData, playerSelection, dataType = null, data = null) 
     this.dataType = dataType;
     this.timestamp = Date.now();
 }
-
-// const inputEventHandler = (DataPackage) => {
-//     const a_y = DataPackage.data.acc.y;
-//     const a_x = DataPackage.data.acc.x;
-//     const mag  = Math.sqrt(Math.pow(a_y, 2) + Math.pow(a_x, 2));
-//     const alpha = Math.atan(a_x/(a_y))*( 180 / Math.PI);
-//     if (DataPackage.playerSelection == 0) {
-//         updateSpring(mag, alpha)
-//     } else if (DataPackage.playerSelection == 1) {
-//         drawBat(mag);
-//     } else console.log('Nope');
-// }
 
 export default class Lobby extends React.Component {
     constructor(props) {
@@ -77,7 +68,7 @@ export default class Lobby extends React.Component {
             gameStart: true,
             gameOver: false,
             hits: 0,
-            swings: 10,
+            swings: avoidHits,
             modalIsOpen: false,
             bitlyOpen: false
     };
@@ -87,8 +78,8 @@ export default class Lobby extends React.Component {
     this.displayChatMessages = this.displayChatMessages.bind(this);
     this.sendChatMessage = this.sendChatMessage.bind(this);
 
-    this.batWins = this.batWins.bind(this);
-    this.pinataWins = this.pinataWins.bind(this);
+    // this.batWins = this.batWins.bind(this);
+    // this.pinataWins = this.pinataWins.bind(this);
     this.inputEventHandler = this.inputEventHandler.bind(this);
 
     // bat state events
@@ -98,7 +89,6 @@ export default class Lobby extends React.Component {
     // general function to send data to admin channel
     this.sendDataAdmin = this.sendDataAdmin.bind(this);
 
-    this.winner = this.winner.bind(this);
     this.declareWinner = this.declareWinner.bind(this);
 
     // setNewState from data coming from admin channel
@@ -211,14 +201,6 @@ export default class Lobby extends React.Component {
         }
     }
 
-    batWins() {
-        this.winner(1)
-    }
-
-    pinataWins() {
-        this.winner(0)
-    }
-
 // Collect appropriate data for swings and hits
     batSwings() {
         // Data package to send to admin channel
@@ -229,12 +211,11 @@ export default class Lobby extends React.Component {
             type: null
         };
         
-        // console.log('swingssss', this.state.swings)
-        if(result >= 1 && this.state.hits < 3) {
+        // determine if you have won or lost the game at this point
+        if(result >= 1 && this.state.hits < killHits) {
             data.type = 'swing';
         }
-        else if(result < 1 && this.state.hits < 3) {
-            console.log('ici')
+        else if(result < 1 && this.state.hits < killHits) {
             data.type = 'pinataWins';
         }
 
@@ -251,26 +232,26 @@ export default class Lobby extends React.Component {
             type: null
         }
 
-        if(result < 3 && this.state.swings <= 10) {
+        // determine if you have won or lost the game at this point
+        if(result < killHits && this.state.swings <= avoidHits) {
             data.type = 'hit';
         }
-        else if(result >= 3 && this.state.swings <= 10) {
+        else if(result >= killHits && this.state.swings <= avoidHits) {
             data.type = 'batWins';
         }
 
-        // Send data to socket admin channel only once (player 0) and when game is playing
         this.sendDataAdmin(data)
     }
 
-    // send data to socket admin channel
+    // send data to socket admin channel only once (player 0) and when game is playing
     sendDataAdmin(data) {
         if(this.props.globalData.playerSelection == 0 && this.state.gameStart) {
             this.props.socket.emit('admin', data);
         }
     }
 
+    // Declare winner of game data comes from socket
     declareWinner(data) {
-        console.log('winner!!!',data)
         if(data.type == 'destroyBat') {
             console.log('destroy bat.... PINATA WINS');
         }
@@ -280,48 +261,26 @@ export default class Lobby extends React.Component {
         }
     }
 
-    winner(player) {
-        // need some logic here
-        // console.log('done mm', player);
-        // const data = {
-        //     roomId: this.props.globalData.gameId,
-        //     result: player,
-        //     type: 'winner'
-        // }
-        // if(this.props.globalData.playerSelection == 0 && this.gameStart) {
-        //     this.props.socket.emit('admin', data);
-        // }
-    }
-
-    // Sets new states from when receiving data from socket admin channel
+    // Sets new states from when receiving data from socket admin channel and acts as middle ground from admin socket channel
     setNewStateAdmin(data) {
-        console.log('htis dta', data)
         switch(data.type) {
             case 'swing':
-                console.log('swing', data.result);
                 this.setState({swings: data.result});
                 break;
 
             case 'hit':
-                console.log('inside switch and hitting', data.result);
                 this.setState({hits: data.result});
                 break;
 
             case 'gameStart':
-                console.log('prior gamestart', this.state.gameStartCount);
                 this.setState({gameStartCount: this.state.gameStartCount + data.result});
-                console.log('gamestartcounnnntt', this.state.gameStartCount, this.state.gameStart);
                 if(this.state.gameStartCount == 2) {
                     this.state.gameStart = true;
-                    console.log('gamestartbool af', this.state.gameStart);
                 }
                 break;
 
             case 'pinataWins':
-                console.log('pinata wingsssss');
                 this.state.gameStart = false;
-                console.log('fallalalla')
-
                 const dataPinataWins = {
                     roomId: this.props.globalData.gameId,
                     result: null,
@@ -332,7 +291,6 @@ export default class Lobby extends React.Component {
                 break;
 
             case 'batWins':
-                console.log('battttt winsnsnsissnns')
                 this.state.gameStart = false;
                 const dataBatWins = {
                     roomId: this.props.globalData.gameId,
@@ -549,9 +507,6 @@ export default class Lobby extends React.Component {
                     </div>
 
              <div>
-             <Link to="#" id="batWins" className="btn btn-primary" onClick={this.batWins} style={{display:"block"}}>bat wins</Link>
-             <Link to="#" id="pinataWins" className="btn btn-primary" onClick={this.pinataWins} style={{display:"block"}}>pinata wins</Link>
-
              <Link to="#" id="batSwings" className="btn btn-primary" onClick={this.batSwings} style={{display:"block"}}>bat swings</Link>
 
              <Link to="#" id="batHits" className="btn btn-primary" onClick={this.batHits} style={{display:"block"}}>bat hits</Link>
