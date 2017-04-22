@@ -1,3 +1,11 @@
+var bubbles = [];
+var hot_air_ballon;
+var backImg;
+var ufo;
+var spidy;
+var cow;
+var cowSecured = false
+
 // let timeoutVariable;
 // let acceptingData = true;
 // pendulum
@@ -58,9 +66,15 @@ let candyTime = false;
 
 // preload image to sprite
 preload = () => {
+  balloon = loadImage('/img/hot_air_balloon.png');
+  bubble = loadImage('/img/asteroid1.png')
+  backFill = loadImage('/img/moonscape.jpg');
+  ufo = loadImage('/img/ufo.png');
+  spidy = loadImage('/img/spidy.png')
+  cow = loadImage('/img/cow.png')
+
   dummy = loadImage('/img/bird.png');
   broken = loadImage('/img/bird2.png')
-  //     broken = loadImage('/img/winner.png')
   chicken = loadSound('/sounds/chicken.mp3')
   arm = loadImage('/img/arm125.png');
 
@@ -72,7 +86,6 @@ preload = () => {
 
   for (var i = 0; i < 3; i++) {
     sweet[i] = loadImage("/img/sweet" + i + ".png");
-    console.log(sweet.length)
   }
   // sounds
   for (var j = 0; j < 6; j++) {
@@ -87,7 +100,16 @@ setup = () => {
 
   // pivot_x = width / 2 -100; //x-position of sprite, relative to middle of screen
   // pivot_y = 0;
-  // cord
+
+  for (var j=0; j < 9; j++) {
+        bubbles[j] = new Bubble();
+    }
+
+    hot_air_balloon = new Balloon();
+    ufo = new UFO();
+    spidy = new Spidy();
+    cow = new Cow();
+
   line(pivot_x, pivot_y, 300, 250);
 
   // pinata
@@ -116,12 +138,31 @@ setup = () => {
 }
 
 draw = () => {
-  background(50);
-  // reference pivot point - not needed
-  ellipse(250, 20, 5, 5);
-  // reference equilibrium point - not needed
-  ellipse(250, len + 20, 5, 5);
+  background(0);
 
+  image(backFill, 0, 0, windowWidth, 700);
+
+for (var i=0; i<bubbles.length; i++) {
+bubbles[i].move();
+bubbles[i].show();
+}
+
+hot_air_balloon.move();
+hot_air_balloon.show();
+
+if (frameCount >= 1400) {
+ufo.move();
+ufo.show();
+cow.move();
+cow.show();
+}
+
+if (frameCount >= 600) {
+spidy.move();
+spidy.show();
+}
+
+// on collision
   if (hits < 8) {
     if (bat.overlap(pinata)) {
       jit = 10;
@@ -203,6 +244,9 @@ pinataSwing = () => {
   if (angle != 0) {
     pinata.rotation = -(angle * 180 / PI) + random(-jit, jit);
     jit *= 0.995;
+  } else {
+    jit = 0.3;
+    pinata.rotation = random(-jit, jit);
   }
 
   pinata.velocity.y += acc;
@@ -212,7 +256,6 @@ pinataSwing = () => {
   pinata.position.y = pivot_y + (len - ps) * cos(angle);
   line(pivot_x, pivot_y, pinata.position.x + random(-1, 1), pinata.position.y);
   pinata.addSpeed(pinata.velocity.y, acc);
-
 }
 
 // ******************** //
@@ -245,6 +288,142 @@ class Candy {
       var randImg = Math.floor(random(0, sweet.length));
       this.img = sweet[randImg];
       image(this.img, this.pos.x, this.pos.y)
+    }
+  }
+}
+
+function Bubble() {
+  var bub_x = 0
+  var vel_x = random(-1, 1);
+  var vel_y = random(-1, 1);
+
+  this.x = random(0, width);
+  this.y = random(0, height);
+
+  this.img = bubble;
+
+  this.show = function() {
+    stroke(255);
+    strokeWeight(1);
+    noFill();
+
+    image(this.img, this.x, this.y)
+    // ellipse(this.x, this.y, 24, 24)
+  }
+
+  this.move = function() {
+    if (this.x > width + 100 || this.x < -100) {
+      vel_x *= -1 * random(0.2, 2)
+    }
+    if (this.y > height + 100 || this.y < -100) {
+      vel_y *= -1
+    }
+    this.x += vel_x
+    this.y += vel_y
+  }
+}
+
+function Balloon() {
+  hot_air_ballon = this.x;
+  var vel = -0.3;
+
+  this.x = windowWidth - 25;
+  this.y = 75
+  this.img = balloon;
+
+  this.show = function() {
+    imageMode(CENTER);
+    image(this.img, this.x, this.y)
+  }
+
+  this.move = function() {
+    if (this.x > windowWidth - random(25, 30) || this.x < 100) {
+      vel *= -1;
+    }
+    this.x += vel + random(-0.5, 0.5);
+    this.y += random(-0.5, 0.5);
+    hot_air_ballon = this.x;
+  }
+
+}
+
+function Spidy() {
+  var vel = 1.3;
+
+  // this.x = 150;
+  this.x = (width/2 - 100)/2.2
+  this.y = -100;
+  this.endline = -100;
+  this.img = spidy;
+
+  this.show = function() {
+    stroke(175)
+    strokeWeight(2)
+    if (this.y < height + 100) {
+    line(this.x, 0, this.x, this.y - 80)
+    imageMode(CENTER);
+    image(this.img, this.x, this.y);
+  }
+  }
+
+  this.move = function() {
+    if (this.y > height/random(1.2,2)) {
+        vel *= random(1.8, 2);
+    }
+
+    this.y += vel * random(0.5, 1);
+  }
+}
+
+function UFO() {
+  var vel = 1.1;
+
+  this.x = -25;
+  this.y = 150
+  this.img = ufo;
+
+  this.show = function() {
+    imageMode(CENTER);
+    image(this.img, this.x, this.y)
+  }
+
+  this.move = function() {
+    if (cowSecured) {
+      vel = -1.2 * random(0.9, 1.1);
+      this.y += 2 * vel;
+      this.x += 0.7 * vel;
+    } else {
+      if (this.x > (width / 2 - 100) / 2) {
+        this.y += 10 * vel;
+        vel *= 0.98
+        if (vel < 0.05) {
+          cowSecured = true;
+        }
+      } else {
+        this.x += vel;
+        this.y += vel * random(-0.15, 0.15);
+      }
+    }
+  }
+}
+
+  function Cow() {
+    var vel;
+
+    this.x = (width/2 - 100)/2
+    this.y = height + 60;
+    this.img = cow;
+
+    this.show = function() {
+      imageMode(CENTER);
+      image(this.img, this.x, this.y);
+    }
+
+    this.move = function() {
+      if (cowSecured) {
+        vel = -1.2 * random(0.9, 1.1);
+        this.y += 2 * vel;
+        this.x += 0.7 * vel + random(-0.05, 0,05);
     }
   }
 }
