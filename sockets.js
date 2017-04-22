@@ -41,7 +41,8 @@ module.exports = {
             //--------------Data--channels---------------------
             //A client requests to join a room and the server joins them
             socket.on('room', (DataPackage) => {
-                console.log('Join Room', DataPackage)
+                console.log('Join Room', DataPackage);
+                io.sockets.emit('game:updates', "");
                 leaveRooms(socket);
                 // Then join the specified room
                 socket.join(DataPackage.roomId);
