@@ -29,6 +29,7 @@ const gameController = {
           
       });
     },
+
     createGame: (req, res) => { 
       console.log('gameController: Create game')
       const newGame = new Models.Game();
@@ -54,7 +55,16 @@ const gameController = {
       });
     },
 
-    completeGame: (req, res) => { Models.Game.find }
+    completeGame: (id, res) => {
+      Models.Game.update({ _id: id }, {isCompleted: true})
+      .exec((err, doc) => {
+        if(err) {
+          console.log(err);
+          res.end()
+        }
+        else {res.end()}
+      });
+    }
 
 };
 

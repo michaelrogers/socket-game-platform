@@ -28,6 +28,13 @@ const helpers = {
         return axios.post(`api/game/remove/${gameId}`)
         .then(response => response.data);
     },
+    
+    completeGame: (gameId) => {
+        return axios.get(`api/game/complete/${gameId}`)
+        .then(response => {
+            return response;
+        });
+    },
 
     joinGame: (gameId, playerId) => {
         return axios.post(`api/game/join/${gameId}/${playerId}`)

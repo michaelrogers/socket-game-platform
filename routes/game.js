@@ -16,10 +16,13 @@ router.post('/create/:playerid', (req, res) => {
 });
 
 router.get('/complete/:gameid', (req, res) => {
-    console.log(req.params)
-    if (req.params.gameid) {
-        gameController.completeGame(req.params.gameid)
-    } else console.log('Nope.');
+    console.log('game to complete',req.params.gameid)
+    if (req.params.gameid, res) {
+        gameController.completeGame(req.params.gameid, res)
+    } else {
+        console.log('Nope.');
+        res.end();
+    }
 });
 
 router.post('/remove/:gameid', (req, res) => {
