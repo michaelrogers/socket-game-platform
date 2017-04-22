@@ -66,9 +66,8 @@ module.exports = {
             });
 
             socket.on('admin', (data) => {
-                console.log(data)
                 io.sockets.in(data.roomId).emit('admin', data);
-            })
+            });
         }); //End connection
 
     }

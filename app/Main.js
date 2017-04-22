@@ -59,10 +59,10 @@ export default class Main extends React.Component {
   setGameId(gameId) { this.setState({gameId: gameId}) }
 
   render() {
+            // <div className="row">
+            //   <div className="col s12">
     return (
       <MuiThemeProvider >
-            <div className="row">
-              <div className="col s12">
 
                 <Router>
                   <div>
@@ -70,7 +70,7 @@ export default class Main extends React.Component {
                       playerName={this.state.playerName}
                       // setPlayerInfo={this.setPlayerInfo}
                     />
-
+                    <div className="container">
                     <Route path="/" exact render={ () => (
                       <Lobby
                         globalData={this.state}
@@ -94,14 +94,15 @@ export default class Main extends React.Component {
                         setMainState={this.setMainState}
                       />
                     )}/>
+                    </div>
                   </div>
                 </Router>
 
+
+          {/*}
               </div>
 
             </div>
-
-          {/*}
               <script src="/lib/p5.js"></script>
               <script src="/lib/p5.play.js"></script>
               */}

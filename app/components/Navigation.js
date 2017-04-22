@@ -29,17 +29,19 @@ export default class Navigation extends React.Component {
         return (
             <Toolbar style={
                 {
-                    top:0,
-                    left:0,
-                    right:0,
-                    position:"absolute",
+                    // top:0,
+                    // left:0,
+                    // right:0,
+                    // position:"absolute",
                     // display: "block"
                 }
             }>
                 <ToolbarGroup firstChild={false}>
+
                     <Link className="navbar-brand" to="/">Socket-Game-Platform</Link>
                     <ToolbarSeparator />
                     <Link to="/">Lobby</Link>
+
                 </ToolbarGroup>
                 {this.populateLogin()} 
             </Toolbar>
