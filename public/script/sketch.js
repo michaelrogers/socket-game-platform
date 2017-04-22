@@ -1,11 +1,3 @@
-var asteroids = [];
-var hot_air_ballon;
-var backImg;
-var ufo;
-var spidy;
-var cow;
-var cowSecured = false
-
 // let timeoutVariable;
 // let acceptingData = true;
 // pendulum
@@ -59,30 +51,26 @@ let sweet = [];
 let hitSound = [];
 let chicken;
 let candyTime = false;
-// var dummyImg; // index of dummy images array
-// var dummy = []  // pinata before
-// var broken = [] // pinata after
-// var dummySound = [] // dummy sounds
+var asteroids = [];
+var hot_air_ballon;
+var backImg;
+var ufo;
+var spidy;
+var cow;
+var cowSecured = false;
 
 // preload image to sprite
 preload = () => {
+  dummy = loadImage('/img/bird.png');
+  broken = loadImage('/img/bird2.png');
+  chicken = loadSound('/sounds/chicken.mp3');
+  arm = loadImage('/img/arm125.png');
   balloon = loadImage('/img/hot_air_balloon.png');
-  asteroid = loadImage('/img/asteroid1.png')
+  asteroid = loadImage('/img/asteroid1.png');
   backFill = loadImage('/img/moonscape.jpg');
   ufo = loadImage('/img/ufo.png');
-  spidy = loadImage('/img/spidy.png')
-  cow = loadImage('/img/cow.png')
-
-  dummy = loadImage('/img/bird.png');
-  broken = loadImage('/img/bird2.png')
-  chicken = loadSound('/sounds/chicken.mp3')
-  arm = loadImage('/img/arm125.png');
-
-  //     for (var i=0; i < 3; i++ ) {
-  //       dummy[i] = loadImage('/img/dummy' + i + '.png');
-  //       broken[i] = loadImage('/img/broken' + i + '.png');
-  //       dummySound[i] = loadSound('/sounds/sound' + i + '.mp3')
-  //     }
+  spidy = loadImage('/img/spidy.png');
+  cow = loadImage('/img/cow.png');
 
   for (var i = 0; i < 3; i++) {
     sweet[i] = loadImage("/img/sweet" + i + ".png");
@@ -98,9 +86,6 @@ setup = () => {
   var myCanvas = createCanvas(1000, 700);
   myCanvas.parent('canvas');
 
-  // pivot_x = width / 2 -100; //x-position of sprite, relative to middle of screen
-  // pivot_y = 0;
-
   for (var j=0; j < 9; j++) {
         asteroids[j] = new Asteroid();
     }
@@ -114,8 +99,6 @@ setup = () => {
 
   // pinata
   pinata = createSprite(pivot_x, pivot_y, 50, 50);
-  //     dummyImg = Math.floor(random(0, dummy.length));
-  //     pinata.addImage(dummy[dummyImg])
   pinata.addImage(dummy);
   pinata.velocity.y = 0;
   pinata.velocity.x = 0;
@@ -169,8 +152,6 @@ spidy.show();
       var rSound = Math.floor(random(0, hitSound.length));
       hitSound[rSound].setVolume(0.5, 2);
       hitSound[rSound].play();
-      //         dummySound[dummyImg].setVolume(0.2, 0.6);
-      //         dummySound[dummyImg].play();
       chicken.setVolume(0.05);
       chicken.play();
     }
@@ -281,9 +262,6 @@ class Candy {
     }
 
     this.show = () => {
-      // noStroke();
-      // stroke(0);
-      // strokeWeight(1);
       imageMode(CENTER);
       var randImg = Math.floor(random(0, sweet.length));
       this.img = sweet[randImg];
@@ -291,6 +269,8 @@ class Candy {
     }
   }
 }
+
+// ******************** //
 
 function Asteroid() {
   var bub_x = 0
@@ -308,7 +288,6 @@ function Asteroid() {
     noFill();
 
     image(this.img, this.x, this.y)
-    // ellipse(this.x, this.y, 24, 24)
   }
 
   this.move = function() {
@@ -350,7 +329,6 @@ function Balloon() {
 function Spidy() {
   var vel = 1.3;
 
-  // this.x = 150;
   this.x = (width/2 - 100)/2.2
   this.y = -100;
   this.endline = -100;
